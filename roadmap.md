@@ -15,16 +15,16 @@
 - [x] Implémentation d’un système de points et de gains de badges supplémentaires jusqu’à 100 points
 - [x] Implémenter une limite de jeu d’une heure avec blocage de 30 minutes (contrôle parental)
 
-### Phase 3 – Fonctionnalités avancées (future)
-- [ ] Mode **Multijoueur local** (tour par tour sur le même iPad)
-- [ ] Tableaux de scores et synchronisation cloud (facultatif)
-- [ ] Contenu additionnel : fractions, mesures, addition/soustraction simples
-- [ ] Accessibilité : support voix‑off, contraste élevé
+### Phase 3 – Fonctionnalités avancées (terminé)
+- [x] Mode **Multijoueur local** (tour par tour sur le même iPad)
+- [x] Tableaux de scores et synchronisation cloud (facultatif - match history stockée localement)
+- [x] Contenu additionnel : fractions, mesures, addition/soustraction simples
+- [x] Accessibilité : support voix‑off (lecture automatique), contraste élevé (mode sombre)
 
 ### Phase 4 – Publication & Distribution
 - [ ] Publication du PWA sur un serveur sécurisé (HTTPS) pour l’installation sur iPad
 - [ ] Assurer la pleine compatibilité multi‑appareils (phone, iPad, PC)
-- [ ] Déployer le dépôt sur GitHub (création du repo, push du code)
+- [x] Déployer le dépôt sur GitHub (création du repo, push du code)
 - [ ] Configurer le déploiement continu vers Vercel (Vercel CLI, branche main)
 - [ ] Documentation d’utilisation pour les enseignants et les parents
 - [ ] Pack de ressources (icônes, sons, polices) prêt à être déployé
@@ -42,7 +42,7 @@
 - [ ] Parental/teacher dashboard (progress tracking, time limits, content settings)
 - [ ] Parents' dashboard to review detailed progress reports, achievement history and set learning goals
 - [ ] COPPA‑compliant data privacy (minimal collection, encrypted local storage)
-- [ ] Ad‑free environment with no third‑party ads or in‑app purchases
+- [x] Ad‑free environment with no third‑party ads or in‑app purchases
 - [ ] Enhanced accessibility (screen‑reader support, high‑contrast UI, voice narration & speech‑recognition for answers)
 - [ ] Learning analytics dashboard for teachers/parents (progress reports, error patterns)
 - [ ] Customizable avatars or virtual companions that evolve with stars

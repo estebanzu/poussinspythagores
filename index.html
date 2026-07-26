@@ -126,6 +126,35 @@
     .animate-pop-in {
       animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
+
+    /* High contrast accessibility dark theme override */
+    body.dark-contrast {
+      background-color: #0f172a !important;
+      background-image: none !important;
+      color: #f8fafc !important;
+    }
+    body.dark-contrast .bg-white {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #475569 !important;
+    }
+    body.dark-contrast .text-slate-800,
+    body.dark-contrast .text-slate-700,
+    body.dark-contrast .text-slate-600 {
+      color: #f8fafc !important;
+    }
+    body.dark-contrast .bg-slate-50 {
+      background-color: #334155 !important;
+    }
+    body.dark-contrast header,
+    body.dark-contrast footer {
+      background-color: #0f172a !important;
+      border-color: #475569 !important;
+    }
+    body.dark-contrast button.bg-white {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-brand-blue-light via-white to-brand-purple-light min-h-screen flex flex-col overflow-x-hidden text-slate-800">
@@ -158,10 +187,21 @@
     </div>
 
     <div class="flex items-center gap-3">
+      <!-- Scoreboard Button -->
+      <button onclick="openScoreboardModal()" class="flex items-center gap-2 bg-gradient-to-r from-brand-purple to-brand-blue text-white font-bold px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all" title="Historique des Scores">
+        <span class="text-lg">📊</span>
+        <span class="hidden sm:inline font-title text-sm">Scores</span>
+      </button>
+
       <!-- Badges Gallery Button -->
       <button onclick="openBadgesModal()" class="flex items-center gap-2 bg-gradient-to-r from-brand-pink to-brand-purple text-white font-bold px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all">
         <span class="text-lg">🏅</span>
         <span id="badge-count-text" class="hidden sm:inline font-title text-sm">Badges (0/7)</span>
+      </button>
+
+      <!-- Accessibility Settings Button -->
+      <button onclick="openAccessibilityModal()" class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-10 h-10 rounded-full shadow-md border-2 border-slate-200 hover:scale-105 active:scale-95 transition-all" title="Accessibilité">
+        <span class="text-lg">⚙️</span>
       </button>
 
       <!-- Global Stars Counter -->
@@ -180,6 +220,27 @@
     <!-- ==================== SCREEN: HOME ==================== -->
     <div id="screen-home" class="animate-pop-in grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
       
+      <!-- Game Mode Selector -->
+      <div class="col-span-full bg-white/70 backdrop-blur-md rounded-3xl p-5 border-4 border-brand-purple/20 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
+        <div class="flex items-center gap-3 text-center md:text-left">
+          <div class="w-12 h-12 bg-brand-purple-light rounded-2xl flex items-center justify-center text-2xl shadow">
+            🎮
+          </div>
+          <div>
+            <h3 class="font-bold text-lg font-title text-slate-800">Mode de Jeu</h3>
+            <p class="text-xs text-slate-500 font-medium">Joue seul pour collectionner les badges ou défie un ami en face-à-face !</p>
+          </div>
+        </div>
+        <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner">
+          <button id="btn-mode-solo" onclick="setGameMode('solo')" class="px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple">
+            👤 Solo
+          </button>
+          <button id="btn-mode-multi" onclick="setGameMode('multi')" class="px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
+            👥 Multijoueur
+          </button>
+        </div>
+      </div>
+
       <!-- Category A: Nombres et Calculs -->
       <div class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
         <div>
@@ -249,9 +310,57 @@
       </div>
     </div>
 
+    <!-- ==================== SCREEN: MULTIPLAYER SETUP ==================== -->
+    <div id="screen-multiplayer-setup" class="hidden animate-pop-in w-full max-w-lg mx-auto bg-white rounded-3xl border-4 border-brand-purple/40 shadow-2xl p-6 md:p-8 flex flex-col items-center">
+      <h2 class="text-2xl font-bold font-title text-brand-purple mb-4">👥 Configuration de la Partie</h2>
+      <p class="text-slate-500 text-sm mb-6 text-center">Entrez vos prénoms pour commencer le défi tour par tour !</p>
+      
+      <div class="w-full flex flex-col gap-4 mb-6">
+        <!-- Player 1 -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Joueur 1 (🐣 Poussin)</label>
+          <input type="text" id="multi-p1-name" value="Joueur 1" placeholder="Prénom Joueur 1" class="w-full border-4 border-slate-200 focus:border-brand-purple rounded-2xl py-3 px-4 font-bold font-title text-lg outline-none transition-all"/>
+        </div>
+        
+        <!-- Player 2 -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Joueur 2 (🦁 Lion)</label>
+          <input type="text" id="multi-p2-name" value="Joueur 2" placeholder="Prénom Joueur 2" class="w-full border-4 border-slate-200 focus:border-brand-purple rounded-2xl py-3 px-4 font-bold font-title text-lg outline-none transition-all"/>
+        </div>
+      </div>
+
+      <div class="flex gap-3 w-full">
+        <button onclick="backToSubmenu()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-title font-bold py-4 rounded-2xl transition-all shadow">
+          Retour
+        </button>
+        <button onclick="startMultiplayerMatch()" class="w-1/2 bg-brand-purple hover:bg-brand-purple-dark text-white font-title font-bold py-4 rounded-2xl transition-all shadow-lg shadow-brand-purple/20">
+          C'est parti ! 🚀
+        </button>
+      </div>
+    </div>
+
     <!-- ==================== SCREEN: GAME ==================== -->
     <div id="screen-game" class="hidden animate-pop-in w-full max-w-4xl mx-auto">
       
+      <!-- Multiplayer Turn Info Banner -->
+      <div id="multiplayer-turn-banner" class="hidden w-full bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 rounded-2xl p-3 border-2 border-brand-purple/20 flex items-center justify-between gap-4 mb-4 shadow-sm">
+        <div class="flex items-center gap-3">
+          <span id="multi-turn-avatar" class="text-2xl animate-bounce-slow">🐣</span>
+          <div>
+            <h4 id="multi-turn-title" class="font-bold text-sm font-title text-brand-purple">Tour de Joueur 1</h4>
+            <p id="multi-turn-subtitle" class="text-[10px] text-slate-500 font-medium">Exercice 1 / 10</p>
+          </div>
+        </div>
+        <div class="flex gap-3 text-xs font-bold font-title">
+          <div class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-slate-700">
+            <span id="p1-score-name">J1</span> : <span id="p1-score-val" class="text-brand-purple">0 ⭐</span>
+          </div>
+          <div class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-slate-700">
+            <span id="p2-score-name">J2</span> : <span id="p2-score-val" class="text-brand-blue">0 ⭐</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Top Action Bar (Back / Progress) -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white/50 p-4 rounded-3xl border-2 border-slate-200/60">
         <div class="flex items-center justify-between md:justify-start gap-4">
@@ -315,7 +424,7 @@
 
           <!-- Action bar underneath choices -->
           <div class="flex items-center gap-3">
-            <button id="btn-next-exercise" onclick="generateExercise()" class="hidden w-full bg-gradient-to-r from-brand-green to-brand-green-dark hover:from-brand-green-dark hover:to-brand-green text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow">
+            <button id="btn-next-exercise" onclick="handleNextExerciseClick()" class="hidden w-full bg-gradient-to-r from-brand-green to-brand-green-dark hover:from-brand-green-dark hover:to-brand-green text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow">
               <span>Exercice suivant</span>
               <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
             </button>
@@ -358,6 +467,41 @@
       </div>
     </div>
 
+    <!-- ==================== SCREEN: MULTIPLAYER VICTORY ==================== -->
+    <div id="screen-multiplayer-victory" class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-purple shadow-2xl p-8 text-center flex flex-col items-center">
+      <div class="w-48 h-48 mb-6 animate-bounce-slow flex items-center justify-center text-8xl bg-brand-purple-light rounded-full border-4 border-brand-purple shadow-inner">
+        👑🏆
+      </div>
+
+      <h2 id="multi-victory-title" class="text-3xl md:text-4xl font-bold font-title text-brand-purple mb-3">Victoire ! 🎉</h2>
+      <p id="multi-victory-desc" class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
+        Quel match incroyable ! Bravo aux deux joueurs !
+      </p>
+
+      <div class="bg-slate-50 border-2 border-slate-200/80 rounded-2xl p-5 w-full mb-8 flex flex-col gap-3 font-title">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">Recap de la partie</h4>
+        <div class="flex justify-between items-center py-1 border-b border-slate-200">
+          <span id="recap-p1-name" class="font-bold text-slate-700">Joueur 1</span>
+          <span id="recap-p1-stars" class="font-black text-xl text-brand-purple">0 ⭐</span>
+        </div>
+        <div class="flex justify-between items-center py-1">
+          <span id="recap-p2-name" class="font-bold text-slate-700">Joueur 2</span>
+          <span id="recap-p2-stars" class="font-black text-xl text-brand-blue">0 ⭐</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+        <button onclick="backToSubmenu()" class="bg-brand-blue hover:bg-brand-blue-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-blue/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          <span>Changer de jeu</span>
+        </button>
+        <button onclick="restartMultiplayerMatch()" class="bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H17"/></svg>
+          <span>Rejouer le match</span>
+        </button>
+      </div>
+    </div>
+
   </main>
 
   <!-- ==================== MODAL: BADGES GALLERY ==================== -->
@@ -379,6 +523,76 @@
       <!-- Badges Grid -->
       <div id="badges-grid-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center">
         <!-- SVG badges will be injected here dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: SCOREBOARD HISTORY ==================== -->
+  <div id="modal-scoreboard" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button onclick="closeScoreboardModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
+        ✕
+      </button>
+
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2">
+          <span>Matchs Récents</span> 📊
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Historique des défis multijoueurs locaux.</p>
+      </div>
+
+      <!-- Match list -->
+      <div id="scoreboard-list-container" class="flex flex-col gap-3 max-h-[40vh] overflow-y-auto pr-1">
+        <!-- Match items injected here dynamically -->
+      </div>
+      
+      <button onclick="clearScoreboardHistory()" class="w-full mt-6 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 font-title font-bold py-3 rounded-2xl border-2 border-dashed border-slate-200 hover:border-rose-200 transition-all text-xs">
+        Effacer l'historique
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: ACCESSIBILITY CONFIG ==================== -->
+  <div id="modal-accessibility" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in">
+      
+      <!-- Close button -->
+      <button onclick="closeAccessibilityModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
+        ✕
+      </button>
+
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2">
+          <span>Accessibilité</span> ⚙️
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Options de confort visuel et d'écoute pour les enfants.</p>
+      </div>
+
+      <!-- Settings List -->
+      <div class="flex flex-col gap-5 font-title">
+        <!-- Setting 1: Voice autoplay -->
+        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
+          <div>
+            <h4 class="font-bold text-slate-700 text-sm">Lecture Vocale Automatique</h4>
+            <p class="text-[10px] text-slate-400 font-medium">Lit les questions à haute voix au chargement.</p>
+          </div>
+          <button id="toggle-acc-voice" onclick="toggleAccVoice()" class="w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative">
+            <div class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"></div>
+          </button>
+        </div>
+
+        <!-- Setting 2: High contrast -->
+        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
+          <div>
+            <h4 class="font-bold text-slate-700 text-sm">Mode Contraste Élevé</h4>
+            <p class="text-[10px] text-slate-400 font-medium">Bascule vers un design sombre à fort contraste.</p>
+          </div>
+          <button id="toggle-acc-contrast" onclick="toggleAccContrast()" class="w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative">
+            <div class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"></div>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -462,6 +676,20 @@
       difficulty: 'normal',
     };
 
+    let multiplayerState = {
+      isActive: false,
+      player1: { name: "Joueur 1", stars: 0 },
+      player2: { name: "Joueur 2", stars: 0 },
+      currentPlayer: 1, // 1 or 2
+      currentTurn: 1, // 1 to 10
+      maxTurns: 10
+    };
+
+    let accessibilityState = {
+      autoplayVoice: localStorage.getItem('mathscp_autoplay_voice') === 'true',
+      highContrast: localStorage.getItem('mathscp_high_contrast') === 'true'
+    };
+
     // Subgames metadata database
     const CATEGORIES = {
       'A': {
@@ -472,7 +700,8 @@
           { id: 'a_additions', name: 'Les additions', desc: 'Opérations en ligne et posées en colonne.' },
           { id: 'a_soustractions', name: 'Les soustractions', desc: 'Retirer des objets et calculer la différence.' },
           { id: 'a_doubles_moities', name: 'Doubles et moitiés', desc: 'Calculer le double ou diviser par deux.' },
-          { id: 'a_complements_10', name: 'Compléments à 10', desc: 'Trouver le nombre qui manque pour faire 10.' }
+          { id: 'a_complements_10', name: 'Compléments à 10', desc: 'Trouver le nombre qui manque pour faire 10.' },
+          { id: 'a_fractions', name: 'Découvrir les fractions', desc: 'Représenter des moitiés, tiers et quarts.' }
         ]
       },
       'B': {
@@ -488,7 +717,8 @@
         color: 'brand-orange',
         games: [
           { id: 'c_monnaie', name: 'La monnaie', desc: 'Sommer des pièces et billets de 1€, 2€, 5€ et 10€.' },
-          { id: 'c_heure', name: 'Lire l\'heure', desc: 'Apprendre à lire les heures piles.' }
+          { id: 'c_heure', name: 'Lire l\'heure', desc: 'Apprendre à lire les heures piles.' },
+          { id: 'c_mesures', name: 'Mesurer avec une règle', desc: 'Lire la longueur d\'un objet en centimètres.' }
         ]
       }
     };
@@ -515,6 +745,7 @@
       updateStarsUI();
       applySoundIcons();
       initParentalControls();
+      initAccessibility();
       goHome();
     });
 
@@ -623,6 +854,11 @@
       document.getElementById('screen-submenu').classList.add('hidden');
       document.getElementById('screen-game').classList.add('hidden');
       document.getElementById('screen-victory').classList.add('hidden');
+      
+      const setup = document.getElementById('screen-multiplayer-setup');
+      if (setup) setup.classList.add('hidden');
+      const victory = document.getElementById('screen-multiplayer-victory');
+      if (victory) victory.classList.add('hidden');
     }
 
     function goHome() {
@@ -672,21 +908,28 @@
     function launchGame(gameId) {
       playAudioTone('click');
       state.currentGame = gameId;
+      
+      if (multiplayerState.isActive) {
+        hideAllScreens();
+        document.getElementById('screen-multiplayer-setup').classList.remove('hidden');
+      } else {
+        startSoloGame();
+      }
+    }
+
+    function startSoloGame() {
       state.sessionStars = 0;
       state.consecutiveCorrect = 0;
       state.consecutiveWrong = 0;
       state.difficulty = 'normal';
       
-      let gameName = '';
-      for (const cat in CATEGORIES) {
-        const found = CATEGORIES[cat].games.find(g => g.id === gameId);
-        if (found) {
-          gameName = found.name;
-          break;
-        }
-      }
-      
+      let gameName = getGameName(state.currentGame);
       document.getElementById('game-title').innerText = gameName;
+      
+      document.getElementById('multiplayer-turn-banner').classList.add('hidden');
+      document.getElementById('difficulty-badge').classList.remove('hidden');
+      document.getElementById('star-dots-container').parentNode.classList.remove('hidden');
+      
       updateSessionStarsUI();
       updateDifficultyUI();
 
@@ -838,6 +1081,9 @@
         case 'a_complements_10':
           genComplements10(visualArea, questionText, optionsContainer);
           break;
+        case 'a_fractions':
+          genFractions(visualArea, questionText, optionsContainer);
+          break;
 
         // Bloc B: Espace et Géométrie
         case 'b_figures':
@@ -854,11 +1100,14 @@
         case 'c_heure':
           genHeure(visualArea, questionText, optionsContainer);
           break;
+        case 'c_mesures':
+          genMesures(visualArea, questionText, optionsContainer);
+          break;
       }
 
-      // Auto-read question text after a brief delay (if not muted)
+      // Auto-read question text after a brief delay (if not muted or voice autoplay is on)
       setTimeout(() => {
-        if (!state.isMuted) {
+        if (!state.isMuted || accessibilityState.autoplayVoice) {
           speakQuestion();
         }
       }, 350);
@@ -888,28 +1137,39 @@
         buttonElement.classList.remove('border-slate-200');
         buttonElement.classList.add('border-brand-green', 'bg-brand-green-light', 'text-brand-green-dark');
         
-        // Stars increase
-        state.sessionStars++;
-        state.stars++;
-        localStorage.setItem('mathscp_stars', state.stars);
-        updateStarsUI();
-        updateSessionStarsUI();
+        if (multiplayerState.isActive) {
+          if (multiplayerState.currentPlayer === 1) {
+            multiplayerState.player1.stars++;
+          } else {
+            multiplayerState.player2.stars++;
+          }
+          updateMultiplayerScoreboardUI();
+        } else {
+          // Stars increase
+          state.sessionStars++;
+          state.stars++;
+          localStorage.setItem('mathscp_stars', state.stars);
+          updateStarsUI();
+          updateSessionStarsUI();
+        }
 
         // Consecutive correct logic
         state.consecutiveCorrect++;
         state.consecutiveWrong = 0;
 
         // Difficulty upgrades
-        if (state.difficulty === 'easy' && state.consecutiveCorrect >= 3) {
-          state.difficulty = 'normal';
-          state.consecutiveCorrect = 0;
-          setTimeout(() => showToast(true, "Super ! Difficulté : Normal ! 🔵"), 500);
-          updateDifficultyUI();
-        } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= 3) {
-          state.difficulty = 'challenge';
-          state.consecutiveCorrect = 0;
-          setTimeout(() => showToast(true, "Incroyable ! Niveau Défi débloqué ! 🔥"), 500);
-          updateDifficultyUI();
+        if (!multiplayerState.isActive) {
+          if (state.difficulty === 'easy' && state.consecutiveCorrect >= 3) {
+            state.difficulty = 'normal';
+            state.consecutiveCorrect = 0;
+            setTimeout(() => showToast(true, "Super ! Difficulté : Normal ! 🔵"), 500);
+            updateDifficultyUI();
+          } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= 3) {
+            state.difficulty = 'challenge';
+            state.consecutiveCorrect = 0;
+            setTimeout(() => showToast(true, "Incroyable ! Niveau Défi débloqué ! 🔥"), 500);
+            updateDifficultyUI();
+          }
         }
 
         // Confetti!
@@ -924,36 +1184,64 @@
         updateFooterMessage('success');
 
         // Show next button or handle level victory
-        if (state.sessionStars >= 5) {
-          setTimeout(() => {
-            triggerVictorySession();
-          }, 1000);
+        if (multiplayerState.isActive) {
+          const nextBtn = document.getElementById('btn-next-exercise');
+          if (nextBtn) {
+            if (multiplayerState.currentTurn >= multiplayerState.maxTurns) {
+              nextBtn.querySelector('span').innerText = "Voir les résultats 🏁";
+            } else {
+              const nextPlayer = multiplayerState.currentPlayer === 1 ? multiplayerState.player2 : multiplayerState.player1;
+              const nextMascot = multiplayerState.currentPlayer === 1 ? "🦁" : "🐣";
+              nextBtn.querySelector('span').innerText = `Passer au tour de ${nextPlayer.name} ${nextMascot}`;
+            }
+            nextBtn.classList.remove('hidden');
+          }
         } else {
-          document.getElementById('btn-next-exercise').classList.remove('hidden');
+          if (state.sessionStars >= 5) {
+            setTimeout(() => {
+              triggerVictorySession();
+            }, 1000);
+          } else {
+            document.getElementById('btn-next-exercise').classList.remove('hidden');
+          }
         }
       } else {
         playAudioTone('fail');
         buttonElement.classList.remove('border-slate-200');
         buttonElement.classList.add('border-brand-pink', 'bg-brand-pink-light', 'text-brand-pink-dark', 'shake');
         
-        // Reset state.isAnswerSelected to let them try again!
-        state.isAnswerSelected = false;
+        if (multiplayerState.isActive) {
+          const nextBtn = document.getElementById('btn-next-exercise');
+          if (nextBtn) {
+            if (multiplayerState.currentTurn >= multiplayerState.maxTurns) {
+              nextBtn.querySelector('span').innerText = "Voir les résultats 🏁";
+            } else {
+              const nextPlayer = multiplayerState.currentPlayer === 1 ? multiplayerState.player2 : multiplayerState.player1;
+              const nextMascot = multiplayerState.currentPlayer === 1 ? "🦁" : "🐣";
+              nextBtn.querySelector('span').innerText = `Passer au tour de ${nextPlayer.name} ${nextMascot}`;
+            }
+            nextBtn.classList.remove('hidden');
+          }
+        } else {
+          // Reset state.isAnswerSelected to let them try again!
+          state.isAnswerSelected = false;
 
-        // Consecutive wrong logic
-        state.consecutiveWrong++;
-        state.consecutiveCorrect = 0;
+          // Consecutive wrong logic
+          state.consecutiveWrong++;
+          state.consecutiveCorrect = 0;
 
-        // Difficulty downgrades
-        if (state.difficulty === 'challenge' && state.consecutiveWrong >= 3) {
-          state.difficulty = 'normal';
-          state.consecutiveWrong = 0;
-          setTimeout(() => showToast(false, "Retour au niveau Normal 🔵"), 500);
-          updateDifficultyUI();
-        } else if (state.difficulty === 'normal' && state.consecutiveWrong >= 3) {
-          state.difficulty = 'easy';
-          state.consecutiveWrong = 0;
-          setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
-          updateDifficultyUI();
+          // Difficulty downgrades
+          if (state.difficulty === 'challenge' && state.consecutiveWrong >= 3) {
+            state.difficulty = 'normal';
+            state.consecutiveWrong = 0;
+            setTimeout(() => showToast(false, "Retour au niveau Normal 🔵"), 500);
+            updateDifficultyUI();
+          } else if (state.difficulty === 'normal' && state.consecutiveWrong >= 3) {
+            state.difficulty = 'easy';
+            state.consecutiveWrong = 0;
+            setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
+            updateDifficultyUI();
+          }
         }
 
         const phrase = FAIL_PHRASES[getRandomInt(0, FAIL_PHRASES.length - 1)];
@@ -1890,6 +2178,385 @@
       const allChoices = Array.from(choicesSet);
       const distractors = allChoices.filter(t => t !== correctText);
       renderOptions(correctText, distractors, optionsContainer);
+    }
+
+    // ==========================================
+    // NEW GAMES & MULTIPLAYER & ACCESSIBILITY LOGIC
+    // ==========================================
+
+    // A6. Découvrir les fractions
+    function genFractions(visualArea, questionText, optionsContainer) {
+      let d = 4;
+      if (state.difficulty === 'easy') {
+        d = 2;
+      } else {
+        d = [2, 3, 4][getRandomInt(0, 2)];
+      }
+
+      const n = getRandomInt(1, d - 1);
+      state.currentAnswer = `${n}/${d}`;
+
+      questionText.innerText = "Quelle fraction de cette barre est coloriée ?";
+
+      let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+      
+      const width = 240;
+      const height = 60;
+      const startX = 40;
+      const startY = 70;
+      const blockW = width / d;
+
+      for (let i = 0; i < d; i++) {
+        const bx = startX + i * blockW;
+        const isColored = i < n;
+        const fill = isColored ? '#6C5DD3' : '#F8FAFC';
+        const stroke = '#5646B8';
+
+        svg += `<rect x="${bx}" y="${startY}" width="${blockW}" height="${height}" fill="${fill}" stroke="${stroke}" stroke-width="4"/>`;
+        svg += `<rect x="${bx + 4}" y="${startY + 4}" width="${blockW - 8}" height="${height - 8}" fill="none" stroke="${isColored ? '#8A7CE0' : '#E2E8F0'}" stroke-width="2" rx="4"/>`;
+      }
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+
+      const allFractions = ['1/2', '1/3', '2/3', '1/4', '2/4', '3/4'];
+      const correctText = `${n}/${d}`;
+      const distractors = allFractions.filter(f => f !== correctText).slice(0, 3);
+      renderOptions(correctText, distractors, optionsContainer);
+    }
+
+    // C3. Mesurer avec une règle
+    function genMesures(visualArea, questionText, optionsContainer) {
+      let length = 6;
+      if (state.difficulty === 'easy') {
+        length = getRandomInt(3, 7);
+      } else {
+        length = getRandomInt(3, 11);
+      }
+      
+      state.currentAnswer = `${length} cm`;
+      questionText.innerText = "Combien mesure ce crayon de couleur ?";
+
+      let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+
+      const rulerX = 20;
+      const rulerY = 110;
+      const rulerW = 280;
+      const rulerH = 40;
+      
+      svg += `<rect x="${rulerX}" y="${rulerY}" width="${rulerW}" height="${rulerH}" rx="4" fill="#FEF08A" stroke="#EAB308" stroke-width="3"/>`;
+      
+      const pxPerCm = rulerW / 12;
+      for (let i = 0; i <= 12; i++) {
+        const x = rulerX + i * pxPerCm;
+        svg += `<line x1="${x}" y1="${rulerY}" x2="${x}" y2="${rulerY + 15}" stroke="#CA8A04" stroke-width="2"/>`;
+        svg += `<text x="${x}" y="${rulerY + 30}" font-family="Fredoka" font-size="10" font-weight="bold" fill="#854D0E" text-anchor="middle">${i}</text>`;
+        
+        if (i < 12) {
+          const hx = x + pxPerCm / 2;
+          svg += `<line x1="${hx}" y1="${rulerY}" x2="${hx}" y2="${rulerY + 9}" stroke="#CA8A04" stroke-width="1.5"/>`;
+        }
+      }
+
+      const crayonY = 60;
+      const crayonH = 20;
+      const crayonW = length * pxPerCm;
+      
+      svg += `<g class="animate-bounce-soft">`;
+      svg += `<rect x="${rulerX}" y="${crayonY}" width="${crayonW - 15}" height="${crayonH}" fill="#FF6B8B" stroke="#E05270" stroke-width="2"/>`;
+      svg += `<rect x="${rulerX}" y="${crayonY}" width="${crayonW - 15}" height="${crayonH / 2}" fill="#FF8EA5" opacity="0.4"/>`;
+      
+      const tipStartX = rulerX + crayonW - 15;
+      const tipEndX = rulerX + crayonW;
+      const tipMidY = crayonY + crayonH / 2;
+      svg += `<polygon points="${tipStartX},${crayonY} ${tipEndX},${tipMidY} ${tipStartX},${crayonY + crayonH}" fill="#FED7AA" stroke="#E05270" stroke-width="2"/>`;
+      
+      const leadStartX = rulerX + crayonW - 5;
+      svg += `<polygon points="${leadStartX},${crayonY + 6} ${tipEndX},${tipMidY} ${leadStartX},${crayonY + crayonH - 6}" fill="#FF6B8B"/>`;
+      
+      svg += `<rect x="${rulerX - 8}" y="${crayonY}" width="8" height="${crayonH}" fill="#E2E8F0" stroke="#E05270" stroke-width="2" rx="1"/>`;
+      svg += `<rect x="${rulerX - 4}" y="${crayonY}" width="4" height="${crayonH}" fill="#FFB6C1"/>`;
+      svg += `</g>`;
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+
+      const correctText = `${length} cm`;
+      const distractorsVal = getDistractors(length, 3, 2, 12);
+      const distractors = distractorsVal.map(val => `${val} cm`);
+      renderOptions(correctText, distractors, optionsContainer);
+    }
+
+    // MULTIPLAYER ACTIONS
+    function setGameMode(mode) {
+      playAudioTone('click');
+      const btnSolo = document.getElementById('btn-mode-solo');
+      const btnMulti = document.getElementById('btn-mode-multi');
+      if (!btnSolo || !btnMulti) return;
+
+      if (mode === 'multi') {
+        multiplayerState.isActive = true;
+        btnSolo.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+        btnMulti.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
+      } else {
+        multiplayerState.isActive = false;
+        btnSolo.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
+        btnMulti.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+      }
+    }
+
+    function startMultiplayerMatch() {
+      playAudioTone('click');
+      const p1Input = document.getElementById('multi-p1-name');
+      const p2Input = document.getElementById('multi-p2-name');
+      
+      multiplayerState.player1.name = p1Input.value.trim() || "Joueur 1";
+      multiplayerState.player2.name = p2Input.value.trim() || "Joueur 2";
+      multiplayerState.player1.stars = 0;
+      multiplayerState.player2.stars = 0;
+      multiplayerState.currentPlayer = 1;
+      multiplayerState.currentTurn = 1;
+
+      let gameName = getGameName(state.currentGame);
+      document.getElementById('game-title').innerText = `${gameName} (Défi)`;
+
+      document.getElementById('difficulty-badge').classList.add('hidden');
+      document.getElementById('star-dots-container').parentNode.classList.add('hidden');
+
+      document.getElementById('multiplayer-turn-banner').classList.remove('hidden');
+      updateMultiplayerScoreboardUI();
+
+      hideAllScreens();
+      document.getElementById('screen-game').classList.remove('hidden');
+      generateExercise();
+      updateFooterMessage('game_start');
+    }
+
+    function nextMultiplayerTurn() {
+      multiplayerState.currentPlayer = multiplayerState.currentPlayer === 1 ? 2 : 1;
+      multiplayerState.currentTurn++;
+      updateMultiplayerScoreboardUI();
+      generateExercise();
+    }
+
+    function handleNextExerciseClick() {
+      if (multiplayerState.isActive) {
+        if (multiplayerState.currentTurn >= multiplayerState.maxTurns) {
+          triggerMultiplayerMatchOver();
+        } else {
+          nextMultiplayerTurn();
+        }
+      } else {
+        generateExercise();
+      }
+    }
+
+    function triggerMultiplayerMatchOver() {
+      playAudioTone('trophy');
+      const p1 = multiplayerState.player1;
+      const p2 = multiplayerState.player2;
+
+      document.getElementById('recap-p1-name').innerText = p1.name;
+      document.getElementById('recap-p1-stars').innerText = `${p1.stars} ⭐`;
+      document.getElementById('recap-p2-name').innerText = p2.name;
+      document.getElementById('recap-p2-stars').innerText = `${p2.stars} ⭐`;
+
+      const titleEl = document.getElementById('multi-victory-title');
+      const descEl = document.getElementById('multi-victory-desc');
+
+      let winner = "";
+      if (p1.stars > p2.stars) {
+        titleEl.innerText = `${p1.name} a gagné ! 🏆`;
+        descEl.innerText = `Félicitations ${p1.name} ! Tu remportes le match avec ${p1.stars} ⭐ contre ${p2.stars} ⭐.`;
+        winner = p1.name;
+      } else if (p2.stars > p1.stars) {
+        titleEl.innerText = `${p2.name} a gagné ! 🏆`;
+        descEl.innerText = `Félicitations ${p2.name} ! Tu remportes le match avec ${p2.stars} ⭐ contre ${p1.stars} ⭐.`;
+        winner = p2.name;
+      } else {
+        titleEl.innerText = "Égalité ! 🤝";
+        descEl.innerText = `Quel beau match ! Vous avez obtenu tous les deux ${p1.stars} ⭐.`;
+        winner = "Égalité";
+      }
+
+      saveMatchResult(p1.name, p1.stars, p2.name, p2.stars, winner);
+
+      hideAllScreens();
+      document.getElementById('screen-multiplayer-victory').classList.remove('hidden');
+
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function restartMultiplayerMatch() {
+      startMultiplayerMatch();
+    }
+
+    function updateMultiplayerScoreboardUI() {
+      const banner = document.getElementById('multiplayer-turn-banner');
+      if (!banner) return;
+
+      const p1 = multiplayerState.player1;
+      const p2 = multiplayerState.player2;
+      const activePlayerName = multiplayerState.currentPlayer === 1 ? p1.name : p2.name;
+      const activeMascot = multiplayerState.currentPlayer === 1 ? "🐣" : "🦁";
+
+      document.getElementById('multi-turn-avatar').innerText = activeMascot;
+      document.getElementById('multi-turn-title').innerText = `Tour de ${activePlayerName}`;
+      document.getElementById('multi-turn-subtitle').innerText = `Tour ${multiplayerState.currentTurn} / ${multiplayerState.maxTurns}`;
+
+      document.getElementById('p1-score-name').innerText = p1.name;
+      document.getElementById('p1-score-val').innerText = `${p1.stars} ⭐`;
+      document.getElementById('p2-score-name').innerText = p2.name;
+      document.getElementById('p2-score-val').innerText = `${p2.stars} ⭐`;
+    }
+
+    function getGameName(gameId) {
+      for (const cat in CATEGORIES) {
+        const found = CATEGORIES[cat].games.find(g => g.id === gameId);
+        if (found) return found.name;
+      }
+      return "Jeu";
+    }
+
+    // SCOREBOARD LEADERBOARD ACTIONS
+    function saveMatchResult(p1Name, p1Stars, p2Name, p2Stars, winnerName) {
+      let history = JSON.parse(localStorage.getItem('mathscp_multiplayer_history') || '[]');
+      const match = {
+        date: new Date().toLocaleDateString('fr-FR'),
+        p1: { name: p1Name, stars: p1Stars },
+        p2: { name: p2Name, stars: p2Stars },
+        winner: winnerName
+      };
+      history.unshift(match);
+      if (history.length > 10) history.pop();
+      localStorage.setItem('mathscp_multiplayer_history', JSON.stringify(history));
+    }
+
+    function openScoreboardModal() {
+      playAudioTone('click');
+      const container = document.getElementById('scoreboard-list-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const history = JSON.parse(localStorage.getItem('mathscp_multiplayer_history') || '[]');
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 font-medium">
+            <span class="text-4xl block mb-2">🎮</span>
+            Aucun match joué pour le moment.
+          </div>
+        `;
+      } else {
+        history.forEach(match => {
+          const card = document.createElement('div');
+          card.className = "bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60 flex flex-col gap-2 font-title";
+          
+          let winnerLabel = "";
+          if (match.winner === "Égalité") {
+            winnerLabel = `<span class="bg-slate-200 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">🤝 Égalité</span>`;
+          } else {
+            winnerLabel = `<span class="bg-brand-purple-light text-brand-purple-dark text-[10px] font-bold px-2 py-0.5 rounded-full">🏆 Gagnant : ${match.winner}</span>`;
+          }
+
+          card.innerHTML = `
+            <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+              <span>Match du ${match.date}</span>
+              ${winnerLabel}
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="font-bold text-slate-600">${match.p1.name} : ${match.p1.stars} ⭐</span>
+              <span class="text-slate-400 font-black">vs</span>
+              <span class="font-bold text-slate-600">${match.p2.name} : ${match.p2.stars} ⭐</span>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      const modal = document.getElementById('modal-scoreboard');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeScoreboardModal() {
+      playAudioTone('click');
+      const modal = document.getElementById('modal-scoreboard');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function clearScoreboardHistory() {
+      playAudioTone('click');
+      if (confirm("Voulez-vous vraiment effacer l'historique des scores ?")) {
+        localStorage.removeItem('mathscp_multiplayer_history');
+        openScoreboardModal();
+      }
+    }
+
+    // ACCESSIBILITY CONTROL ACTIONS
+    function initAccessibility() {
+      applyAccessibilitySettings();
+    }
+
+    function openAccessibilityModal() {
+      playAudioTone('click');
+      updateAccessibilityUI();
+      const modal = document.getElementById('modal-accessibility');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeAccessibilityModal() {
+      playAudioTone('click');
+      const modal = document.getElementById('modal-accessibility');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function updateAccessibilityUI() {
+      const voiceBtn = document.getElementById('toggle-acc-voice');
+      const contrastBtn = document.getElementById('toggle-acc-contrast');
+      if (!voiceBtn || !contrastBtn) return;
+
+      if (accessibilityState.autoplayVoice) {
+        voiceBtn.className = "w-12 h-6 rounded-full bg-brand-green p-0.5 transition-all relative";
+        voiceBtn.querySelector('div').className = "w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-6";
+      } else {
+        voiceBtn.className = "w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative";
+        voiceBtn.querySelector('div').className = "w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0";
+      }
+
+      if (accessibilityState.highContrast) {
+        contrastBtn.className = "w-12 h-6 rounded-full bg-brand-green p-0.5 transition-all relative";
+        contrastBtn.querySelector('div').className = "w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-6";
+      } else {
+        contrastBtn.className = "w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative";
+        contrastBtn.querySelector('div').className = "w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0";
+      }
+    }
+
+    function toggleAccVoice() {
+      playAudioTone('click');
+      accessibilityState.autoplayVoice = !accessibilityState.autoplayVoice;
+      localStorage.setItem('mathscp_autoplay_voice', accessibilityState.autoplayVoice.toString());
+      updateAccessibilityUI();
+    }
+
+    function toggleAccContrast() {
+      playAudioTone('click');
+      accessibilityState.highContrast = !accessibilityState.highContrast;
+      localStorage.setItem('mathscp_high_contrast', accessibilityState.highContrast.toString());
+      updateAccessibilityUI();
+      applyAccessibilitySettings();
+    }
+
+    function applyAccessibilitySettings() {
+      const body = document.body;
+      if (accessibilityState.highContrast) {
+        body.classList.add('dark-contrast');
+      } else {
+        body.classList.remove('dark-contrast');
+      }
     }
 
     // ==========================================
