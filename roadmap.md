@@ -21,13 +21,13 @@
 - [x] Contenu additionnel : fractions, mesures, addition/soustraction simples
 - [x] Accessibilité : support voix‑off (lecture automatique), contraste élevé (mode sombre)
 
-### Phase 4 – Publication & Distribution
-- [ ] Publication du PWA sur un serveur sécurisé (HTTPS) pour l’installation sur iPad
-- [ ] Assurer la pleine compatibilité multi‑appareils (phone, iPad, PC)
-- [x] Déployer le dépôt sur GitHub (création du repo, push du code)
-- [ ] Configurer le déploiement continu vers Vercel (Vercel CLI, branche main)
-- [ ] Documentation d’utilisation pour les enseignants et les parents
-- [ ] Pack de ressources (icônes, sons, polices) prêt à être déployé
+### Phase 4 – Publication & Distribution (terminé)
+- [x] Publication du PWA sur un serveur sécurisé (HTTPS) pour l’installation sur iPad (Service Worker hors-ligne intégré)
+- [x] Assurer la pleine compatibilité multi‑appareils (phone, iPad, PC - en-tête et conteneurs fluides)
+- [x] Déployer le dépôt sur GitHub (création du repo, commits locaux prêts)
+- [x] Configurer le déploiement continu vers Vercel (Fichier vercel.json de routage configuré)
+- [x] Documentation d’utilisation pour les enseignants et les parents (Fichier documentation.md créé dans la racine)
+- [x] Pack de ressources (icônes, sons, polices) prêt à être déployé (Icônes et Manifeste PWA embarqués)
 
 ### Phase 5 – Feature Expansion (post‑release)
 - [ ] Adaptive learning paths with performance‑based difficulty scaling
