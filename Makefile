@@ -19,11 +19,13 @@ install:
 # Development server with hot‑reload (nodemon)
 dev:
 	@echo "Starting development server..."
+	@(sleep 1.5 && (cmd.exe /c start http://localhost:$(PORT) || open http://localhost:$(PORT) || xdg-open http://localhost:$(PORT) || true)) &
 	npm run dev
 
 # Production start (node)
 start:
 	@echo "Starting production server..."
+	@(sleep 1.5 && (cmd.exe /c start http://localhost:$(PORT) || open http://localhost:$(PORT) || xdg-open http://localhost:$(PORT) || true)) &
 	npm start
 
 # Stop the server (kills any node process using the defined PORT)

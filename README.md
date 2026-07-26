@@ -1,4 +1,4 @@
-# Super Maths CP (Node.js version)
+# Poussins Pythagorés (Node.js version)
 
 ## Overview
 This repository contains a **Progressive Web App** for CP maths, now served via a lightweight **Node.js + Express** backend. The app works as a normal static PWA, but the server makes it easier to extend (add APIs, authentication, database, etc.).

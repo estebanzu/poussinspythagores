@@ -8,12 +8,12 @@
 - [x] Système de difficulté adaptative (facile / normal / challenge) intégré aux générateurs de jeux
 - [x] Gamification de base – compteur d’étoiles, badges unlockables
 
-### Phase 2 – Améliorations UX & Contenu (en cours)
-- [ ] Vérification manuelle du passage automatique de la difficulté (tests UI, ajustement du seuil de 3 victoires/échecs consécutifs)
-- [ ] Ajout de messages motivants dynamiques dans le footer (succès / encouragement)
-- [ ] Extension du catalogue de jeux : nombres, formes, monnaie, heures, vocabulaire spatial
-- [ ] Implémentation d’un système de points et de gains de badges supplémentaires jusqu’à 100 points
-- [ ] Implémenter une limite de jeu d’une heure avec blocage de 30 minutes (contrôle parental)
+### Phase 2 – Améliorations UX & Contenu (terminé)
+- [x] Vérification manuelle du passage automatique de la difficulté (tests UI, ajustement du seuil de 3 victoires/échecs consécutifs)
+- [x] Ajout de messages motivants dynamiques dans le footer (succès / encouragement)
+- [x] Extension du catalogue de jeux : nombres, formes, monnaie, heures, vocabulaire spatial
+- [x] Implémentation d’un système de points et de gains de badges supplémentaires jusqu’à 100 points
+- [x] Implémenter une limite de jeu d’une heure avec blocage de 30 minutes (contrôle parental)
 
 ### Phase 3 – Fonctionnalités avancées (future)
 - [ ] Mode **Multijoueur local** (tour par tour sur le même iPad)

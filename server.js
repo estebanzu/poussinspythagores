@@ -1,11 +1,19 @@
 require('dotenv').config();
+const express = require('express');
+const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const { supabase } = require('./src/supabase');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Apply security middlewares
-app.use(helmet());
-app.use(cors({ origin: '*'})); // Adjust origin as needed
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
+app.use(cors({ origin: '*' })); // Adjust origin as needed
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
@@ -14,13 +22,13 @@ app.use(rateLimit({
 // Parse JSON bodies
 app.use(express.json());
 
+// Serve static assets (CSS, JS, images, etc.) from the 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Health‑check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
-
-// Supabase client (initialized in src/supabase.js)
-const { supabase } = require('./src/supabase');
 
 // Telemetry endpoint
 app.post('/api/telemetry', async (req, res) => {
@@ -28,6 +36,11 @@ app.post('/api/telemetry', async (req, res) => {
   if (!userId || !event) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
+  
+  if (!supabase) {
+    return res.status(503).json({ error: 'Telemetry service unavailable (Supabase not configured)' });
+  }
+
   try {
     const { error } = await supabase.from('telemetry').insert({
       user_id: userId,
@@ -42,12 +55,6 @@ app.post('/api/telemetry', async (req, res) => {
   }
 });
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Serve static assets (CSS, JS, images, etc.) from the 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Serve the main HTML file
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -57,11 +64,6 @@ app.get('/', (req, res) => {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-
-const express = require('express');
-const path = require('path');
-
-// ... existing code above remains ...
 
 // Start server and handle graceful shutdown
 const server = app.listen(PORT, () => {

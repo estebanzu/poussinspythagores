@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Super Maths CP 🌟</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <title>Poussins Pythagorés 🌟</title>
 
   <!-- PWA & iOS Safari Standard Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -144,12 +145,13 @@
   <!-- Header Section -->
   <header class="relative z-10 w-full px-6 py-4 flex justify-between items-center bg-white/70 backdrop-blur-md border-b-4 border-brand-purple/20">
     <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+      <img src="/logo.png" alt="Poussins Pythagorés logo" class="h-12 w-12 mr-2"/>
       <div class="bg-gradient-to-tr from-brand-purple to-brand-blue w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
         <span class="text-white text-2xl font-title font-bold">∑</span>
       </div>
       <div>
         <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent drop-shadow-sm font-title">
-          Super Maths CP
+          Poussins Pythagorés
         </h1>
         <p class="text-xs text-slate-500 font-medium tracking-wide">6 - 7 ANS • ÉCOLE ÉLÉMENTAIRE</p>
       </div>
@@ -512,6 +514,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       updateStarsUI();
       applySoundIcons();
+      initParentalControls();
       goHome();
     });
 
@@ -902,7 +905,7 @@
           state.consecutiveCorrect = 0;
           setTimeout(() => showToast(true, "Super ! Difficulté : Normal ! 🔵"), 500);
           updateDifficultyUI();
-        } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= 5) {
+        } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= 3) {
           state.difficulty = 'challenge';
           state.consecutiveCorrect = 0;
           setTimeout(() => showToast(true, "Incroyable ! Niveau Défi débloqué ! 🔥"), 500);
@@ -941,12 +944,12 @@
         state.consecutiveCorrect = 0;
 
         // Difficulty downgrades
-        if (state.difficulty === 'challenge' && state.consecutiveWrong >= 2) {
+        if (state.difficulty === 'challenge' && state.consecutiveWrong >= 3) {
           state.difficulty = 'normal';
           state.consecutiveWrong = 0;
           setTimeout(() => showToast(false, "Retour au niveau Normal 🔵"), 500);
           updateDifficultyUI();
-        } else if (state.difficulty === 'normal' && state.consecutiveWrong >= 2) {
+        } else if (state.difficulty === 'normal' && state.consecutiveWrong >= 3) {
           state.difficulty = 'easy';
           state.consecutiveWrong = 0;
           setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
@@ -2153,8 +2156,23 @@
       const avatarEl = document.getElementById('footer-helper-avatar');
       if (!textEl || !avatarEl) return;
 
-      const list = FOOTER_PHRASES[type] || FOOTER_PHRASES['idle'];
-      const msg = list[Math.floor(Math.random() * list.length)];
+      let msg = "";
+      if (type === 'idle' && state.stars > 0) {
+        // Generate a dynamic progression message
+        const nextBadge = BADGES.find(b => state.stars < b.starsReq);
+        const remaining = nextBadge ? nextBadge.starsReq - state.stars : 0;
+        const progressPhrases = [
+          `Waouh ! Tu as déjà accumulé ${state.stars} étoile${state.stars > 1 ? 's' : ''} !${nextBadge ? ` Encore ${remaining} pour le badge "${nextBadge.name}" ! 🏅` : ''}`,
+          `Félicitations pour tes ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! Tu travailles comme un vrai champion ! 🏆`,
+          `Tu as ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! Es-tu prêt à remporter le prochain badge ? ${nextBadge ? `Plus que ${remaining} !` : ''} ⭐`,
+          `Les mathématiques sont un jeu d'enfant avec toi ! Déjà ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! 🎈`
+        ];
+        msg = progressPhrases[Math.floor(Math.random() * progressPhrases.length)];
+      } else {
+        const list = FOOTER_PHRASES[type] || FOOTER_PHRASES['idle'];
+        msg = list[Math.floor(Math.random() * list.length)];
+      }
+
       textEl.innerText = msg;
 
       // Set avatar emoji based on state
@@ -2211,7 +2229,196 @@
         speakText(textEl.innerText);
       }
     }
+
+    // ==========================================
+    // CONTRÔLE PARENTAL & LIMITE DE TEMPS
+    // ==========================================
+    const PLAYTIME_LIMIT = 60 * 60 * 1000; // 60 minutes in ms
+    const LOCKOUT_DURATION = 30 * 60 * 1000; // 30 minutes in ms
+    const DECAY_BREAK_DURATION = 30 * 60 * 1000; // 30 minutes in ms
+
+    let playtimeState = {
+      accumulated: parseInt(localStorage.getItem('mathscp_playtime_accumulated') || '0'),
+      lastActive: parseInt(localStorage.getItem('mathscp_last_active_time') || '0'),
+      lockoutStart: parseInt(localStorage.getItem('mathscp_lockout_start_time') || '0'),
+      sessionStart: Date.now()
+    };
+
+    let parentGateAnswer = null;
+
+    function initParentalControls() {
+      const now = Date.now();
+
+      // Check if lockout is currently active
+      if (playtimeState.lockoutStart > 0) {
+        const elapsed = now - playtimeState.lockoutStart;
+        if (elapsed >= LOCKOUT_DURATION) {
+          // Lockout expired! Clear it.
+          clearLockout();
+        } else {
+          // Lockout still active! Trigger overlay immediately.
+          triggerLockout();
+        }
+      }
+
+      // Check if they took a break of 30+ minutes since last active time to reset their limit
+      if (playtimeState.lockoutStart === 0 && playtimeState.lastActive > 0 && (now - playtimeState.lastActive) >= DECAY_BREAK_DURATION) {
+        playtimeState.accumulated = 0;
+        localStorage.setItem('mathscp_playtime_accumulated', '0');
+      }
+
+      // Start periodic updates (every 1 second)
+      setInterval(tickPlaytime, 1000);
+    }
+
+    function tickPlaytime() {
+      const now = Date.now();
+
+      // If already locked out, update countdown only
+      if (playtimeState.lockoutStart > 0) {
+        updateCountdownUI();
+        // Check if lockout elapsed in background
+        if ((now - playtimeState.lockoutStart) >= LOCKOUT_DURATION) {
+          clearLockout();
+        }
+        return;
+      }
+
+      // Update active time and accumulate playtime since session start
+      const timePassed = now - playtimeState.sessionStart;
+      playtimeState.sessionStart = now; // reset session start for next tick
+
+      playtimeState.accumulated += timePassed;
+      playtimeState.lastActive = now;
+
+      localStorage.setItem('mathscp_playtime_accumulated', playtimeState.accumulated.toString());
+      localStorage.setItem('mathscp_last_active_time', playtimeState.lastActive.toString());
+
+      // If limit exceeded, lock!
+      if (playtimeState.accumulated >= PLAYTIME_LIMIT) {
+        playtimeState.lockoutStart = now;
+        localStorage.setItem('mathscp_lockout_start_time', playtimeState.lockoutStart.toString());
+        triggerLockout();
+      }
+    }
+
+    function triggerLockout() {
+      const modal = document.getElementById('modal-parental-lock');
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+      hideParentGate();
+      updateCountdownUI();
+    }
+
+    function clearLockout() {
+      playtimeState.lockoutStart = 0;
+      playtimeState.accumulated = 0;
+      playtimeState.sessionStart = Date.now();
+      localStorage.removeItem('mathscp_lockout_start_time');
+      localStorage.setItem('mathscp_playtime_accumulated', '0');
+      
+      const modal = document.getElementById('modal-parental-lock');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function updateCountdownUI() {
+      const textEl = document.getElementById('lock-countdown-text');
+      if (!textEl || playtimeState.lockoutStart === 0) return;
+
+      const remaining = LOCKOUT_DURATION - (Date.now() - playtimeState.lockoutStart);
+      if (remaining <= 0) {
+        textEl.innerText = "00:00";
+        return;
+      }
+
+      const totalSecs = Math.floor(remaining / 1000);
+      const mins = Math.floor(totalSecs / 60);
+      const secs = totalSecs % 60;
+      textEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function showParentGate() {
+      const container = document.getElementById('parent-gate-container');
+      const questionEl = document.getElementById('parent-gate-question');
+      const inputEl = document.getElementById('parent-gate-input');
+      const errorEl = document.getElementById('parent-gate-error');
+
+      if (!container || !questionEl || !inputEl) return;
+
+      // Generate a slightly hard parent override question
+      const a = getRandomInt(15, 45);
+      const b = getRandomInt(15, 45);
+      parentGateAnswer = a + b;
+
+      questionEl.innerText = `${a} + ${b} = ?`;
+      inputEl.value = "";
+      if (errorEl) errorEl.classList.add('hidden');
+
+      container.classList.remove('hidden');
+      inputEl.focus();
+    }
+
+    function hideParentGate() {
+      const container = document.getElementById('parent-gate-container');
+      if (container) container.classList.add('hidden');
+      parentGateAnswer = null;
+    }
+
+    function verifyParentGate() {
+      const inputEl = document.getElementById('parent-gate-input');
+      const errorEl = document.getElementById('parent-gate-error');
+      if (!inputEl) return;
+
+      const val = parseInt(inputEl.value);
+      if (val === parentGateAnswer) {
+        // Parents solved it! Clear lock.
+        clearLockout();
+      } else {
+        if (errorEl) errorEl.classList.remove('hidden');
+        inputEl.value = "";
+        inputEl.focus();
+      }
+    }
   </script>
+
+  <!-- ==================== SCREEN: PARENTAL CONTROL LOCKOUT ==================== -->
+  <div id="modal-parental-lock" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-blue shadow-2xl text-center flex flex-col items-center animate-pop-in">
+      <div class="w-32 h-32 mb-6 flex items-center justify-center text-6xl bg-brand-blue-light rounded-full border-4 border-brand-blue animate-bounce-slow">
+        🦉💤
+      </div>
+      <h2 class="text-3xl font-bold font-title text-slate-800 mb-3">L'heure de la pause !</h2>
+      <p class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
+        Tu as très bien travaillé aujourd'hui ! Pour protéger tes yeux, c'est l'heure de faire une pause de 30 minutes. Va jouer dehors ou repose-toi ! 🌳
+      </p>
+      
+      <!-- Countdown timer -->
+      <div class="bg-brand-blue-light/60 border-2 border-brand-blue/30 rounded-2xl p-4 w-full mb-6 flex flex-col items-center shadow-sm">
+        <span class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title mb-1">Temps de pause restant</span>
+        <span id="lock-countdown-text" class="text-2xl font-black font-title text-brand-blue">30:00</span>
+      </div>
+
+      <!-- Parent override button -->
+      <button onclick="showParentGate()" class="text-sm font-bold text-slate-400 hover:text-brand-blue underline cursor-pointer active:scale-95 transition-all">
+        Espace Parents (Déverrouiller)
+      </button>
+
+      <!-- Parent math gate container (initially hidden) -->
+      <div id="parent-gate-container" class="hidden mt-6 pt-6 border-t-2 border-slate-100 w-full flex flex-col items-center gap-3">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Question pour les parents :</p>
+        <h4 id="parent-gate-question" class="text-lg font-black font-title text-slate-800">14 + 17 = ?</h4>
+        <input type="number" id="parent-gate-input" placeholder="Réponse..." class="w-full text-center border-4 border-slate-200 rounded-xl py-2 font-bold font-title text-lg focus:border-brand-blue outline-none transition-all"/>
+        <div class="flex gap-3 w-full mt-1">
+          <button onclick="hideParentGate()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-title font-bold py-3 rounded-xl transition-all">Retour</button>
+          <button onclick="verifyParentGate()" class="w-1/2 bg-brand-blue hover:bg-brand-blue-dark text-white font-title font-bold py-3 rounded-xl transition-all shadow-md">Valider</button>
+        </div>
+        <p id="parent-gate-error" class="hidden text-xs font-bold text-brand-pink mt-1">Oups ! Ce n'est pas correct.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Shake effect animation CSS helper -->
   <style>
