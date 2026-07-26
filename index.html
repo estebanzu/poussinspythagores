@@ -228,15 +228,18 @@
           </div>
           <div>
             <h3 class="font-bold text-lg font-title text-slate-800">Mode de Jeu</h3>
-            <p class="text-xs text-slate-500 font-medium">Joue seul pour collectionner les badges ou défie un ami en face-à-face !</p>
+            <p class="text-xs text-slate-500 font-medium">Joue seul, défie un ami en face-à-face, ou pars en Quête Aventure avec Pytha !</p>
           </div>
         </div>
-        <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner">
-          <button id="btn-mode-solo" onclick="setGameMode('solo')" class="px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple">
+        <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner flex-wrap justify-center gap-1">
+          <button id="btn-mode-solo" onclick="setGameMode('solo')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple">
             👤 Solo
           </button>
-          <button id="btn-mode-multi" onclick="setGameMode('multi')" class="px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
-            👥 Multijoueur
+          <button id="btn-mode-multi" onclick="setGameMode('multi')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
+            👥 Défis
+          </button>
+          <button id="btn-mode-quest" onclick="setGameMode('quest')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
+            ✨ Quêtes
           </button>
         </div>
       </div>
@@ -342,6 +345,21 @@
     <!-- ==================== SCREEN: GAME ==================== -->
     <div id="screen-game" class="hidden animate-pop-in w-full max-w-4xl mx-auto">
       
+      <!-- Quest Progress Banner -->
+      <div id="quest-progress-banner" class="hidden w-full bg-gradient-to-r from-brand-pink/10 to-brand-purple/10 rounded-2xl p-3 border-2 border-brand-pink/20 flex items-center justify-between gap-4 mb-4 shadow-sm">
+        <div class="flex items-center gap-3">
+          <span id="quest-banner-emoji" class="text-2xl animate-bounce-slow">🪺</span>
+          <div>
+            <h4 id="quest-banner-title" class="font-bold text-sm font-title text-brand-pink">Quête de Pytha</h4>
+            <p id="quest-banner-subtitle" class="text-[10px] text-slate-500 font-medium">Récolte 5 brindilles pour finir</p>
+          </div>
+        </div>
+        <div class="bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-2 text-slate-700 font-bold font-title text-xs">
+          <span>Matériaux :</span>
+          <span id="quest-material-tracker" class="text-brand-pink">0 / 5 🪵</span>
+        </div>
+      </div>
+
       <!-- Multiplayer Turn Info Banner -->
       <div id="multiplayer-turn-banner" class="hidden w-full bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 rounded-2xl p-3 border-2 border-brand-purple/20 flex items-center justify-between gap-4 mb-4 shadow-sm">
         <div class="flex items-center gap-3">
@@ -500,6 +518,79 @@
           <span>Rejouer le match</span>
         </button>
       </div>
+    </div>
+
+    <!-- ==================== SCREEN: QUESTS SELECTION ==================== -->
+    <div id="screen-quests" class="hidden animate-pop-in w-full max-w-4xl mx-auto flex flex-col gap-6">
+      <div class="flex items-center gap-4 mb-2">
+        <button onclick="goHome()" class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-2 px-4 rounded-2xl shadow border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          <span>Retour</span>
+        </button>
+        <h2 class="text-2xl sm:text-3xl font-bold font-title text-slate-800">✨ Les Quêtes de Pytha</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <!-- Quest 1 -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 bg-brand-purple-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow">🪺</div>
+            <h3 class="text-2xl font-bold text-brand-purple mb-2">Le Nid de Pytha</h3>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Aide Pytha à ramasser 5 brindilles pour construire son nid en résolvant des énigmes de nombres et de calculs !</p>
+          </div>
+          <button onclick="launchQuest(1)" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-purple/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+            Commencer 🚀
+          </button>
+        </div>
+
+        <!-- Quest 2 -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-brand-green shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 bg-brand-green-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow">🔑</div>
+            <h3 class="text-2xl font-bold text-brand-green mb-2">Le Temple Perdu</h3>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Trouve 5 clés en résolvant des défis de formes géométriques et d'orientation pour ouvrir la porte du temple !</p>
+          </div>
+          <button onclick="launchQuest(2)" class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+            Commencer 🚀
+          </button>
+        </div>
+
+        <!-- Quest 3 -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-brand-orange shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 bg-brand-orange-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow">⏳</div>
+            <h3 class="text-2xl font-bold text-brand-orange mb-2">Le Trésor du Temps</h3>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Récolte 5 engrenages magiques en lisant l'heure et en mesurant des objets pour réparer la montre du temps !</p>
+          </div>
+          <button onclick="launchQuest(3)" class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-orange/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+            Commencer 🚀
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: QUEST VICTORY ==================== -->
+    <div id="screen-quest-victory" class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-yellow shadow-2xl p-8 text-center flex flex-col items-center">
+      <div id="quest-victory-emoji" class="w-44 h-44 mb-6 animate-bounce-slow flex items-center justify-center text-8xl bg-brand-yellow-light rounded-full border-4 border-brand-yellow shadow-inner">
+        🏆✨
+      </div>
+
+      <h2 id="quest-victory-title" class="text-3xl md:text-4xl font-bold font-title text-brand-purple mb-3">Quête Réussie ! 🎉</h2>
+      <p id="quest-victory-desc" class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
+        Félicitations ! Tu as récolté tous les matériaux et complété la quête avec succès !
+      </p>
+
+      <div class="bg-brand-purple-light/50 border-2 border-brand-purple/20 rounded-2xl p-4 w-full mb-8 flex flex-col items-center shadow-sm">
+        <span class="text-xs text-brand-purple font-bold uppercase tracking-wider font-title mb-1">Nouveau Badge de Quête</span>
+        <span id="quest-victory-badge-name" class="text-xl font-black font-title text-brand-purple">Aventurier de Pytha</span>
+      </div>
+
+      <button onclick="goHome()" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+        <span>Retour à l'accueil</span>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
     </div>
 
   </main>
@@ -866,6 +957,11 @@
       if (setup) setup.classList.add('hidden');
       const victory = document.getElementById('screen-multiplayer-victory');
       if (victory) victory.classList.add('hidden');
+      
+      const quests = document.getElementById('screen-quests');
+      if (quests) quests.classList.add('hidden');
+      const qvictory = document.getElementById('screen-quest-victory');
+      if (qvictory) qvictory.classList.add('hidden');
     }
 
     function goHome() {
@@ -874,6 +970,23 @@
       document.getElementById('screen-home').classList.remove('hidden');
       state.currentCategory = null;
       state.currentGame = null;
+      
+      // Reset mode variables and banners
+      questState.isActive = false;
+      multiplayerState.isActive = false;
+      document.getElementById('quest-progress-banner').classList.add('hidden');
+      document.getElementById('multiplayer-turn-banner').classList.add('hidden');
+      
+      // Update home screen selector buttons state
+      const btnSolo = document.getElementById('btn-mode-solo');
+      const btnMulti = document.getElementById('btn-mode-multi');
+      const btnQuest = document.getElementById('btn-mode-quest');
+      if (btnSolo && btnMulti && btnQuest) {
+        btnSolo.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
+        btnMulti.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+        btnQuest.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+      }
+      
       updateFooterMessage('idle');
     }
 
@@ -934,6 +1047,7 @@
       document.getElementById('game-title').innerText = gameName;
       
       document.getElementById('multiplayer-turn-banner').classList.add('hidden');
+      document.getElementById('quest-progress-banner').classList.add('hidden');
       document.getElementById('difficulty-badge').classList.remove('hidden');
       document.getElementById('star-dots-container').parentNode.classList.remove('hidden');
       
@@ -963,7 +1077,10 @@
     }
 
     function backToSubmenu() {
-      if (state.currentCategory) {
+      if (questState.isActive) {
+        hideAllScreens();
+        document.getElementById('screen-quests').classList.remove('hidden');
+      } else if (state.currentCategory) {
         selectCategory(state.currentCategory);
       } else {
         goHome();
@@ -1099,6 +1216,9 @@
         case 'b_vocabulaire_spatial':
           genVocabulaireSpatial(visualArea, questionText, optionsContainer);
           break;
+        case 'b_formes_tri':
+          genFormesTri(visualArea, questionText, optionsContainer);
+          break;
 
         // Bloc C: Grandeurs et Mesures
         case 'c_monnaie':
@@ -1109,6 +1229,14 @@
           break;
         case 'c_mesures':
           genMesures(visualArea, questionText, optionsContainer);
+          break;
+
+        // Interactive games (Phase 5)
+        case 'a_fractions_interact':
+          genFractionsInteract(visualArea, questionText, optionsContainer);
+          break;
+        case 'a_blocs_dizaines':
+          genBlocsDizaines(visualArea, questionText, optionsContainer);
           break;
       }
 
@@ -1151,6 +1279,10 @@
             multiplayerState.player2.stars++;
           }
           updateMultiplayerScoreboardUI();
+        } else if (questState.isActive) {
+          questState.progress++;
+          questState.consecutiveCorrect++;
+          updateQuestObjectiveUI();
         } else {
           // Stars increase
           state.sessionStars++;
@@ -1165,7 +1297,7 @@
         state.consecutiveWrong = 0;
 
         // Difficulty upgrades
-        if (!multiplayerState.isActive) {
+        if (!multiplayerState.isActive && !questState.isActive) {
           if (state.difficulty === 'easy' && state.consecutiveCorrect >= 3) {
             state.difficulty = 'normal';
             state.consecutiveCorrect = 0;
@@ -1203,6 +1335,16 @@
             }
             nextBtn.classList.remove('hidden');
           }
+        } else if (questState.isActive) {
+          const nextBtn = document.getElementById('btn-next-exercise');
+          if (nextBtn) {
+            if (questState.progress >= 5) {
+              nextBtn.querySelector('span').innerText = "Terminer la quête ! 🏆";
+            } else {
+              nextBtn.querySelector('span').innerText = "Continuer l'aventure 🚀";
+            }
+            nextBtn.classList.remove('hidden');
+          }
         } else {
           if (state.sessionStars >= 5) {
             setTimeout(() => {
@@ -1229,6 +1371,9 @@
             }
             nextBtn.classList.remove('hidden');
           }
+        } else if (questState.isActive) {
+          state.isAnswerSelected = false;
+          questState.consecutiveCorrect = 0;
         } else {
           // Reset state.isAnswerSelected to let them try again!
           state.isAnswerSelected = false;
@@ -2298,17 +2443,189 @@
       playAudioTone('click');
       const btnSolo = document.getElementById('btn-mode-solo');
       const btnMulti = document.getElementById('btn-mode-multi');
-      if (!btnSolo || !btnMulti) return;
+      const btnQuest = document.getElementById('btn-mode-quest');
+      if (!btnSolo || !btnMulti || !btnQuest) return;
+
+      // Reset active flags
+      multiplayerState.isActive = false;
+      questState.isActive = false;
+
+      // Reset classes
+      btnSolo.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+      btnMulti.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+      btnQuest.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
 
       if (mode === 'multi') {
         multiplayerState.isActive = true;
-        btnSolo.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
-        btnMulti.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
+        btnMulti.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
+      } else if (mode === 'quest') {
+        questState.isActive = true;
+        btnQuest.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
+        // Transition directly to the Quests Selection Screen
+        setTimeout(() => {
+          hideAllScreens();
+          document.getElementById('screen-quests').classList.remove('hidden');
+        }, 200);
       } else {
-        multiplayerState.isActive = false;
-        btnSolo.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
-        btnMulti.className = "px-5 py-2.5 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+        btnSolo.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
       }
+    }
+
+    function launchQuest(questId) {
+      playAudioTone('click');
+      questState.isActive = true;
+      questState.currentQuest = questId;
+      questState.progress = 0;
+      questState.currentSequenceIndex = 0;
+      questState.consecutiveCorrect = 0;
+      
+      if (questId === 1) {
+        questState.materialEmoji = "🪵";
+        questState.materialName = "Brindilles";
+        questState.gameSequence = [
+          'a_complements_10',
+          'a_nombres_100',
+          'a_blocs_dizaines',
+          'a_additions',
+          'a_fractions_interact'
+        ];
+      } else if (questId === 2) {
+        questState.materialEmoji = "🔑";
+        questState.materialName = "Clés";
+        questState.gameSequence = [
+          'b_vocabulaire_spatial',
+          'b_figures',
+          'b_formes_tri',
+          'b_vocabulaire_spatial',
+          'b_formes_tri'
+        ];
+      } else {
+        questState.materialEmoji = "⚙️";
+        questState.materialName = "Engrenages";
+        questState.gameSequence = [
+          'c_heure',
+          'c_mesures',
+          'c_monnaie',
+          'c_mesures',
+          'c_monnaie'
+        ];
+      }
+
+      state.currentGame = questState.gameSequence[0];
+      updateQuestObjectiveUI();
+      showQuestStoryIntro();
+    }
+
+    function showQuestStoryIntro() {
+      const modal = document.getElementById('modal-quest-story');
+      const avatar = document.getElementById('quest-story-avatar');
+      const title = document.getElementById('quest-story-title');
+      const text = document.getElementById('quest-story-text');
+      if (!modal) return;
+
+      if (questState.currentQuest === 1) {
+        avatar.innerText = "🦉🪺";
+        title.innerText = "Le Nid de Pytha";
+        text.innerHTML = "<b>Pytha l'Hibou</b> : <br/>\"Salut jeune mathématicien ! L'hiver approche et je dois réparer mon nid douillet. Peux-tu m'aider à ramasser <b>5 brindilles</b> en résolvant mes énigmes de nombres ? C'est parti !\"";
+      } else if (questState.currentQuest === 2) {
+        avatar.innerText = "🦉🔑";
+        title.innerText = "Le Temple Perdu";
+        text.innerHTML = "<b>Pytha l'Hibou</b> : <br/>\"Regarde ces ruines mystérieuses ! La porte du temple est fermée. Trouve les <b>5 clés de pierre</b> cachées derrière les formes géométriques pour l'ouvrir ! En route !\"";
+      } else {
+        avatar.innerText = "🦉⚙️";
+        title.innerText = "Le Trésor du Temps";
+        text.innerHTML = "<b>Pytha l'Hibou</b> : <br/>\"Oh non ! L'horloge magique s'est arrêtée, le temps est figé ! Récolte <b>5 engrenages dorés</b> en lisant l'heure et en mesurant des objets pour la relancer ! Vite !\"";
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeQuestStoryModal() {
+      playAudioTone('click');
+      document.getElementById('modal-quest-story').classList.add('hidden');
+      
+      state.sessionStars = 0;
+      state.consecutiveCorrect = 0;
+      state.consecutiveWrong = 0;
+      state.difficulty = 'normal';
+      
+      let gameName = getGameName(state.currentGame);
+      document.getElementById('game-title').innerText = `Quête : ${gameName}`;
+      
+      document.getElementById('multiplayer-turn-banner').classList.add('hidden');
+      document.getElementById('difficulty-badge').classList.remove('hidden');
+      document.getElementById('star-dots-container').parentNode.classList.remove('hidden');
+      
+      updateSessionStarsUI();
+      updateDifficultyUI();
+
+      hideAllScreens();
+      document.getElementById('screen-game').classList.remove('hidden');
+      generateExercise();
+      updateFooterMessage('game_start');
+    }
+
+    function updateQuestObjectiveUI() {
+      const banner = document.getElementById('quest-progress-banner');
+      const tracker = document.getElementById('quest-material-tracker');
+      if (!banner || !tracker) return;
+
+      banner.classList.remove('hidden');
+      document.getElementById('multiplayer-turn-banner').classList.add('hidden');
+      
+      const emoji = questState.materialEmoji;
+      const count = questState.progress;
+      tracker.innerText = `${count} / 5 ${emoji}`;
+
+      const bannerTitle = document.getElementById('quest-banner-title');
+      const bannerSubtitle = document.getElementById('quest-banner-subtitle');
+      const names = ["", "Nid de Pytha 🪺", "Temple Perdu 🔑", "Trésor du Temps ⏳"];
+      bannerTitle.innerText = names[questState.currentQuest];
+      bannerSubtitle.innerText = `Récolte 5 ${questState.materialName} pour réussir`;
+    }
+
+    function nextQuestStep() {
+      if (questState.consecutiveCorrect >= 2) {
+        // Skip ahead dynamically based on adaptive path routing
+        questState.currentSequenceIndex = Math.min(questState.gameSequence.length - 1, questState.currentSequenceIndex + 2);
+        questState.consecutiveCorrect = 0;
+        showToast(true, "Super rapide ! Saut de niveau ! 🚀");
+      } else {
+        questState.currentSequenceIndex = (questState.currentSequenceIndex + 1) % questState.gameSequence.length;
+      }
+      
+      state.currentGame = questState.gameSequence[questState.currentSequenceIndex];
+      let gameName = getGameName(state.currentGame);
+      document.getElementById('game-title').innerText = `Quête : ${gameName}`;
+      
+      generateExercise();
+    }
+
+    function triggerQuestVictory() {
+      playAudioTone('trophy');
+      const badgeNames = ["", "Protecteur du Nid 🪺", "Clé du Savoir 🔑", "Maître du Temps ⏳"];
+      const badgeName = badgeNames[questState.currentQuest];
+      
+      document.getElementById('quest-victory-badge-name').innerText = badgeName;
+      
+      if (!state.unlockedBadges.includes(badgeName)) {
+        state.unlockedBadges.push(badgeName);
+        localStorage.setItem('mathscp_unlocked_badges', JSON.stringify(state.unlockedBadges));
+        updateBadgeCountUI();
+      }
+
+      state.stars += 10;
+      localStorage.setItem('mathscp_stars', state.stars);
+      updateStarsUI();
+
+      hideAllScreens();
+      document.getElementById('screen-quest-victory').classList.remove('hidden');
+
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
     }
 
     function startMultiplayerMatch() {
@@ -2328,6 +2645,7 @@
 
       document.getElementById('difficulty-badge').classList.add('hidden');
       document.getElementById('star-dots-container').parentNode.classList.add('hidden');
+      document.getElementById('quest-progress-banner').classList.add('hidden');
 
       document.getElementById('multiplayer-turn-banner').classList.remove('hidden');
       updateMultiplayerScoreboardUI();
@@ -2351,6 +2669,12 @@
           triggerMultiplayerMatchOver();
         } else {
           nextMultiplayerTurn();
+        }
+      } else if (questState.isActive) {
+        if (questState.progress >= 5) {
+          triggerQuestVictory();
+        } else {
+          nextQuestStep();
         }
       } else {
         generateExercise();
@@ -2421,6 +2745,10 @@
     }
 
     function getGameName(gameId) {
+      if (gameId === 'a_fractions_interact') return "Colorier les Fractions";
+      if (gameId === 'a_blocs_dizaines') return "Construire les Nombres";
+      if (gameId === 'b_formes_tri') return "Trier les Formes";
+      
       for (const cat in CATEGORIES) {
         const found = CATEGORIES[cat].games.find(g => g.id === gameId);
         if (found) return found.name;
@@ -3056,6 +3384,250 @@
         inputEl.focus();
       }
     }
+
+    // =========================================================================
+    // INTERACTIVE MANIPULATIVES (PHASE 5)
+    // =========================================================================
+
+    // 1. Interactive Fraction Coloring Game
+    let userFractionSelected = [];
+    let targetFractionNumerator = 0;
+    let targetFractionDenominator = 0;
+
+    function genFractionsInteract(visualArea, questionText, optionsContainer) {
+      targetFractionDenominator = [2, 3, 4][getRandomInt(0, 2)];
+      targetFractionNumerator = getRandomInt(1, targetFractionDenominator - 1);
+      state.currentAnswer = `${targetFractionNumerator}/${targetFractionDenominator}`;
+      userFractionSelected = Array(targetFractionDenominator).fill(false);
+
+      questionText.innerText = `Colorie la fraction ${state.currentAnswer} de cette barre :`;
+      renderFractionsInteractSVG(visualArea);
+
+      optionsContainer.innerHTML = `
+        <button onclick="validateInteractiveFraction()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">
+          Valider ma réponse
+        </button>
+      `;
+    }
+
+    function renderFractionsInteractSVG(visualArea) {
+      let svg = `<svg class="w-full h-full max-h-[200px] md:max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+      const width = 240;
+      const height = 60;
+      const startX = 40;
+      const startY = 70;
+      const blockW = width / targetFractionDenominator;
+
+      for (let i = 0; i < targetFractionDenominator; i++) {
+        const bx = startX + i * blockW;
+        const isColored = userFractionSelected[i];
+        const fill = isColored ? '#6C5DD3' : '#F8FAFC';
+        const stroke = '#5646B8';
+
+        svg += `<rect x="${bx}" y="${startY}" width="${blockW}" height="${height}" fill="${fill}" stroke="${stroke}" stroke-width="4" cursor="pointer" onclick="toggleFractionBlock(${i})"/>`;
+        svg += `<rect x="${bx + 4}" y="${startY + 4}" width="${blockW - 8}" height="${height - 8}" fill="none" stroke="${isColored ? '#8A7CE0' : '#E2E8F0'}" stroke-width="2" rx="4" pointer-events="none"/>`;
+      }
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+    }
+
+    function toggleFractionBlock(index) {
+      playAudioTone('click');
+      userFractionSelected[index] = !userFractionSelected[index];
+      renderFractionsInteractSVG(document.getElementById('game-visual-area'));
+    }
+
+    function validateInteractiveFraction() {
+      const coloredCount = userFractionSelected.filter(Boolean).length;
+      const userAns = `${coloredCount}/${targetFractionDenominator}`;
+      const valBtn = document.querySelector('#game-options-container button');
+      checkAnswer(userAns, valBtn);
+    }
+
+    // 2. Interactive Base-Ten Blocks Game
+    let userTens = 0;
+    let userUnits = 0;
+    let targetNumber = 0;
+
+    function genBlocsDizaines(visualArea, questionText, optionsContainer) {
+      targetNumber = getRandomInt(11, 49);
+      state.currentAnswer = targetNumber;
+      userTens = 0;
+      userUnits = 0;
+
+      questionText.innerText = `Représente le nombre ${targetNumber} en plaçant des dizaines (10) et des unités (1) :`;
+      renderBlocsDizainesSVG(visualArea);
+
+      optionsContainer.innerHTML = `
+        <div class="grid grid-cols-2 gap-3 mb-3 font-title">
+          <button onclick="addBaseTen(10)" class="py-3 bg-brand-purple-light hover:bg-brand-purple/20 text-brand-purple font-bold border-2 border-brand-purple/30 rounded-2xl transition-all active:scale-95 flex flex-col items-center">
+            <span class="text-2xl">⚡</span>
+            <span class="text-xs">+10 (Dizaine)</span>
+          </button>
+          <button onclick="addBaseTen(1)" class="py-3 bg-brand-blue-light hover:bg-brand-blue/20 text-brand-blue font-bold border-2 border-brand-blue/30 rounded-2xl transition-all active:scale-95 flex flex-col items-center">
+            <span class="text-2xl">🧊</span>
+            <span class="text-xs">+1 (Unité)</span>
+          </button>
+        </div>
+        <div class="flex gap-3 font-title">
+          <button onclick="resetBaseTen()" class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-4 rounded-2xl transition-all active:scale-95">
+            Effacer
+          </button>
+          <button onclick="validateBaseTen()" class="w-2/3 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-md">
+            Valider
+          </button>
+        </div>
+      `;
+    }
+
+    function renderBlocsDizainesSVG(visualArea) {
+      let svg = `<svg class="w-full h-full max-h-[200px] md:max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+
+      svg += `<text x="60" y="30" font-family="Fredoka" font-size="14" font-weight="bold" fill="#6C5DD3" text-anchor="middle">Dizaines : ${userTens}</text>`;
+      svg += `<text x="220" y="30" font-family="Fredoka" font-size="14" font-weight="bold" fill="#4D96FF" text-anchor="middle">Unités : ${userUnits}</text>`;
+      svg += `<line x1="160" y1="10" x2="160" y2="190" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4 4"/>`;
+
+      const tenStartX = 20;
+      for (let t = 0; t < userTens; t++) {
+        const sx = tenStartX + t * 24;
+        for (let b = 0; b < 10; b++) {
+          const sy = 160 - b * 13;
+          svg += `<rect x="${sx}" y="${sy}" width="16" height="11" fill="#CBBFEF" stroke="#6C5DD3" stroke-width="1.5" rx="1"/>`;
+        }
+      }
+
+      const unitStartX = 180;
+      for (let u = 0; u < userUnits; u++) {
+        const col = u % 4;
+        const row = Math.floor(u / 4);
+        const ux = unitStartX + col * 28;
+        const uy = 150 - row * 28;
+        svg += `<rect x="${ux}" y="${uy}" width="20" height="20" fill="#DDEBFF" stroke="#4D96FF" stroke-width="2" rx="2"/>`;
+        svg += `<rect x="${ux + 3}" y="${uy + 3}" width="6" height="6" fill="white" opacity="0.6"/>`;
+      }
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+    }
+
+    function addBaseTen(value) {
+      playAudioTone('click');
+      if (value === 10) {
+        if (userTens < 5) userTens++;
+      } else {
+        if (userUnits < 15) userUnits++;
+      }
+      renderBlocsDizainesSVG(document.getElementById('game-visual-area'));
+    }
+
+    function resetBaseTen() {
+      playAudioTone('click');
+      userTens = 0;
+      userUnits = 0;
+      renderBlocsDizainesSVG(document.getElementById('game-visual-area'));
+    }
+
+    function validateBaseTen() {
+      const userVal = userTens * 10 + userUnits;
+      const valBtn = document.querySelector('#game-options-container button:last-child');
+      checkAnswer(userVal, valBtn);
+    }
+
+    // 3. Interactive Shape Picker Game
+    let targetShapeType = "";
+    let shapesArray = [];
+
+    function genFormesTri(visualArea, questionText, optionsContainer) {
+      const types = ["triangle", "rectangle", "cercle"];
+      targetShapeType = types[getRandomInt(0, 2)];
+      
+      const shapeNamesFr = {
+        triangle: "triangles 🔺",
+        rectangle: "rectangles 🟦",
+        cercle: "cercles 🟡"
+      };
+      
+      questionText.innerText = `Trouve et clique sur tous les ${shapeNamesFr[targetShapeType]} dans le dessin :`;
+      
+      shapesArray = [];
+      for (let i = 0; i < 6; i++) {
+        let type = types[getRandomInt(0, 2)];
+        if (i < 2) type = targetShapeType;
+        
+        shapesArray.push({
+          id: i,
+          type: type,
+          selected: false,
+          x: 0,
+          y: 0
+        });
+      }
+
+      shapesArray.sort(() => Math.random() - 0.5);
+      shapesArray.forEach((shape, idx) => {
+        shape.x = 55 + (idx % 3) * 95;
+        shape.y = 55 + Math.floor(idx / 3) * 75;
+      });
+
+      state.currentAnswer = "correct";
+      renderFormesTriSVG(visualArea);
+
+      optionsContainer.innerHTML = `
+        <button onclick="validateFormesTri()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">
+          Valider ma sélection
+        </button>
+      `;
+    }
+
+    function renderFormesTriSVG(visualArea) {
+      let svg = `<svg class="w-full h-full max-h-[200px] md:max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+
+      shapesArray.forEach(shape => {
+        const fill = shape.selected ? '#FFEFEF' : '#F8FAFC';
+        const stroke = shape.selected ? '#FF6B8B' : '#64748B';
+        const strokeWidth = shape.selected ? 4 : 2;
+
+        svg += `<g cursor="pointer" onclick="toggleShapeSelected(${shape.id})">`;
+
+        if (shape.type === 'triangle') {
+          svg += `<polygon points="${shape.x + 30},${shape.y} ${shape.x},${shape.y + 50} ${shape.x + 60},${shape.y + 50}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}"/>`;
+        } else if (shape.type === 'rectangle') {
+          svg += `<rect x="${shape.x}" y="${shape.y + 5}" width="60" height="40" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" rx="4"/>`;
+        } else if (shape.type === 'cercle') {
+          svg += `<circle cx="${shape.x + 30}" cy="${shape.y + 25}" r="22" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}"/>`;
+        }
+
+        svg += `</g>`;
+      });
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+    }
+
+    // Export toggle helper to window scope for onclick
+    window.toggleFractionBlock = toggleFractionBlock;
+    window.toggleShapeSelected = toggleShapeSelected;
+
+    function toggleShapeSelected(id) {
+      playAudioTone('click');
+      const shape = shapesArray.find(s => s.id === id);
+      if (shape) shape.selected = !shape.selected;
+      renderFormesTriSVG(document.getElementById('game-visual-area'));
+    }
+
+    function validateFormesTri() {
+      const allCorrectSelected = shapesArray.every(shape => {
+        if (shape.type === targetShapeType) {
+          return shape.selected;
+        } else {
+          return !shape.selected;
+        }
+      });
+
+      const userAns = allCorrectSelected ? "correct" : "incorrect";
+      const valBtn = document.querySelector('#game-options-container button');
+      checkAnswer(userAns, valBtn);
+    }
   </script>
 
   <!-- ==================== SCREEN: PARENTAL CONTROL LOCKOUT ==================== -->
@@ -3091,6 +3663,22 @@
         </div>
         <p id="parent-gate-error" class="hidden text-xs font-bold text-brand-pink mt-1">Oups ! Ce n'est pas correct.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: QUEST STORY DIALOG ==================== -->
+  <div id="modal-quest-story" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-purple shadow-2xl text-center flex flex-col items-center animate-pop-in">
+      <div id="quest-story-avatar" class="w-32 h-32 mb-6 flex items-center justify-center text-6xl bg-brand-purple-light rounded-full border-4 border-brand-purple animate-bounce-slow">
+        🦉
+      </div>
+      <h2 id="quest-story-title" class="text-2xl font-bold font-title text-slate-800 mb-3">Nouvelle Quête !</h2>
+      <p id="quest-story-text" class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
+        Histoire racontée ici...
+      </p>
+      <button onclick="closeQuestStoryModal()" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all font-bold">
+        Compris ! 👍
+      </button>
     </div>
   </div>
 
