@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Super Maths CP 🌟</title>
+
+  <!-- PWA & iOS Safari Standard Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Maths CP">
+  
+  <!-- Embedded Manifest for PWA Support in a Single File -->
+  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlN1cGVyIE1hdGhzIENQIC0gTWF0aMOpbWF0aXF1ZXMgcG91ciBFbmZhbnRzIiwKICAic2hvcnRfbmFtZSI6ICJNYXRocyBDUCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjRkZGOERFIiwKICAidGhlbWVfY29sb3IiOiAiIzZDNUQtMyIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDt1dGY4LDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMicgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInPjxyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTI4JyBmaWxsPScjNkM1REQzJy8+PHRleHQgeD0nNTAlJyB5PSc1NSUnIGZvbnQtZmFtaWx5PSdzYW5zLXNlcmlmJyBmb250LXNpemU9JzE2MCcgZmlsbD0nI0ZGRkZGRicgZm9udC13ZWlnaHQ9J2JvbGQnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGRvbWluYW50LWJhc2VsaW5lPSdtaWRkbGUnPs6bPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            nunito: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              pink: {
+                light: '#FFF0F3',
+                DEFAULT: '#FF6B8B',
+                dark: '#E05270',
+              },
+              orange: {
+                light: '#FFF5F0',
+                DEFAULT: '#FF8E53',
+                dark: '#E0753A',
+              },
+              yellow: {
+                light: '#FFFDF0',
+                DEFAULT: '#FFD93D',
+                dark: '#E0BE2F',
+              },
+              green: {
+                light: '#F0FDF4',
+                DEFAULT: '#4ECA64',
+                dark: '#3AB24F',
+              },
+              blue: {
+                light: '#EFF6FF',
+                DEFAULT: '#4D96FF',
+                dark: '#357AE8',
+              },
+              purple: {
+                light: '#F5F3FF',
+                DEFAULT: '#6C5DD3',
+                dark: '#5646B8',
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    h1, h2, h3, h4, .font-title {
+      font-family: 'Fredoka', sans-serif;
+    }
+    
+    /* Seyès Notebook Grid Background for Vertical Additions */
+    .seyes-grid {
+      background-color: #f8fafc;
+      background-image: 
+        linear-gradient(rgba(173, 216, 230, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(173, 216, 230, 0.5) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border: 2px solid #94a3b8;
+    }
+    .seyes-red-line {
+      border-left: 2px solid rgba(239, 68, 68, 0.4);
+    }
+
+    /* Floating Bubble Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+    @keyframes float-slow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-24px) rotate(-4deg); }
+    }
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes pop-in {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    .animate-float-slow {
+      animation: float-slow 7s ease-in-out infinite;
+    }
+    .animate-bounce-slow {
+      animation: bounce-slow 3s ease-in-out infinite;
+    }
+    .animate-pop-in {
+      animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-brand-blue-light via-white to-brand-purple-light min-h-screen flex flex-col overflow-x-hidden text-slate-800">
+
+  <!-- Floating Background Elements (Pure Aesthetics for Kids) -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute top-10 left-10 w-24 h-24 bg-brand-pink opacity-10 rounded-full animate-float"></div>
+    <div class="absolute top-1/4 right-8 w-32 h-32 bg-brand-blue opacity-10 rounded-full animate-float-slow"></div>
+    <div class="absolute bottom-16 left-12 w-28 h-28 bg-brand-yellow opacity-10 rounded-full animate-float-slow"></div>
+    <div class="absolute bottom-1/3 right-1/4 w-20 h-20 bg-brand-green opacity-10 rounded-full animate-float"></div>
+    <!-- Tiny Math symbols -->
+    <div class="absolute top-20 right-1/3 text-brand-purple opacity-10 text-5xl font-title animate-bounce-slow font-bold">+</div>
+    <div class="absolute bottom-24 left-1/3 text-brand-pink opacity-10 text-5xl font-title animate-bounce-slow font-bold">-</div>
+    <div class="absolute top-1/2 left-8 text-brand-orange opacity-10 text-5xl font-title animate-float font-bold">=</div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="relative z-10 w-full px-6 py-4 flex justify-between items-center bg-white/70 backdrop-blur-md border-b-4 border-brand-purple/20">
+    <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+      <div class="bg-gradient-to-tr from-brand-purple to-brand-blue w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
+        <span class="text-white text-2xl font-title font-bold">∑</span>
+      </div>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent drop-shadow-sm font-title">
+          Super Maths CP
+        </h1>
+        <p class="text-xs text-slate-500 font-medium tracking-wide">6 - 7 ANS • ÉCOLE ÉLÉMENTAIRE</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Badges Gallery Button -->
+      <button onclick="openBadgesModal()" class="flex items-center gap-2 bg-gradient-to-r from-brand-pink to-brand-purple text-white font-bold px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all">
+        <span class="text-lg">🏅</span>
+        <span id="badge-count-text" class="hidden sm:inline font-title text-sm">Badges (0/7)</span>
+      </button>
+
+      <!-- Global Stars Counter -->
+      <div class="flex items-center gap-2 bg-gradient-to-r from-brand-yellow to-brand-orange text-slate-900 font-bold px-4 py-2 rounded-full shadow-md border-2 border-white animate-bounce-slow">
+        <svg class="w-6 h-6 text-amber-900 fill-amber-400" viewBox="0 0 24 24">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+        <span id="global-stars-text" class="text-lg md:text-xl font-title">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="relative z-10 flex-grow w-full max-w-6xl mx-auto px-4 py-6 flex flex-col justify-center">
+    
+    <!-- ==================== SCREEN: HOME ==================== -->
+    <div id="screen-home" class="animate-pop-in grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      
+      <!-- Category A: Nombres et Calculs -->
+      <div class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
+        <div>
+          <div class="w-16 h-16 bg-brand-purple-light rounded-2xl flex items-center justify-center mb-4">
+            <svg class="w-10 h-10 text-brand-purple" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-brand-purple mb-2">Nombres et Calculs</h2>
+          <p class="text-slate-600 text-sm mb-6 leading-relaxed">Apprendre à compter jusqu'à 100, faire des additions, des soustractions et des doubles !</p>
+        </div>
+        <button onclick="selectCategory('A')" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-purple/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <span>S'entraîner</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Category B: Espace et Géométrie -->
+      <div class="bg-white rounded-3xl p-6 border-4 border-brand-green shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
+        <div>
+          <div class="w-16 h-16 bg-brand-green-light rounded-2xl flex items-center justify-center mb-4">
+            <svg class="w-10 h-10 text-brand-green" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-brand-green mb-2">Espace et Géométrie</h2>
+          <p class="text-slate-600 text-sm mb-6 leading-relaxed">Découvrir les formes géométriques et apprendre à se repérer dans l'espace.</p>
+        </div>
+        <button onclick="selectCategory('B')" class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <span>S'entraîner</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Category C: Grandeurs et Mesures -->
+      <div class="bg-white rounded-3xl p-6 border-4 border-brand-orange shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
+        <div>
+          <div class="w-16 h-16 bg-brand-orange-light rounded-2xl flex items-center justify-center mb-4">
+            <svg class="w-10 h-10 text-brand-orange" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-brand-orange mb-2">Grandeurs et Mesures</h2>
+          <p class="text-slate-600 text-sm mb-6 leading-relaxed">Jouer avec des pièces et billets en euros et apprendre à lire l'heure.</p>
+        </div>
+        <button onclick="selectCategory('C')" class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-orange/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <span>S'entraîner</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ==================== SCREEN: SUBMENU ==================== -->
+    <div id="screen-submenu" class="hidden animate-pop-in w-full max-w-3xl mx-auto">
+      <div class="flex items-center gap-4 mb-6">
+        <button onclick="goHome()" class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-2 px-4 rounded-2xl shadow border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          <span>Retour</span>
+        </button>
+        <h2 id="submenu-title" class="text-3xl font-bold font-title text-slate-800">Catégorie</h2>
+      </div>
+
+      <!-- Grid of Subgames -->
+      <div id="submenu-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Subgame buttons will be injected dynamically -->
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: GAME ==================== -->
+    <div id="screen-game" class="hidden animate-pop-in w-full max-w-4xl mx-auto">
+      
+      <!-- Top Action Bar (Back / Progress) -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white/50 p-4 rounded-3xl border-2 border-slate-200/60">
+        <div class="flex items-center justify-between md:justify-start gap-4">
+          <button onclick="backToSubmenu()" class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-3 px-5 rounded-2xl shadow-md border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span class="text-sm md:text-base">Changer de jeu</span>
+          </button>
+          
+          <h3 id="game-title" class="text-xl font-bold font-title text-slate-700 truncate max-w-[200px] md:max-w-md">Jeu</h3>
+        </div>
+
+        <!-- Level Objective & Difficulty Indicator -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <!-- Difficulty Badge -->
+          <div id="difficulty-badge" class="px-4 py-2 rounded-full font-title text-xs font-bold shadow-sm border-2 transition-all flex items-center gap-1">
+            <!-- Dynamic text and color -->
+          </div>
+
+          <!-- Star Tracker (5 stars per level session) -->
+          <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl shadow-inner border border-slate-200/80">
+            <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Objectif :</span>
+            <div class="flex gap-1" id="star-dots-container">
+              <!-- 5 Star icons dynamically filled/empty -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Game Card -->
+      <div class="bg-white rounded-3xl border-4 border-brand-purple/40 shadow-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-stretch">
+        
+        <!-- Interactive Illustration Area (SVG container) -->
+        <div class="w-full md:w-3/5 min-h-[260px] md:min-h-[360px] bg-slate-50 border-4 border-dashed border-slate-200 rounded-2xl flex items-center justify-center overflow-hidden relative p-4">
+          <div id="game-visual-area" class="w-full h-full flex items-center justify-center">
+            <!-- SVG content dynamically loaded here -->
+          </div>
+        </div>
+
+        <!-- Question & Answers Area -->
+        <div class="w-full md:w-2/5 flex flex-col justify-between gap-6">
+          <div class="bg-brand-blue-light/60 border-2 border-brand-blue/30 rounded-2xl p-5 flex flex-col justify-center min-h-[100px] shadow-sm relative overflow-hidden">
+            <!-- Decorative character inside question box -->
+            <div class="absolute right-2 -bottom-2 text-brand-blue/20 text-7xl select-none font-bold">?</div>
+            <div class="flex items-center justify-between mb-1 relative z-10">
+              <p class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title">Question</p>
+              <button onclick="speakQuestion()" id="btn-speak-question" class="text-brand-blue hover:text-brand-blue-dark hover:scale-105 active:scale-95 transition-all w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center shadow-sm" title="Écouter la question">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/>
+                </svg>
+              </button>
+            </div>
+            <h4 id="game-question-text" class="text-lg md:text-xl font-bold text-slate-800 leading-snug relative z-10">
+              Combien y a-t-il d'étoiles ?
+            </h4>
+          </div>
+
+          <!-- Multiple choice buttons -->
+          <div class="flex flex-col gap-3" id="game-options-container">
+            <!-- 3 or 4 choices generated here -->
+          </div>
+
+          <!-- Action bar underneath choices -->
+          <div class="flex items-center gap-3">
+            <button id="btn-next-exercise" onclick="generateExercise()" class="hidden w-full bg-gradient-to-r from-brand-green to-brand-green-dark hover:from-brand-green-dark hover:to-brand-green text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow">
+              <span>Exercice suivant</span>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== SCREEN: VICTORY SESSION ==================== -->
+    <div id="screen-victory" class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-yellow shadow-2xl p-8 text-center flex flex-col items-center">
+      <!-- Big SVG Trophy -->
+      <div class="w-48 h-48 mb-6 animate-bounce-slow">
+        <svg class="w-full h-full" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 40H140V110C140 132.091 122.091 150 100 150C77.9086 150 60 132.091 60 110V40Z" fill="#FFD93D" stroke="#E0BE2F" stroke-width="6" stroke-linejoin="round"/>
+          <path d="M60 60H30C20 60 20 90 30 90H60" stroke="#FFD93D" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M140 60H170C180 60 180 90 170 90H140" stroke="#FFD93D" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M100 150V180" stroke="#E0BE2F" stroke-width="10" stroke-linecap="round"/>
+          <rect x="60" y="176" width="80" height="16" rx="8" fill="#FF8E53" stroke="#E0753A" stroke-width="4"/>
+          <!-- Star details on cup -->
+          <path d="M100 70L106 82.5L120 84.5L110 94.5L112.5 108L100 101L87.5 108L90 94.5L80 84.5L94 82.5L100 70Z" fill="white"/>
+        </svg>
+      </div>
+
+      <h2 class="text-3xl md:text-4xl font-bold font-title text-brand-orange mb-3">Tu as gagné ! 🏆</h2>
+      <p class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
+        Félicitations ! Tu as complété la série de 5 étoiles. Tu es un champion des mathématiques ! 🌟
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+        <button onclick="backToSubmenu()" class="bg-brand-blue hover:bg-brand-blue-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-blue/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          <span>Choisir un autre jeu</span>
+        </button>
+        <button onclick="restartCurrentGame()" class="bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H17"/></svg>
+          <span>Rejouer</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== MODAL: BADGES GALLERY ==================== -->
+  <div id="modal-badges" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button onclick="closeBadgesModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
+        ✕
+      </button>
+
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2">
+          <span>Mes Badges</span> 🏅
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Gagne des étoiles pour collectionner tous les badges jusqu'à 100 étoiles !</p>
+      </div>
+
+      <!-- Badges Grid -->
+      <div id="badges-grid-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center">
+        <!-- SVG badges will be injected here dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== POPUP: BADGE UNLOCK CELEBRATION ==================== -->
+  <div id="popup-badge-unlock" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-yellow shadow-2xl text-center flex flex-col items-center animate-pop-in">
+      
+      <!-- Big SVG for newly unlocked badge -->
+      <div id="unlocked-badge-svg-container" class="w-44 h-44 mb-6 animate-bounce-slow">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="text-xs text-brand-orange font-bold uppercase tracking-widest bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/20 mb-3 font-title">
+        Nouveau Badge Débloqué !
+      </div>
+      
+      <h2 id="unlocked-badge-title" class="text-3xl font-bold font-title text-slate-800 mb-2">
+        Nom du Badge
+      </h2>
+      
+      <p id="unlocked-badge-desc" class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
+        Félicitations ! Tu as franchi le palier de X étoiles !
+      </p>
+
+      <button onclick="closeUnlockPopup()" class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow">
+        <span>Génial ! Continuer</span>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER: MOTIVATIONAL MESSAGE BOARD ==================== -->
+  <footer class="relative z-10 w-full px-6 py-4 mt-auto bg-white/40 backdrop-blur-md border-t-2 border-slate-200/50 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+    <!-- Bubbly avatar helper -->
+    <div class="flex items-center gap-3">
+      <div id="footer-helper-avatar" class="w-12 h-12 rounded-full bg-brand-yellow flex items-center justify-center text-2xl shadow-md border-2 border-white animate-bounce-slow">
+        🤖
+      </div>
+      <div class="max-w-md">
+        <!-- Message box -->
+        <p id="footer-motivational-text" class="text-sm font-bold text-slate-600 italic">
+          "Bienvenue dans l'aventure des mathématiques ! Clique sur un jeu pour commencer !"
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Sound Mute Toggle (Floating bubble in bottom right) -->
+  <button onclick="toggleMute()" id="btn-sound-toggle" class="fixed bottom-6 right-6 z-50 bg-white hover:bg-slate-50 text-slate-600 w-14 h-14 rounded-full shadow-lg border-2 border-slate-200/80 flex items-center justify-center transform active:scale-95 transition-all">
+    <svg id="svg-sound-on" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+    </svg>
+    <svg id="svg-sound-off" class="w-7 h-7 hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm12.95-6.364l-4.243 4.243m0-4.243l4.243 4.243"/>
+    </svg>
+  </button>
+
+  <!-- Encouraging feedback bottom toast -->
+  <div id="feedback-toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="feedback-toast-card" class="px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4">
+      <span id="feedback-toast-emoji" class="text-3xl">🌟</span>
+      <span id="feedback-toast-text" class="font-title font-bold text-lg">Super !</span>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // State management
+    let state = {
+      stars: parseInt(localStorage.getItem('mathscp_stars') || '0'),
+      sessionStars: 0,
+      currentCategory: null,
+      currentGame: null,
+      currentAnswer: null,
+      isMuted: localStorage.getItem('mathscp_muted') === 'true',
+      isAnswerSelected: false,
+      unlockedBadges: JSON.parse(localStorage.getItem('mathscp_unlocked_badges') || '[]'),
+      consecutiveCorrect: 0,
+      consecutiveWrong: 0,
+      difficulty: 'normal',
+    };
+
+    // Subgames metadata database
+    const CATEGORIES = {
+      'A': {
+        name: 'Nombres et Calculs',
+        color: 'brand-purple',
+        games: [
+          { id: 'a_nombres_100', name: 'Les nombres jusqu\'à 100', desc: 'Dizaines, unités et décompositions.' },
+          { id: 'a_additions', name: 'Les additions', desc: 'Opérations en ligne et posées en colonne.' },
+          { id: 'a_soustractions', name: 'Les soustractions', desc: 'Retirer des objets et calculer la différence.' },
+          { id: 'a_doubles_moities', name: 'Doubles et moitiés', desc: 'Calculer le double ou diviser par deux.' },
+          { id: 'a_complements_10', name: 'Compléments à 10', desc: 'Trouver le nombre qui manque pour faire 10.' }
+        ]
+      },
+      'B': {
+        name: 'Espace et Géométrie',
+        color: 'brand-green',
+        games: [
+          { id: 'b_figures', name: 'Reconnaître les figures', desc: 'Carré, rectangle, triangle et cercle.' },
+          { id: 'b_vocabulaire_spatial', name: 'Vocabulaire spatial', desc: 'Au-dessus, en dessous, à gauche, à droite.' }
+        ]
+      },
+      'C': {
+        name: 'Grandeurs et Mesures',
+        color: 'brand-orange',
+        games: [
+          { id: 'c_monnaie', name: 'La monnaie', desc: 'Sommer des pièces et billets de 1€, 2€, 5€ et 10€.' },
+          { id: 'c_heure', name: 'Lire l\'heure', desc: 'Apprendre à lire les heures piles.' }
+        ]
+      }
+    };
+
+    // Encouraging phrases in French for success and failure
+    const SUCCESS_PHRASES = [
+      "Super ! C'est correct !",
+      "Bravo ! Tu as trouvé !",
+      "Magnifique ! Tu es fort !",
+      "Excellent travail ! Continues !",
+      "Génial ! Une étoile pour toi !"
+    ];
+
+    const FAIL_PHRASES = [
+      "Aïe ! Réessaie, tu vas y arriver ! 🌟",
+      "Pas tout à fait ! Regarde bien le dessin.",
+      "Presque ! Essaie encore un coup !",
+      "Ne t'inquiète pas, réessaie !",
+      "Oups ! Essaye un autre nombre !"
+    ];
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      updateStarsUI();
+      applySoundIcons();
+      goHome();
+    });
+
+    // Sound effects engine using Web Audio API
+    function playAudioTone(type) {
+      if (state.isMuted) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        if (type === 'success') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+
+          osc.start(now);
+          osc.stop(now + 0.45);
+        } else if (type === 'fail') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.linearRampToValueAtTime(110, now + 0.25);
+
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(400, now + 0.08);
+
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'trophy') {
+          // Retro game fanfare
+          const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50]; // Ascending scales
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'square';
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+            gain.gain.setValueAtTime(0.06, now + idx * 0.1);
+            gain.gain.setValueAtTime(0.06, now + idx * 0.1 + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.15);
+
+            osc.start(now + idx * 0.1);
+            osc.stop(now + idx * 0.1 + 0.18);
+          });
+        }
+      } catch (err) {
+        console.warn("Audio error", err);
+      }
+    }
+
+    function toggleMute() {
+      state.isMuted = !state.isMuted;
+      localStorage.setItem('mathscp_muted', state.isMuted);
+      applySoundIcons();
+      playAudioTone('click');
+    }
+
+    function applySoundIcons() {
+      const onSvg = document.getElementById('svg-sound-on');
+      const offSvg = document.getElementById('svg-sound-off');
+      if (state.isMuted) {
+        onSvg.classList.add('hidden');
+        offSvg.classList.remove('hidden');
+      } else {
+        onSvg.classList.remove('hidden');
+        offSvg.classList.add('hidden');
+      }
+    }
+
+    // Routing navigation
+    function hideAllScreens() {
+      document.getElementById('screen-home').classList.add('hidden');
+      document.getElementById('screen-submenu').classList.add('hidden');
+      document.getElementById('screen-game').classList.add('hidden');
+      document.getElementById('screen-victory').classList.add('hidden');
+    }
+
+    function goHome() {
+      playAudioTone('click');
+      hideAllScreens();
+      document.getElementById('screen-home').classList.remove('hidden');
+      state.currentCategory = null;
+      state.currentGame = null;
+      updateFooterMessage('idle');
+    }
+
+    function selectCategory(catId) {
+      playAudioTone('click');
+      state.currentCategory = catId;
+      const cat = CATEGORIES[catId];
+      
+      const titleEl = document.getElementById('submenu-title');
+      titleEl.innerText = cat.name;
+      
+      const listEl = document.getElementById('submenu-list');
+      listEl.innerHTML = '';
+      
+      // Inject category colors & games
+      cat.games.forEach(g => {
+        const item = document.createElement('div');
+        item.className = `bg-white rounded-3xl p-5 border-4 border-${cat.color} shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer`;
+        item.onclick = () => launchGame(g.id);
+        item.innerHTML = `
+          <div class="mb-4">
+            <h3 class="text-xl font-bold text-slate-800 font-title mb-1">${g.name}</h3>
+            <p class="text-slate-500 text-xs">${g.desc}</p>
+          </div>
+          <div class="flex items-center justify-between text-${cat.color} font-bold font-title">
+            <span class="text-xs tracking-wider uppercase">Commencer</span>
+            <div class="w-8 h-8 rounded-full bg-${cat.color}/10 flex items-center justify-center">
+              <svg class="w-5 h-5 stroke-current" fill="none" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+
+      hideAllScreens();
+      document.getElementById('screen-submenu').classList.remove('hidden');
+    }
+
+    function launchGame(gameId) {
+      playAudioTone('click');
+      state.currentGame = gameId;
+      state.sessionStars = 0;
+      state.consecutiveCorrect = 0;
+      state.consecutiveWrong = 0;
+      state.difficulty = 'normal';
+      
+      let gameName = '';
+      for (const cat in CATEGORIES) {
+        const found = CATEGORIES[cat].games.find(g => g.id === gameId);
+        if (found) {
+          gameName = found.name;
+          break;
+        }
+      }
+      
+      document.getElementById('game-title').innerText = gameName;
+      updateSessionStarsUI();
+      updateDifficultyUI();
+
+      hideAllScreens();
+      document.getElementById('screen-game').classList.remove('hidden');
+      generateExercise();
+      updateFooterMessage('game_start');
+    }
+
+    function updateDifficultyUI() {
+      const badge = document.getElementById('difficulty-badge');
+      if (!badge) return;
+
+      if (state.difficulty === 'easy') {
+        badge.className = "px-4 py-2 rounded-full font-title text-xs font-bold shadow-sm border-2 bg-emerald-50 border-emerald-300 text-emerald-700 animate-pulse";
+        badge.innerHTML = "🟢 Facile";
+      } else if (state.difficulty === 'challenge') {
+        badge.className = "px-4 py-2 rounded-full font-title text-xs font-bold shadow-sm border-2 bg-rose-50 border-rose-400 text-rose-600 animate-pulse";
+        badge.innerHTML = "🔥 Défi !";
+      } else {
+        badge.className = "px-4 py-2 rounded-full font-title text-xs font-bold shadow-sm border-2 bg-sky-50 border-sky-300 text-sky-700";
+        badge.innerHTML = "🔵 Normal";
+      }
+    }
+
+    function backToSubmenu() {
+      if (state.currentCategory) {
+        selectCategory(state.currentCategory);
+      } else {
+        goHome();
+      }
+    }
+
+    function restartCurrentGame() {
+      if (state.currentGame) {
+        launchGame(state.currentGame);
+      } else {
+        goHome();
+      }
+    }
+
+    // UI Updates
+    function updateStarsUI() {
+      document.getElementById('global-stars-text').innerText = state.stars;
+      checkBadgeUnlocks();
+      updateBadgeCountUI();
+    }
+
+    function updateSessionStarsUI() {
+      console.log("updateSessionStarsUI: sessionStars =", state.sessionStars);
+      const container = document.getElementById('star-dots-container');
+      console.log("updateSessionStarsUI: container =", container);
+      let starsHtml = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= state.sessionStars) {
+          // Filled star
+          starsHtml += `
+            <svg class="w-7 h-7 fill-brand-yellow text-brand-orange animate-bounce-slow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          `;
+        } else {
+          // Empty star
+          starsHtml += `
+            <svg class="w-7 h-7 text-slate-300 fill-slate-100" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          `;
+        }
+      }
+      if (container) {
+        container.innerHTML = starsHtml;
+        console.log("updateSessionStarsUI: set innerHTML success, html length =", starsHtml.length);
+      } else {
+        console.error("updateSessionStarsUI: container is null!");
+      }
+    }
+
+    function showToast(isSuccess, message) {
+      const toast = document.getElementById('feedback-toast');
+      const card = document.getElementById('feedback-toast-card');
+      const text = document.getElementById('feedback-toast-text');
+      const emoji = document.getElementById('feedback-toast-emoji');
+
+      if (isSuccess) {
+        card.className = 'px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4 bg-brand-green-light border-brand-green text-brand-green-dark animate-pop-in';
+        emoji.innerText = '🎉';
+      } else {
+        card.className = 'px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4 bg-brand-pink-light border-brand-pink text-brand-pink-dark animate-pop-in';
+        emoji.innerText = '💡';
+      }
+
+      text.innerText = message;
+      toast.classList.remove('translate-y-32', 'opacity-0');
+      
+      // Clear previous timeout if any
+      if (window.toastTimeout) clearTimeout(window.toastTimeout);
+      
+      window.toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-32', 'opacity-0');
+      }, 3000);
+    }
+
+    // Helpers for dynamic math exercises
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getDistractors(correctAnswer, count, min = 0, max = 100) {
+      const set = new Set();
+      while (set.size < count) {
+        let dist = correctAnswer + getRandomInt(-5, 5);
+        if (dist === correctAnswer || dist < min || dist > max) {
+          dist = getRandomInt(min, max);
+        }
+        if (dist !== correctAnswer) set.add(dist);
+      }
+      return Array.from(set);
+    }
+
+    // ==========================================
+    // EXERCISE GENERATION MOTOR
+    // ==========================================
+    function generateExercise() {
+      state.isAnswerSelected = false;
+      document.getElementById('btn-next-exercise').classList.add('hidden');
+      
+      const visualArea = document.getElementById('game-visual-area');
+      const questionText = document.getElementById('game-question-text');
+      const optionsContainer = document.getElementById('game-options-container');
+
+      visualArea.innerHTML = '';
+      optionsContainer.innerHTML = '';
+
+      switch (state.currentGame) {
+        // Bloc A: Nombres et Calculs
+        case 'a_nombres_100':
+          genNombres100(visualArea, questionText, optionsContainer);
+          break;
+        case 'a_additions':
+          genAdditions(visualArea, questionText, optionsContainer);
+          break;
+        case 'a_soustractions':
+          genSoustractions(visualArea, questionText, optionsContainer);
+          break;
+        case 'a_doubles_moities':
+          genDoublesMoities(visualArea, questionText, optionsContainer);
+          break;
+        case 'a_complements_10':
+          genComplements10(visualArea, questionText, optionsContainer);
+          break;
+
+        // Bloc B: Espace et Géométrie
+        case 'b_figures':
+          genFigures(visualArea, questionText, optionsContainer);
+          break;
+        case 'b_vocabulaire_spatial':
+          genVocabulaireSpatial(visualArea, questionText, optionsContainer);
+          break;
+
+        // Bloc C: Grandeurs et Mesures
+        case 'c_monnaie':
+          genMonnaie(visualArea, questionText, optionsContainer);
+          break;
+        case 'c_heure':
+          genHeure(visualArea, questionText, optionsContainer);
+          break;
+      }
+
+      // Auto-read question text after a brief delay (if not muted)
+      setTimeout(() => {
+        if (!state.isMuted) {
+          speakQuestion();
+        }
+      }, 350);
+    }
+
+    function renderOptions(correct, distractors, container) {
+      const allChoices = [correct, ...distractors].sort(() => Math.random() - 0.5);
+      container.innerHTML = '';
+
+      allChoices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full min-h-[64px] bg-white hover:bg-slate-50 border-4 border-slate-200 active:border-brand-blue rounded-2xl shadow-md text-xl font-bold font-title flex items-center justify-center p-3 transform active:translate-y-1 active:shadow-sm transition-all';
+        btn.innerText = choice;
+        btn.onclick = () => checkAnswer(choice, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected, buttonElement) {
+      if (state.isAnswerSelected) return;
+      state.isAnswerSelected = true;
+
+      const isCorrect = (selected === state.currentAnswer);
+
+      if (isCorrect) {
+        playAudioTone('success');
+        buttonElement.classList.remove('border-slate-200');
+        buttonElement.classList.add('border-brand-green', 'bg-brand-green-light', 'text-brand-green-dark');
+        
+        // Stars increase
+        state.sessionStars++;
+        state.stars++;
+        localStorage.setItem('mathscp_stars', state.stars);
+        updateStarsUI();
+        updateSessionStarsUI();
+
+        // Consecutive correct logic
+        state.consecutiveCorrect++;
+        state.consecutiveWrong = 0;
+
+        // Difficulty upgrades
+        if (state.difficulty === 'easy' && state.consecutiveCorrect >= 3) {
+          state.difficulty = 'normal';
+          state.consecutiveCorrect = 0;
+          setTimeout(() => showToast(true, "Super ! Difficulté : Normal ! 🔵"), 500);
+          updateDifficultyUI();
+        } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= 5) {
+          state.difficulty = 'challenge';
+          state.consecutiveCorrect = 0;
+          setTimeout(() => showToast(true, "Incroyable ! Niveau Défi débloqué ! 🔥"), 500);
+          updateDifficultyUI();
+        }
+
+        // Confetti!
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.75 }
+        });
+
+        const phrase = SUCCESS_PHRASES[getRandomInt(0, SUCCESS_PHRASES.length - 1)];
+        showToast(true, phrase);
+        updateFooterMessage('success');
+
+        // Show next button or handle level victory
+        if (state.sessionStars >= 5) {
+          setTimeout(() => {
+            triggerVictorySession();
+          }, 1000);
+        } else {
+          document.getElementById('btn-next-exercise').classList.remove('hidden');
+        }
+      } else {
+        playAudioTone('fail');
+        buttonElement.classList.remove('border-slate-200');
+        buttonElement.classList.add('border-brand-pink', 'bg-brand-pink-light', 'text-brand-pink-dark', 'shake');
+        
+        // Reset state.isAnswerSelected to let them try again!
+        state.isAnswerSelected = false;
+
+        // Consecutive wrong logic
+        state.consecutiveWrong++;
+        state.consecutiveCorrect = 0;
+
+        // Difficulty downgrades
+        if (state.difficulty === 'challenge' && state.consecutiveWrong >= 2) {
+          state.difficulty = 'normal';
+          state.consecutiveWrong = 0;
+          setTimeout(() => showToast(false, "Retour au niveau Normal 🔵"), 500);
+          updateDifficultyUI();
+        } else if (state.difficulty === 'normal' && state.consecutiveWrong >= 2) {
+          state.difficulty = 'easy';
+          state.consecutiveWrong = 0;
+          setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
+          updateDifficultyUI();
+        }
+
+        const phrase = FAIL_PHRASES[getRandomInt(0, FAIL_PHRASES.length - 1)];
+        showToast(false, phrase);
+        updateFooterMessage('retry');
+      }
+    }
+
+    function triggerVictorySession() {
+      playAudioTone('trophy');
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+      hideAllScreens();
+      document.getElementById('screen-victory').classList.remove('hidden');
+    }
+
+    // =========================================================================
+    // EXERCISE CREATION IMPLEMENTATIONS (DYNAMIC SVG RENDERERS)
+    // =========================================================================
+
+    // A1. Les nombres jusqu'à 100
+    function genNombres100(visualArea, questionText, optionsContainer) {
+      const mode = getRandomInt(1, 2); // 1 = count base-10 blocks, 2 = written decomposition
+      
+      let number;
+      if (state.difficulty === 'easy') {
+        number = getRandomInt(5, 20);
+      } else if (state.difficulty === 'challenge') {
+        const pairs = [
+          [12, 21], [13, 31], [14, 41], [15, 51], [16, 61], [17, 71], [18, 81], [19, 91],
+          [23, 32], [24, 42], [25, 52], [26, 62], [27, 72], [28, 82], [29, 92],
+          [34, 43], [35, 53], [36, 63], [37, 73], [38, 83], [39, 93], [45, 54],
+          [46, 64], [47, 74], [48, 84], [49, 94], [56, 65], [57, 75], [58, 85],
+          [59, 95], [67, 76], [68, 86], [69, 96], [78, 87], [79, 97], [89, 98]
+        ];
+        const pair = pairs[getRandomInt(0, pairs.length - 1)];
+        number = pair[getRandomInt(0, 1)];
+      } else {
+        number = getRandomInt(10, 99);
+      }
+      state.currentAnswer = number;
+
+      const dizaines = Math.floor(number / 10);
+      const unites = number % 10;
+
+      if (mode === 1) {
+        questionText.innerText = "Quel est ce nombre représenté par les blocs ?";
+        
+        // Draw Base-10 rods (orange/yellow) and cubes (blue)
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+        
+        // Draw rods of 10
+        const dWidth = 12;
+        const dHeight = 120;
+        const spacing = 18;
+        const startX = 20;
+        const startY = 30;
+
+        for (let i = 0; i < dizaines; i++) {
+          const rx = startX + i * spacing;
+          svg += `<g>`;
+          svg += `<rect x="${rx}" y="${startY}" width="${dWidth}" height="${dHeight}" rx="2" fill="#F97316" stroke="#C2410C" stroke-width="1.5"/>`;
+          // Draw horizontal marks to represent 10 stacked blocks inside rod
+          for (let j = 1; j < 10; j++) {
+            const my = startY + j * (dHeight / 10);
+            svg += `<line x1="${rx}" y1="${my}" x2="${rx + dWidth}" y2="${my}" stroke="#C2410C" stroke-width="1"/>`;
+          }
+          svg += `</g>`;
+        }
+
+        // Draw unit cubes
+        const cSize = 12;
+        const uStartX = startX + (dizaines * spacing) + 20;
+        const uStartY = startY + 10;
+
+        for (let i = 0; i < unites; i++) {
+          const row = Math.floor(i / 5);
+          const col = i % 5;
+          const cx = uStartX + col * 18;
+          const cy = uStartY + row * 18;
+
+          svg += `<rect x="${cx}" y="${cy}" width="${cSize}" height="${cSize}" rx="2" fill="#38BDF8" stroke="#0284C7" stroke-width="1.5" class="animate-bounce-slow" style="animation-delay: ${i * 0.05}s"/>`;
+        }
+
+        svg += `</svg>`;
+        visualArea.innerHTML = svg;
+
+        // Render options
+        const minVal = state.difficulty === 'easy' ? 1 : 10;
+        const maxVal = state.difficulty === 'easy' ? 25 : 99;
+        const distractors = getDistractors(number, 3, minVal, maxVal);
+        renderOptions(number, distractors, optionsContainer);
+      } else {
+        questionText.innerText = `Trouve le nombre correspondant à l'écriture :`;
+        
+        // Display decomposition inside the visual area in a cute box
+        visualArea.innerHTML = `
+          <div class="flex flex-col items-center justify-center gap-4 bg-gradient-to-tr from-brand-purple/10 to-brand-blue/10 p-6 rounded-3xl border-2 border-brand-purple/20 w-4/5 animate-float font-title">
+            <span class="text-4xl md:text-5xl font-extrabold text-brand-purple tracking-wide">
+              ${dizaines > 0 ? `${dizaines}d et ` : ''}${unites}u
+            </span>
+            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider bg-white px-3 py-1 rounded-full border border-slate-200">
+              d = dizaine • u = unité
+            </div>
+          </div>
+        `;
+
+        const minVal = state.difficulty === 'easy' ? 1 : 10;
+        const maxVal = state.difficulty === 'easy' ? 25 : 99;
+        const distractors = getDistractors(number, 3, minVal, maxVal);
+        renderOptions(number, distractors, optionsContainer);
+      }
+    }
+
+    // A2. Les additions (calculs en ligne & posés)
+    function genAdditions(visualArea, questionText, optionsContainer) {
+      let mode;
+      if (state.difficulty === 'easy') {
+        mode = 1;
+      } else if (state.difficulty === 'challenge') {
+        mode = 2;
+      } else {
+        mode = getRandomInt(1, 2); // 1 = horizontal, 2 = vertical (calcul posé)
+      }
+
+      if (mode === 1) {
+        // Horizontal addition.
+        let a, b, correct;
+        
+        if (state.difficulty === 'easy') {
+          a = getRandomInt(1, 7);
+          b = getRandomInt(1, 10 - a);
+        } else {
+          const subMode = getRandomInt(1, 3);
+          if (subMode === 1) { // Single + Single
+            a = getRandomInt(2, 9);
+            b = getRandomInt(2, 9);
+          } else if (subMode === 2) { // Tens + single/tens
+            a = getRandomInt(1, 8) * 10;
+            b = getRandomInt(1, 9);
+          } else { // Double + single (no carry)
+            a = getRandomInt(11, 25);
+            b = getRandomInt(1, 4);
+          }
+        }
+        correct = a + b;
+        state.currentAnswer = correct;
+
+        questionText.innerText = "Trouve le résultat de cette addition en ligne :";
+
+        visualArea.innerHTML = `
+          <div class="flex items-center justify-center gap-3 bg-brand-blue-light/40 border-2 border-brand-blue/15 p-6 rounded-3xl shadow-sm w-4/5 animate-float font-title">
+            <span class="text-4xl md:text-5xl font-extrabold text-brand-blue">${a}</span>
+            <span class="text-3xl md:text-4xl font-black text-brand-pink">+</span>
+            <span class="text-4xl md:text-5xl font-extrabold text-brand-blue">${b}</span>
+            <span class="text-3xl md:text-4xl font-black text-brand-pink">=</span>
+            <span class="text-4xl md:text-5xl font-extrabold text-slate-300">?</span>
+          </div>
+        `;
+
+        const distractors = getDistractors(correct, 3, 2, 100);
+        renderOptions(correct, distractors, optionsContainer);
+      } else {
+        // Vertical addition (calcul posé)
+        let aUnits, bUnits, aTens, bTens;
+
+        if (state.difficulty === 'challenge') {
+          // forces units sum >= 10 to create carrying/retenue
+          aUnits = getRandomInt(4, 9);
+          bUnits = getRandomInt(10 - aUnits, 9);
+          aTens = getRandomInt(1, 4);
+          bTens = getRandomInt(1, 4);
+        } else {
+          // units sum < 10 (no carry)
+          aUnits = getRandomInt(1, 6);
+          bUnits = getRandomInt(1, 9 - aUnits);
+          aTens = getRandomInt(1, 5);
+          bTens = getRandomInt(1, 9 - aTens);
+        }
+
+        const a = aTens * 10 + aUnits;
+        const b = bTens * 10 + bUnits;
+        const correct = a + b;
+        state.currentAnswer = correct;
+
+        questionText.innerText = "Calcule cette addition posée en colonne :";
+
+        // Layout standard CP columns "Dizaines" and "Unités" in Seyes grid
+        visualArea.innerHTML = `
+          <div class="seyes-grid p-6 rounded-2xl flex flex-col items-center justify-center font-title w-48 shadow-md relative overflow-hidden">
+            <div class="absolute left-4 top-0 bottom-0 seyes-red-line"></div>
+            <!-- Column titles -->
+            <div class="grid grid-cols-2 gap-4 text-center border-b-2 border-slate-300 w-full pb-1 text-sm font-bold text-slate-500">
+              <div>D</div>
+              <div>U</div>
+            </div>
+            
+            <!-- Retenue row (only for challenge mode carrying) -->
+            <div class="grid grid-cols-2 gap-4 text-center w-full text-xs font-bold text-brand-pink h-4 mt-1">
+              ${state.difficulty === 'challenge' ? '<div class="animate-pulse bg-brand-pink/15 rounded-full w-5 h-5 flex items-center justify-center mx-auto border border-brand-pink/30">①</div>' : '<div></div>'}
+              <div></div>
+            </div>
+
+            <!-- Rows -->
+            <div class="grid grid-cols-2 gap-4 text-center w-full py-1 text-2xl font-extrabold text-slate-800">
+              <div>${aTens}</div>
+              <div>${aUnits}</div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-center w-full py-1 text-2xl font-extrabold text-slate-800 relative">
+              <span class="absolute left-[-10px] text-brand-pink font-black text-xl">+</span>
+              <div>${bTens}</div>
+              <div>${bUnits}</div>
+            </div>
+            <!-- Line divider -->
+            <div class="w-full border-b-4 border-slate-700 my-1"></div>
+            <!-- Results row with prompt -->
+            <div class="grid grid-cols-2 gap-4 text-center w-full py-1 text-2xl font-black text-brand-blue animate-pulse-soft">
+              <div>?</div>
+              <div>?</div>
+            </div>
+          </div>
+        `;
+
+        const distractors = getDistractors(correct, 3, 10, 99);
+        renderOptions(correct, distractors, optionsContainer);
+      }
+    }
+
+    // A3. Les soustractions
+    function genSoustractions(visualArea, questionText, optionsContainer) {
+      let a, b;
+      
+      if (state.difficulty === 'easy') {
+        a = getRandomInt(3, 5);
+        b = getRandomInt(1, a - 1);
+      } else if (state.difficulty === 'challenge') {
+        a = getRandomInt(15, 29);
+        b = getRandomInt(11, a - 2);
+        // keep no borrow to remain simple for CP (units of a >= units of b)
+        if (a % 10 < b % 10) {
+          const aUnits = getRandomInt(5, 9);
+          const bUnits = getRandomInt(1, aUnits - 1);
+          a = Math.floor(a / 10) * 10 + aUnits;
+          b = Math.floor(b / 10) * 10 + bUnits;
+        }
+      } else {
+        const aTens = getRandomInt(1, 2);
+        const aUnits = getRandomInt(4, 9);
+        const bTens = aTens === 2 ? getRandomInt(1, 2) : 0;
+        const bUnits = getRandomInt(1, aUnits - 1);
+        a = aTens * 10 + aUnits;
+        b = bTens * 10 + bUnits;
+      }
+      
+      const correct = a - b;
+      state.currentAnswer = correct;
+
+      questionText.innerText = `Trouve le résultat de la soustraction : ${a} - ${b}`;
+
+      // Visual aid: draw A red balls, cross out B of them.
+      let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+      
+      const r = 12;
+      const spacingX = 30;
+      const spacingY = 32;
+      
+      for (let i = 0; i < a; i++) {
+        const col = i % 10;
+        const row = Math.floor(i / 10);
+        const x = 25 + col * spacingX;
+        const y = 35 + row * spacingY;
+
+        const isCrossed = (i >= (a - b));
+
+        if (isCrossed) {
+          // Crossed out ball
+          svg += `<g>`;
+          svg += `<circle cx="${x}" cy="${y}" r="${r}" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>`;
+          // Diagonal red cross
+          svg += `<line x1="${x - r + 3}" y1="${y - r + 3}" x2="${x + r - 3}" y2="${y + r - 3}" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/>`;
+          svg += `<line x1="${x - r + 3}" y1="${y + r - 3}" x2="${x + r - 3}" y2="${y - r + 3}" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/>`;
+          svg += `</g>`;
+        } else {
+          // Clear red ball (apple)
+          svg += `<g class="animate-bounce-slow" style="animation-delay: ${i * 0.05}s">`;
+          svg += `<circle cx="${x}" cy="${y}" r="${r}" fill="#FF6B8B" stroke="#E05270" stroke-width="1.5"/>`;
+          // Shiny white spot
+          svg += `<circle cx="${x - 4}" cy="${y - 4}" r="3" fill="white" opacity="0.6"/>`;
+          // Little green leaf on top
+          svg += `<path d="M${x - 2} ${y - r - 2} Q${x} ${y - r - 6} ${x + 4} ${y - r - 4} Q${x + 1} ${y - r - 1} ${x - 2} ${y - r - 2}" fill="#4ECA64"/>`;
+          svg += `</g>`;
+        }
+      }
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+
+      const maxRange = state.difficulty === 'easy' ? 10 : 35;
+      const distractors = getDistractors(correct, 3, 0, maxRange);
+      renderOptions(correct, distractors, optionsContainer);
+    }
+
+    // A4. Doubles et moitiés
+    function genDoublesMoities(visualArea, questionText, optionsContainer) {
+      const mode = getRandomInt(1, 2); // 1 = double, 2 = moitié
+
+      if (mode === 1) {
+        // Double
+        let x;
+        if (state.difficulty === 'easy') {
+          x = getRandomInt(2, 5);
+        } else if (state.difficulty === 'challenge') {
+          x = getRandomInt(10, 15);
+        } else {
+          x = getRandomInt(2, 9);
+        }
+        
+        const correct = x * 2;
+        state.currentAnswer = correct;
+
+        questionText.innerText = `Quel est le double de ${x} ? (${x} + ${x})`;
+
+        // Show two groups side-by-side
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+        
+        // Draw left group (box + stars)
+        svg += `<rect x="15" y="25" width="135" height="150" rx="15" fill="#EEF2F6" stroke="#94A3B8" stroke-width="3" stroke-dasharray="6 4"/>`;
+        svg += `<text x="82" y="19" font-family="Fredoka" font-size="12" font-weight="bold" fill="#64748B" text-anchor="middle">GROUPE 1</text>`;
+
+        // Draw right group
+        svg += `<rect x="170" y="25" width="135" height="150" rx="15" fill="#EEF2F6" stroke="#94A3B8" stroke-width="3" stroke-dasharray="6 4"/>`;
+        svg += `<text x="237" y="19" font-family="Fredoka" font-size="12" font-weight="bold" fill="#64748B" text-anchor="middle">GROUPE 2</text>`;
+
+        // Draw items (stars) inside boxes
+        const drawStarsInBox = (startX, count) => {
+          let boxSvg = '';
+          for (let i = 0; i < count; i++) {
+            const col = i % 3;
+            const row = Math.floor(i / 3);
+            const posX = startX + 25 + col * 35;
+            const posY = 50 + row * 40;
+            // cute yellow star SVG
+            boxSvg += `<path d="M${posX} ${posY - 12} L${posX + 3.5} ${posY - 3.5} L${posX + 12} ${posY - 3.5} L${posX + 5.5} ${posY + 1.5} L${posX + 8} ${posY + 9.5} L${posX} ${posY + 5} L${posX - 8} ${posY + 9.5} L${posX - 5.5} ${posY + 1.5} L${posX - 12} ${posY - 3.5} L${posX - 3.5} ${posY - 3.5} Z" fill="#FFD93D" stroke="#E0BE2F" stroke-width="1.5"/>`;
+          }
+          return boxSvg;
+        };
+
+        svg += drawStarsInBox(15, x);
+        svg += drawStarsInBox(170, x);
+
+        svg += `</svg>`;
+        visualArea.innerHTML = svg;
+
+        const maxRange = state.difficulty === 'easy' ? 12 : 35;
+        const distractors = getDistractors(correct, 3, 2, maxRange);
+        renderOptions(correct, distractors, optionsContainer);
+      } else {
+        // Moitié
+        let Y;
+        if (state.difficulty === 'easy') {
+          Y = getRandomInt(2, 5) * 2; // Even number 4 to 10
+        } else if (state.difficulty === 'challenge') {
+          Y = getRandomInt(6, 10) * 2; // Even number 12 to 20
+        } else {
+          Y = getRandomInt(1, 10) * 2; // Even number 2 to 20
+        }
+        
+        const correct = Y / 2;
+        state.currentAnswer = correct;
+
+        questionText.innerText = `Quelle est la moitié de ${Y} ?`;
+
+        // Show a single box divided in half by a central line
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+        
+        // Large box
+        svg += `<rect x="20" y="25" width="280" height="150" rx="20" fill="#EEF2F6" stroke="#94A3B8" stroke-width="4"/>`;
+        // Dividing dashed vertical line
+        svg += `<line x1="160" y1="25" x2="160" y2="175" stroke="#FF6B8B" stroke-width="3" stroke-dasharray="8 6"/>`;
+
+        // Draw candies Y/2 in left, Y/2 in right
+        const drawCandies = (startX, count) => {
+          let candySvg = '';
+          for (let i = 0; i < count; i++) {
+            const col = i % 3;
+            const row = Math.floor(i / 3);
+            const posX = startX + 22 + col * 35;
+            const posY = 50 + row * 40; // Adjusted spacing to fit Y/2 = 10 candies
+            
+            candySvg += `<g>`;
+            candySvg += `<polygon points="${posX - 12},${posY - 6} ${posX - 12},${posY + 6} ${posX - 4},${posY}" fill="#4D96FF" stroke="#357AE8" stroke-width="1"/>`;
+            candySvg += `<polygon points="${posX + 12},${posY - 6} ${posX + 12},${posY + 6} ${posX + 4},${posY}" fill="#4D96FF" stroke="#357AE8" stroke-width="1"/>`;
+            candySvg += `<ellipse cx="${posX}" cy="${posY}" rx="8" ry="6" fill="#4ECA64" stroke="#3AB24F" stroke-width="1.5"/>`;
+            candySvg += `</g>`;
+          }
+          return candySvg;
+        };
+
+        svg += drawCandies(20, Y / 2);
+        svg += drawCandies(160, Y / 2);
+
+        svg += `</svg>`;
+        visualArea.innerHTML = svg;
+
+        const distractors = getDistractors(correct, 3, 1, 12);
+        renderOptions(correct, distractors, optionsContainer);
+      }
+    }
+
+    // A5. Compléments à 10
+    function genComplements10(visualArea, questionText, optionsContainer) {
+      let x, correct;
+      
+      if (state.difficulty === 'easy') {
+        x = getRandomInt(7, 9);
+        correct = 10 - x;
+      } else if (state.difficulty === 'challenge') {
+        x = getRandomInt(11, 18);
+        correct = 20 - x;
+      } else {
+        x = getRandomInt(1, 9);
+        correct = 10 - x;
+      }
+      
+      state.currentAnswer = correct;
+
+      if (state.difficulty === 'challenge') {
+        questionText.innerText = `Combien de jetons manque-t-il pour faire 20 ? (${x} + ? = 20)`;
+
+        // Double Ten Frame rendering (2 stacked 2x5 grids)
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+        
+        // Draw Grid 1 (Top)
+        svg += `<rect x="35" y="20" width="250" height="70" rx="6" fill="#F8FAFC" stroke="#6C5DD3" stroke-width="3"/>`;
+        // Draw Grid 2 (Bottom)
+        svg += `<rect x="35" y="105" width="250" height="70" rx="6" fill="#F8FAFC" stroke="#6C5DD3" stroke-width="3"/>`;
+        
+        // Vertical dividers
+        for (let i = 1; i < 5; i++) {
+          svg += `<line x1="${35 + i * 50}" y1="20" x2="${35 + i * 50}" y2="90" stroke="#6C5DD3" stroke-width="1.5"/>`;
+          svg += `<line x1="${35 + i * 50}" y1="105" x2="${35 + i * 50}" y2="175" stroke="#6C5DD3" stroke-width="1.5"/>`;
+        }
+        // Horizontal dividers
+        svg += `<line x1="35" y1="55" x2="285" y2="55" stroke="#6C5DD3" stroke-width="1.5"/>`;
+        svg += `<line x1="35" y1="140" x2="285" y2="140" stroke="#6C5DD3" stroke-width="1.5"/>`;
+        
+        // Draw 20 slots
+        for (let i = 0; i < 20; i++) {
+          const grid = Math.floor(i / 10);
+          const cellInGrid = i % 10;
+          const row = Math.floor(cellInGrid / 5);
+          const col = cellInGrid % 5;
+          
+          const cx = 35 + col * 50 + 25;
+          const cy = (grid === 0 ? 20 : 105) + row * 35 + 17.5;
+          
+          if (i < x) {
+            // Red counter
+            svg += `<circle cx="${cx}" cy="${cy}" r="13" fill="#FF6B8B" stroke="#E05270" stroke-width="1.5"/>`;
+            svg += `<circle cx="${cx - 3}" cy="${cy - 3}" r="3" fill="white" opacity="0.6"/>`;
+          } else {
+            // Dotted gray helper outline
+            svg += `<circle cx="${cx}" cy="${cy}" r="13" fill="none" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+            // Question mark
+            svg += `<text x="${cx}" y="${cy + 5}" font-family="Fredoka" font-size="14" font-weight="bold" fill="#94A3B8" text-anchor="middle">?</text>`;
+          }
+        }
+
+        svg += `</svg>`;
+        visualArea.innerHTML = svg;
+
+        const distractors = getDistractors(correct, 3, 1, 9);
+        renderOptions(correct, distractors, optionsContainer);
+      } else {
+        questionText.innerText = `Combien de jetons manque-t-il pour faire 10 ? (${x} + ? = 10)`;
+
+        // Ten Frame rendering (2x5 grid)
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+        
+        const gridW = 250;
+        const gridH = 100;
+        const startX = 35;
+        const startY = 50;
+        const cellW = gridW / 5;
+        const cellH = gridH / 2;
+
+        // Draw grid bounding box
+        svg += `<rect x="${startX}" y="${startY}" width="${gridW}" height="${gridH}" rx="10" fill="#F8FAFC" stroke="#6C5DD3" stroke-width="4"/>`;
+
+        // Vertical dividers
+        for (let i = 1; i < 5; i++) {
+          const lineX = startX + i * cellW;
+          svg += `<line x1="${lineX}" y1="${startY}" x2="${lineX}" y2="${startY + gridH}" stroke="#6C5DD3" stroke-width="2"/>`;
+        }
+        // Horizontal divider
+        svg += `<line x1="${startX}" y1="${startY + cellH}" x2="${startX + gridW}" y2="${startY + cellH}" stroke="#6C5DD3" stroke-width="2"/>`;
+
+        // Fill counters.
+        for (let i = 0; i < 10; i++) {
+          const row = Math.floor(i / 5);
+          const col = i % 5;
+          const cx = startX + col * cellW + cellW / 2;
+          const cy = startY + row * cellH + cellH / 2;
+
+          if (i < x) {
+            // Red counter
+            svg += `<circle cx="${cx}" cy="${cy}" r="18" fill="#FF6B8B" stroke="#E05270" stroke-width="2"/>`;
+            svg += `<circle cx="${cx - 4}" cy="${cy - 4}" r="4" fill="white" opacity="0.6"/>`;
+          } else {
+            // Dotted gray helper outline
+            svg += `<circle cx="${cx}" cy="${cy}" r="18" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4 4"/>`;
+            // Question mark
+            svg += `<text x="${cx}" y="${cy + 6}" font-family="Fredoka" font-size="18" font-weight="bold" fill="#94A3B8" text-anchor="middle">?</text>`;
+          }
+        }
+
+        svg += `</svg>`;
+        visualArea.innerHTML = svg;
+
+        const distractors = getDistractors(correct, 3, 1, 9);
+        renderOptions(correct, distractors, optionsContainer);
+      }
+    }
+
+    // B1. Reconnaître les figures
+    function genFigures(visualArea, questionText, optionsContainer) {
+      if (state.difficulty === 'challenge') {
+        const questions = [
+          { q: "Combien y a-t-il de triangles dans ce dessin ?", ans: 3 },
+          { q: "Combien y a-t-il de carrés dans ce dessin ?", ans: 2 },
+          { q: "Combien y a-t-il de cercles dans ce dessin ?", ans: 1 },
+          { q: "Combien y a-t-il de rectangles dans ce dessin ?", ans: 2 }
+        ];
+        const item = questions[getRandomInt(0, questions.length - 1)];
+        state.currentAnswer = `${item.ans}`;
+        questionText.innerText = item.q;
+
+        // Draw the scene
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+        // Background sky and sun (1 circle)
+        svg += `<circle cx="280" cy="40" r="18" fill="#FFF9DB" stroke="#F59E0B" stroke-width="2" class="animate-pulse"/>`; // Sun (cercle)
+        
+        // Trees: 2 triangles + 2 small rectangles for trunk
+        svg += `<rect x="40" y="140" width="8" height="20" fill="#78350F"/>`;
+        svg += `<polygon points="44,90 24,140 64,140" fill="#059669"/>`; // Tree 1 (triangle)
+        
+        svg += `<rect x="80" y="135" width="8" height="25" fill="#78350F"/>`;
+        svg += `<polygon points="84,80 64,135 104,135" fill="#10B981"/>`; // Tree 2 (triangle)
+        
+        // House body (1 rectangle)
+        svg += `<rect x="140" y="100" width="110" height="60" rx="4" fill="#DBEAFE" stroke="#2563EB" stroke-width="3"/>`;
+        // Roof (1 triangle)
+        svg += `<polygon points="195,45 130,100 260,100" fill="#FCA5A5" stroke="#EF4444" stroke-width="3" stroke-linejoin="round"/>`;
+        // Door (1 rectangle)
+        svg += `<rect x="185" y="125" width="20" height="35" fill="#FCD34D" stroke="#D97706" stroke-width="2"/>`;
+        // Windows: 2 squares
+        svg += `<rect x="155" y="110" width="18" height="18" rx="2" fill="white" stroke="#2563EB" stroke-width="2"/>`;
+        svg += `<rect x="215" y="110" width="18" height="18" rx="2" fill="white" stroke="#2563EB" stroke-width="2"/>`;
+        
+        // Ground line
+        svg += `<line x1="10" y1="160" x2="310" y2="160" stroke="#475569" stroke-width="3" stroke-linecap="round"/>`;
+        svg += `</svg>`;
+        
+        visualArea.innerHTML = svg;
+
+        const correct = item.ans;
+        const distractorsSet = new Set();
+        while (distractorsSet.size < 3) {
+          const d = getRandomInt(0, 6);
+          if (d !== correct) distractorsSet.add(d);
+        }
+        const distractors = Array.from(distractorsSet);
+        renderOptions(`${correct}`, distractors.map(v => `${v}`), optionsContainer);
+      } else {
+        const shapes = [
+          { id: 'carré', name: 'un carré', color: '#6C5DD3', border: '#5646B8' },
+          { id: 'rectangle', name: 'un rectangle', color: '#4D96FF', border: '#357AE8' },
+          { id: 'triangle', name: 'un triangle', color: '#4ECA64', border: '#3AB24F' },
+          { id: 'cercle', name: 'un cercle', color: '#FF6B8B', border: '#E05270' }
+        ];
+
+        const idx = getRandomInt(0, 3);
+        const chosen = shapes[idx];
+        state.currentAnswer = chosen.name;
+
+        questionText.innerText = "Comment s'appelle cette figure géométrique ?";
+
+        let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">`;
+
+        // Draw cute Kawaii figures
+        let shapeMarkup = '';
+        let faceX = 120, faceY = 120;
+
+        if (chosen.id === 'carré') {
+          shapeMarkup = `<rect x="50" y="50" width="140" height="140" rx="12" fill="${chosen.color}" stroke="${chosen.border}" stroke-width="6"/>`;
+          faceX = 120; faceY = 120;
+        } else if (chosen.id === 'rectangle') {
+          shapeMarkup = `<rect x="30" y="65" width="180" height="110" rx="12" fill="${chosen.color}" stroke="${chosen.border}" stroke-width="6"/>`;
+          faceX = 120; faceY = 120;
+        } else if (chosen.id === 'triangle') {
+          shapeMarkup = `<polygon points="120,40 35,190 205,190" stroke-linejoin="round" fill="${chosen.color}" stroke="${chosen.border}" stroke-width="6"/>`;
+          faceX = 120; faceY = 145;
+        } else if (chosen.id === 'cercle') {
+          shapeMarkup = `<circle cx="120" cy="120" r="75" fill="${chosen.color}" stroke="${chosen.border}" stroke-width="6"/>`;
+          faceX = 120; faceY = 120;
+        }
+
+        svg += shapeMarkup;
+
+        // Add Kawaii Cute Face (blinking cheeks + smile)
+        svg += `
+          <!-- Eyes -->
+          <ellipse cx="${faceX - 25}" cy="${faceY - 10}" rx="6" ry="8" fill="#1E293B"/>
+          <ellipse cx="${faceX + 25}" cy="${faceY - 10}" rx="6" ry="8" fill="#1E293B"/>
+          <circle cx="${faceX - 27}" cy="${faceY - 13}" r="2" fill="white"/>
+          <circle cx="${faceX + 23}" cy="${faceY - 13}" r="2" fill="white"/>
+          <!-- Cheeks -->
+          <circle cx="${faceX - 35}" cy="${faceY + 5}" r="8" fill="#FFA5A5" opacity="0.75"/>
+          <circle cx="${faceX + 35}" cy="${faceY + 5}" r="8" fill="#FFA5A5" opacity="0.75"/>
+          <!-- Smile -->
+          <path d="M${faceX - 8} ${faceY + 2} Q${faceX} ${faceY + 12} ${faceX + 8} ${faceY + 2}" stroke="#1E293B" stroke-width="3" stroke-linecap="round" fill="none"/>
+        `;
+
+        svg += `</svg>`;
+        visualArea.innerHTML = svg;
+
+        // Multiple choice list
+        const allOptions = shapes.map(s => s.name);
+        const distractors = allOptions.filter(name => name !== chosen.name);
+        renderOptions(chosen.name, distractors, optionsContainer);
+      }
+    }
+
+    // B2. Vocabulaire spatial (Au-dessus, en dessous, à gauche, à droite)
+    function genVocabulaireSpatial(visualArea, questionText, optionsContainer) {
+      let positions = [
+        { id: 'au-dessus', label: 'au-dessus de la boîte', birdX: 120, birdY: 45 },
+        { id: 'en dessous', label: 'en dessous de la boîte', birdX: 120, birdY: 195 },
+        { id: 'à gauche', label: 'à gauche de la boîte', birdX: 35, birdY: 130 },
+        { id: 'à droite', label: 'à droite de la boîte', birdX: 205, birdY: 130 }
+      ];
+
+      if (state.difficulty === 'easy') {
+        const subsetMode = getRandomInt(0, 1);
+        if (subsetMode === 0) {
+          positions = [positions[0], positions[1]]; // vertical only
+        } else {
+          positions = [positions[2], positions[3]]; // horizontal only
+        }
+      }
+
+      const idx = getRandomInt(0, positions.length - 1);
+      const chosen = positions[idx];
+      state.currentAnswer = chosen.label;
+
+      questionText.innerText = "Où est le petit oiseau bleu ?";
+
+      let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">`;
+
+      // 1. Draw central platform/box
+      svg += `
+        <!-- Shadow of the box -->
+        <ellipse cx="120" cy="180" rx="55" ry="10" fill="#E2E8F0"/>
+        <!-- Cartoon Box -->
+        <rect x="75" y="95" width="90" height="75" rx="8" fill="#FF8E53" stroke="#E0753A" stroke-width="4"/>
+        <!-- Star emblem in the middle of box -->
+        <path d="M120 120 L122 125 L127 126 L123 130 L124 135 L120 132 L116 135 L117 130 L113 126 L118 125 Z" fill="white"/>
+        <!-- Box flaps details -->
+        <path d="M75 105 H165 M120 105 V170" stroke="#E0753A" stroke-width="2"/>
+      `;
+
+      // 2. Draw Cute bird at positions[chosen.id]
+      const bx = chosen.birdX;
+      const by = chosen.birdY;
+      svg += `
+        <g class="animate-bounce-slow">
+          <!-- Shadow of bird -->
+          <ellipse cx="${bx}" cy="${by + 20}" rx="12" ry="4" fill="#E2E8F0" opacity="0.6"/>
+          <!-- Bird Tail -->
+          <polygon points="${bx - 12},${by - 2} ${bx - 20},${by - 8} ${bx - 18},${by + 5}" fill="#4D96FF"/>
+          <!-- Bird Body -->
+          <circle cx="${bx}" cy="${by}" r="15" fill="#4D96FF" stroke="#357AE8" stroke-width="2"/>
+          <!-- Wing -->
+          <ellipse cx="${bx - 2}" cy="${by + 3}" rx="7" ry="5" fill="#2E86DE" transform="rotate(-15, ${bx - 2}, ${by + 3})"/>
+          <!-- Eye -->
+          <circle cx="${bx + 5}" cy="${by - 4}" r="2" fill="#1E293B"/>
+          <!-- Beak -->
+          <polygon points="${bx + 14},${by - 2} ${bx + 20},${by} ${bx + 14},${by + 4}" fill="#FFD93D"/>
+          <!-- Little legs -->
+          <line x1="${bx - 4}" y1="${by + 14}" x2="${bx - 6}" y2="${by + 20}" stroke="#FF8E53" stroke-width="2" stroke-linecap="round"/>
+          <line x1="${bx + 4}" y1="${by + 14}" x2="${bx + 2}" y2="${by + 20}" stroke="#FF8E53" stroke-width="2" stroke-linecap="round"/>
+        </g>
+      `;
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+
+      // Render options
+      const allLabels = positions.map(p => p.label);
+      const distractors = allLabels.filter(lbl => lbl !== chosen.label);
+      renderOptions(chosen.label, distractors, optionsContainer);
+    }
+
+    // C1. La monnaie
+    function genMonnaie(visualArea, questionText, optionsContainer) {
+      const items = [];
+      let total = 0;
+
+      if (state.difficulty === 'easy') {
+        // Coins only, sum <= 5
+        const numTwos = getRandomInt(0, 2);
+        for (let i = 0; i < numTwos; i++) {
+          items.push({ type: 'piece', val: 2 });
+          total += 2;
+        }
+        const numOnes = getRandomInt(1, 3);
+        for (let i = 0; i < numOnes; i++) {
+          items.push({ type: 'piece', val: 1 });
+          total += 1;
+        }
+      } else if (state.difficulty === 'challenge') {
+        // High sums up to 45 using bills and coins
+        const numTens = getRandomInt(1, 3);
+        for (let i = 0; i < numTens; i++) {
+          items.push({ type: 'billet', val: 10 });
+          total += 10;
+        }
+        const numFives = getRandomInt(1, 2);
+        for (let i = 0; i < numFives; i++) {
+          items.push({ type: 'billet', val: 5 });
+          total += 5;
+        }
+        const numTwos = getRandomInt(1, 3);
+        for (let i = 0; i < numTwos; i++) {
+          items.push({ type: 'piece', val: 2 });
+          total += 2;
+        }
+        const numOnes = getRandomInt(1, 3);
+        for (let i = 0; i < numOnes; i++) {
+          items.push({ type: 'piece', val: 1 });
+          total += 1;
+        }
+      } else {
+        // Normal mode setup
+        const numTens = getRandomInt(0, 2);
+        for (let i = 0; i < numTens; i++) {
+          items.push({ type: 'billet', val: 10 });
+          total += 10;
+        }
+        const numFives = getRandomInt(0, 2);
+        for (let i = 0; i < numFives; i++) {
+          items.push({ type: 'billet', val: 5 });
+          total += 5;
+        }
+        const numTwos = getRandomInt(0, 3);
+        for (let i = 0; i < numTwos; i++) {
+          items.push({ type: 'piece', val: 2 });
+          total += 2;
+        }
+        const numOnes = getRandomInt(1, 3);
+        for (let i = 0; i < numOnes; i++) {
+          items.push({ type: 'piece', val: 1 });
+          total += 1;
+        }
+      }
+
+      // Safety check
+      if (total < 1) {
+        items.push({ type: 'piece', val: 2 });
+        total += 2;
+      }
+
+      state.currentAnswer = `${total} €`;
+      questionText.innerText = "Combien d'argent y a-t-il dans le porte-monnaie ?";
+
+      // Render Wallet SVG containing coins and bills
+      let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
+      
+      // Draw Porte-monnaie (Cute purple purse)
+      svg += `
+        <path d="M40 180 C40 120 70 50 160 50 C250 50 280 120 280 180 Z" fill="#F5F3FF" stroke="#6C5DD3" stroke-width="4"/>
+        <rect x="30" y="165" width="260" height="25" rx="10" fill="#6C5DD3"/>
+        <circle cx="160" cy="50" r="10" fill="#FFD93D" stroke="#E0BE2F" stroke-width="2"/>
+      `;
+
+      // Lay items out in two columns inside the wallet (y: 80 to 150, x: 70 to 250)
+      items.forEach((item, index) => {
+        const row = Math.floor(index / 3);
+        const col = index % 3;
+        const x = 70 + col * 65 + (row * 15);
+        const y = 80 + row * 38;
+
+        if (item.type === 'billet') {
+          // Billet rectangle
+          const fill = item.val === 10 ? '#FF6B8B' : '#4D96FF';
+          const stroke = item.val === 10 ? '#E05270' : '#357AE8';
+          
+          svg += `
+            <g class="animate-bounce-slow" style="animation-delay: ${index * 0.1}s">
+              <!-- Billet card -->
+              <rect x="${x}" y="${y}" width="55" height="32" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="2" transform="rotate(-5, ${x}, ${y})"/>
+              <!-- Billet details -->
+              <rect x="${x + 4}" y="${y + 4}" width="47" height="24" rx="2" fill="none" stroke="white" stroke-dasharray="2 1" opacity="0.6"/>
+              <text x="${x + 27}" y="${y + 22}" font-family="Fredoka" font-weight="bold" font-size="14" fill="white" text-anchor="middle">${item.val}€</text>
+            </g>
+          `;
+        } else {
+          // Pièce circle
+          const r = item.val === 2 ? 14 : 11;
+          const outerFill = item.val === 2 ? '#D8A020' : '#CCCCCC';
+          const innerFill = item.val === 2 ? '#E6E6E6' : '#EAA020';
+          
+          svg += `
+            <g class="animate-bounce-slow" style="animation-delay: ${index * 0.1}s">
+              <!-- Outer Ring -->
+              <circle cx="${x + 20}" cy="${y + 15}" r="${r}" fill="${outerFill}" stroke="#94A3B8" stroke-width="1"/>
+              <!-- Inner ring -->
+              <circle cx="${x + 20}" cy="${y + 15}" r="${r - 3}" fill="${innerFill}"/>
+              <!-- Text -->
+              <text x="${x + 20}" y="${y + 19}" font-family="Fredoka" font-size="10" font-weight="black" fill="#1E293B" text-anchor="middle">${item.val}</text>
+            </g>
+          `;
+        }
+      });
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+
+      // Render options
+      const correctText = `${total} €`;
+      const distVals = getDistractors(total, 3, 1, 60);
+      const distractors = distVals.map(val => `${val} €`);
+      renderOptions(correctText, distractors, optionsContainer);
+    }
+
+    // C2. Lire l'heure
+    function genHeure(visualArea, questionText, optionsContainer) {
+      function getHeureText(h, min) {
+        if (min === 30) {
+          return `${h} heures et demie`;
+        } else if (min === 15) {
+          return `${h} heures et quart`;
+        } else if (min === 45) {
+          const nextH = h === 12 ? 1 : h + 1;
+          return `${nextH} heures moins le quart`;
+        } else {
+          return `${h} heures`;
+        }
+      }
+
+      let hour = getRandomInt(1, 12);
+      let min = 0;
+
+      if (state.difficulty === 'easy') {
+        min = 0;
+      } else if (state.difficulty === 'challenge') {
+        min = [0, 15, 30, 45][getRandomInt(0, 3)];
+      } else {
+        min = [0, 30][getRandomInt(0, 1)];
+      }
+
+      const correctText = getHeureText(hour, min);
+      state.currentAnswer = correctText;
+
+      questionText.innerText = "Quelle heure indique cette horloge ?";
+
+      // Analog Clock Rendering
+      let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">`;
+      
+      const cx = 120;
+      const cy = 120;
+      const r = 90;
+
+      // Outer rim
+      svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="#6C5DD3" stroke-width="8" shadow="lg"/>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="${r - 6}" fill="none" stroke="#F5F3FF" stroke-width="4"/>`;
+
+      // Hour Numbers
+      for (let h = 1; h <= 12; h++) {
+        const angle = h * 30 * Math.PI / 180;
+        const tx = cx + (r - 20) * Math.sin(angle);
+        const ty = cy - (r - 20) * Math.cos(angle);
+        svg += `<text x="${tx}" y="${ty + 5}" font-family="Fredoka" font-weight="bold" font-size="14" fill="#334155" text-anchor="middle">${h}</text>`;
+      }
+
+      // Minute ticks (lines around)
+      for (let m = 0; m < 60; m += 5) {
+        if (m % 15 !== 0) { // skip 3, 6, 9, 12 positions for clean look
+          const angle = m * 6 * Math.PI / 180;
+          const x1 = cx + (r - 8) * Math.sin(angle);
+          const y1 = cy - (r - 8) * Math.cos(angle);
+          const x2 = cx + (r - 4) * Math.sin(angle);
+          const y2 = cy - (r - 4) * Math.cos(angle);
+          svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#CBD5E1" stroke-width="2"/>`;
+        }
+      }
+
+      // 1. Minute hand (blue, pointing to minutes)
+      const mAngle = min * 6 * Math.PI / 180;
+      const mx = cx + 68 * Math.sin(mAngle);
+      const my = cy - 68 * Math.cos(mAngle);
+      svg += `<line x1="${cx}" y1="${cy}" x2="${mx}" y2="${my}" stroke="#4D96FF" stroke-width="5" stroke-linecap="round"/>`;
+
+      // 2. Hour hand (red, pointing to hour position with minute fraction)
+      const hAngle = (hour + min / 60) * 30 * Math.PI / 180;
+      const hx = cx + 45 * Math.sin(hAngle);
+      const hy = cy - 45 * Math.cos(hAngle);
+      svg += `<line x1="${cx}" y1="${cy}" x2="${hx}" y2="${hy}" stroke="#FF6B8B" stroke-width="7" stroke-linecap="round"/>`;
+
+      // Center Pin
+      svg += `<circle cx="${cx}" cy="${cy}" r="6" fill="#1E293B"/>`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="2" fill="white"/>`;
+
+      svg += `</svg>`;
+      visualArea.innerHTML = svg;
+
+      // Render choices
+      const choicesSet = new Set([correctText]);
+      while (choicesSet.size < 4) {
+        const dh = getRandomInt(1, 12);
+        let dmin = 0;
+        if (state.difficulty === 'easy') {
+          dmin = 0;
+        } else if (state.difficulty === 'challenge') {
+          dmin = [0, 15, 30, 45][getRandomInt(0, 3)];
+        } else {
+          dmin = [0, 30][getRandomInt(0, 1)];
+        }
+        choicesSet.add(getHeureText(dh, dmin));
+      }
+      const allChoices = Array.from(choicesSet);
+      const distractors = allChoices.filter(t => t !== correctText);
+      renderOptions(correctText, distractors, optionsContainer);
+    }
+
+    // ==========================================
+    // SYSTEME DE BADGES & GAMIFICATION
+    // ==========================================
+    const BADGES = [
+      {
+        id: 'badge_squirrel',
+        name: 'L\'Écureuil Calculateur',
+        desc: 'Tu as débloqué ce badge à 5 étoiles !',
+        starsReq: 5,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 L85 25 V60 C85 80 50 95 50 95 C50 95 15 80 15 60 V25 L50 5 Z" fill="#D38B5D" stroke="#A0522D" stroke-width="4"/>
+            <path d="M50 10 L80 28 V57 C80 75 50 88 50 88 C50 88 20 75 20 57 V28 L50 10 Z" fill="#FFF" stroke="#CD853F" stroke-width="2" opacity="0.9"/>
+            <path d="M50 35 C65 35 65 55 50 68 C35 55 35 35 50 35 Z" fill="#8B4513"/>
+            <path d="M35 35 C35 30 65 30 65 35 C65 40 35 40 35 35 Z" fill="#A0522D" stroke="#8B4513" stroke-width="1"/>
+            <circle cx="50" cy="30" r="3" fill="#A0522D"/>
+            <path d="M50 72 L52 76 L57 77 L53 80 L54 85 L50 83 L46 85 L47 80 L43 77 L48 76 Z" fill="#FFD93D" stroke="#E0BE2F" stroke-width="0.5"/>
+          </svg>
+        `
+      },
+      {
+        id: 'badge_rabbit',
+        name: 'Le Lapin Rapide',
+        desc: 'Tu as débloqué ce badge à 10 étoiles !',
+        starsReq: 10,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="#E2E8F0" stroke="#94A3B8" stroke-width="4"/>
+            <circle cx="50" cy="50" r="39" fill="#FFF" stroke="#CBD5E1" stroke-width="2"/>
+            <path d="M38 25 C30 5 42 5 44 25 Z" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
+            <path d="M40 23 C34 9 41 9 42 23 Z" fill="#FFB6C1"/>
+            <path d="M62 25 C70 5 58 5 56 25 Z" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
+            <path d="M60 23 C66 9 59 9 58 23 Z" fill="#FFB6C1"/>
+            <circle cx="50" cy="52" r="18" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
+            <circle cx="44" cy="48" r="2" fill="#1E293B"/>
+            <circle cx="56" cy="48" r="2" fill="#1E293B"/>
+            <polygon points="50,53 48,51 52,51" fill="#FFB6C1"/>
+            <path d="M50 53 Q48 56 46 55 M50 53 Q52 56 54 55" stroke="#1E293B" stroke-width="1.5" fill="none"/>
+          </svg>
+        `
+      },
+      {
+        id: 'badge_owl',
+        name: 'Le Hibou Sage',
+        desc: 'Tu as débloqué ce badge à 20 étoiles !',
+        starsReq: 20,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="#FEF08A" stroke="#EAB308" stroke-width="4"/>
+            <circle cx="50" cy="50" r="39" fill="#FFF" stroke="#FEF08A" stroke-width="2"/>
+            <polygon points="32,45 32,32 45,40" fill="#CA8A04"/>
+            <polygon points="68,45 68,32 55,40" fill="#CA8A04"/>
+            <circle cx="50" cy="55" r="22" fill="#D97706" stroke="#B45309" stroke-width="2"/>
+            <circle cx="42" cy="48" r="8" fill="#FFF" stroke="#CA8A04" stroke-width="1.5"/>
+            <circle cx="58" cy="48" r="8" fill="#FFF" stroke="#CA8A04" stroke-width="1.5"/>
+            <circle cx="42" cy="48" r="3" fill="#1E293B"/>
+            <circle cx="58" cy="48" r="3" fill="#1E293B"/>
+            <line x1="48" y1="48" x2="52" y2="48" stroke="#1E293B" stroke-width="2"/>
+            <polygon points="50,52 47,58 53,58" fill="#EA580C"/>
+          </svg>
+        `
+      },
+      {
+        id: 'badge_dolphin',
+        name: 'Le Dauphin Malin',
+        desc: 'Tu as débloqué ce badge à 35 étoiles !',
+        starsReq: 35,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="4"/>
+            <circle cx="50" cy="50" r="39" fill="#FFF" stroke="#E0F2FE" stroke-width="2"/>
+            <path d="M15 65 Q32.5 55 50 65 T85 65 L85 85 L15 85 Z" fill="#38BDF8" opacity="0.6"/>
+            <path d="M15 72 Q32.5 65 50 72 T85 72 L85 85 L15 85 Z" fill="#0284C7"/>
+            <path d="M30 55 C35 30 65 28 72 45 C65 42 55 45 48 55 Z" fill="#0EA5E9" stroke="#0284C7" stroke-width="1.5"/>
+            <path d="M50 35 C52 28 58 28 56 36 Z" fill="#0EA5E9"/>
+            <circle cx="62" cy="38" r="1.5" fill="white"/>
+          </svg>
+        `
+      },
+      {
+        id: 'badge_lion',
+        name: 'Le Lion Champion',
+        desc: 'Tu as débloqué ce badge à 50 étoiles !',
+        starsReq: 50,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 L90 25 V60 C90 78 50 95 50 95 C50 95 10 78 10 60 V25 L50 5 Z" fill="#FEE2E2" stroke="#EF4444" stroke-width="4"/>
+            <circle cx="50" cy="52" r="26" fill="#F97316"/>
+            <path d="M50 20 Q56 26 50 32 Q62 26 62 38" stroke="#EA580C" stroke-width="2" fill="none"/>
+            <circle cx="50" cy="52" r="18" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+            <circle cx="36" cy="40" r="5" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+            <circle cx="64" cy="40" r="5" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
+            <circle cx="44" cy="48" r="2.5" fill="#1E293B"/>
+            <circle cx="56" cy="48" r="2.5" fill="#1E293B"/>
+            <polygon points="50,54 47,51 53,51" fill="#EA580C"/>
+            <path d="M50 54 V58 Q48 60 46 59 M50 58 Q52 60 54 59" stroke="#1E293B" stroke-width="1.5" fill="none"/>
+            <polygon points="42,28 50,20 58,28 53,32 47,32" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
+          </svg>
+        `
+      },
+      {
+        id: 'badge_unicorn',
+        name: 'La Licorne Magique',
+        desc: 'Tu as débloqué ce badge à 75 étoiles !',
+        starsReq: 75,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 L88 27 V55 C88 78 50 95 50 95 C50 95 12 78 12 55 V27 L50 5 Z" fill="#F5F3FF" stroke="#D946EF" stroke-width="4"/>
+            <path d="M50 10 L83 30 V52 C83 72 50 88 50 88 C50 88 17 72 17 52 V30 L50 10 Z" fill="#FFF" stroke="#E879F9" stroke-width="2" opacity="0.9"/>
+            <path d="M35 45 C25 55 35 75 55 75 C60 70 50 60 45 45 Z" fill="#A855F7"/>
+            <path d="M32 50 C20 62 30 82 50 82" stroke="#EC4899" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M42 45 C45 35 60 32 68 42 C72 47 70 55 60 55 C52 55 48 55 42 45 Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+            <polygon points="45,35 48,15 54,32" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+            <circle cx="58" cy="43" r="2" fill="#D946EF"/>
+            <path d="M72 25 L74 29 L78 30 L74 31 L72 35 L70 31 L66 30 L70 29 Z" fill="#FFD93D"/>
+          </svg>
+        `
+      },
+      {
+        id: 'badge_dragon',
+        name: 'Le Dragon de Légende',
+        desc: 'Tu as débloqué ce badge à 100 étoiles !',
+        starsReq: 100,
+        svg: (isLocked) => `
+          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 5 L88 27 V55 C88 78 50 95 50 95 C50 95 12 78 12 55 V27 L50 5 Z" fill="#FFFBEB" stroke="#F59E0B" stroke-width="5"/>
+            <path d="M22 45 C5 25 15 65 35 55 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
+            <path d="M78 45 C95 25 85 65 65 55 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
+            <circle cx="50" cy="58" r="18" fill="#10B981" stroke="#047857" stroke-width="2"/>
+            <circle cx="50" cy="42" r="14" fill="#10B981" stroke="#047857" stroke-width="2"/>
+            <ellipse cx="50" cy="62" rx="10" ry="12" fill="#A7F3D0"/>
+            <polygon points="42,32 35,22 46,29" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
+            <polygon points="58,32 65,22 54,29" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
+            <circle cx="45" cy="40" r="2.5" fill="#1E293B"/>
+            <circle cx="55" cy="40" r="2.5" fill="#1E293B"/>
+            <circle cx="48" cy="46" r="1" fill="#047857"/>
+            <circle cx="52" cy="46" r="1" fill="#047857"/>
+            <polygon points="45,28 50,18 55,28 52,30 48,30" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
+          </svg>
+        `
+      }
+    ];
+
+    function updateBadgeCountUI() {
+      const unlockedCount = state.unlockedBadges.length;
+      const btnText = document.getElementById('badge-count-text');
+      if (btnText) {
+        btnText.innerText = `Badges (${unlockedCount}/${BADGES.length})`;
+      }
+    }
+
+    function checkBadgeUnlocks() {
+      let newlyUnlocked = [];
+      BADGES.forEach(badge => {
+        if (state.stars >= badge.starsReq && !state.unlockedBadges.includes(badge.id)) {
+          state.unlockedBadges.push(badge.id);
+          newlyUnlocked.push(badge);
+        }
+      });
+
+      if (newlyUnlocked.length > 0) {
+        localStorage.setItem('mathscp_unlocked_badges', JSON.stringify(state.unlockedBadges));
+        updateBadgeCountUI();
+        const lastBadge = newlyUnlocked[newlyUnlocked.length - 1];
+        triggerBadgeUnlockPopup(lastBadge);
+      }
+    }
+
+    function triggerBadgeUnlockPopup(badge) {
+      playAudioTone('trophy');
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+
+      const svgContainer = document.getElementById('unlocked-badge-svg-container');
+      const titleEl = document.getElementById('unlocked-badge-title');
+      const descEl = document.getElementById('unlocked-badge-desc');
+
+      if (svgContainer) svgContainer.innerHTML = badge.svg(false);
+      if (titleEl) titleEl.innerText = badge.name;
+      if (descEl) descEl.innerText = `Félicitations ! Tu as franchi le palier de ${badge.starsReq} étoiles et tu as gagné ce magnifique badge de niveau ! 🏆`;
+
+      const popup = document.getElementById('popup-badge-unlock');
+      if (popup) popup.classList.remove('hidden');
+    }
+
+    function closeUnlockPopup() {
+      playAudioTone('click');
+      const popup = document.getElementById('popup-badge-unlock');
+      if (popup) popup.classList.add('hidden');
+    }
+
+    function openBadgesModal() {
+      playAudioTone('click');
+      const grid = document.getElementById('badges-grid-container');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      BADGES.forEach(badge => {
+        const isLocked = !state.unlockedBadges.includes(badge.id);
+        const card = document.createElement('div');
+        card.className = `flex flex-col items-center p-3 rounded-2xl border-2 bg-slate-50 transition-all w-full max-w-[130px] ${isLocked ? 'border-slate-200 opacity-80' : 'border-brand-purple bg-white hover:scale-105 shadow-md'}`;
+        card.innerHTML = `
+          <div class="w-16 h-16 mb-2 flex items-center justify-center">
+            ${badge.svg(isLocked)}
+          </div>
+          <span class="text-[11px] font-bold font-title text-slate-800 text-center leading-tight h-8 flex items-center justify-center">${badge.name}</span>
+          <span class="text-[9px] text-slate-500 mt-1 font-medium bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+            ${isLocked ? `Req: ${badge.starsReq} 🌟` : 'Débloqué !'}
+          </span>
+        `;
+        grid.appendChild(card);
+      });
+
+      const modal = document.getElementById('modal-badges');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeBadgesModal() {
+      playAudioTone('click');
+      const modal = document.getElementById('modal-badges');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // ==========================================
+    // DIALOGUES ET PHRASES DE MOTIVATION DU COMPAGNON
+    // ==========================================
+    const FOOTER_PHRASES = {
+      idle: [
+        "Bonjour champion ! Choisis un jeu et amuse-toi ! 🌟",
+        "Tu es très fort en mathématiques ! Continue à t'entraîner ! 🚀",
+        "Chaque bonne réponse te rapproche d'un nouveau badge ! 🏅",
+        "Les mathématiques sont un jeu d'enfant avec toi ! 🎈",
+        "Tu as déjà gagné plein d'étoiles, c'est formidable ! 🌟"
+      ],
+      success: [
+        "Incroyable ! Tu as trouvé la bonne réponse ! 🥳",
+        "Bravo ! Ta réponse est tout à fait correcte ! 🦖",
+        "Magnifique ! Tu es le roi des calculs ! 👑",
+        "Génial ! Une étoile de plus dans ta collection ! ⭐",
+        "Quel talent ! C'est un sans-faute ! 🎯"
+      ],
+      retry: [
+        "Ne t'inquiète pas ! Essaye encore, tu vas y arriver ! 💪",
+        "Presque ! Prends ton temps et regarde bien le dessin. 🔍",
+        "L'erreur fait partie du jeu. Réessaie tranquillement ! 🌻",
+        "Une autre tentative ? Tu es tout près de trouver ! 💡",
+        "On apprend tous de nos erreurs. Tu vas réussir ! 🌟"
+      ],
+      game_start: [
+        "Regarde bien l'image et réfléchis. Quelle est la bonne carte ? 🤔",
+        "Un nouvel exercice ! Concentre-toi et choisis ta réponse. 🎯",
+        "Tu as toutes les clés pour réussir cet exercice ! C'est parti ! 🚀",
+        "Observe bien les indices visuels à gauche. 🔍"
+      ]
+    };
+
+    function updateFooterMessage(type) {
+      const textEl = document.getElementById('footer-motivational-text');
+      const avatarEl = document.getElementById('footer-helper-avatar');
+      if (!textEl || !avatarEl) return;
+
+      const list = FOOTER_PHRASES[type] || FOOTER_PHRASES['idle'];
+      const msg = list[Math.floor(Math.random() * list.length)];
+      textEl.innerText = msg;
+
+      // Set avatar emoji based on state
+      if (type === 'success') {
+        avatarEl.innerText = ['🥳', '😎', '🦖', '🎈', '🦄'][Math.floor(Math.random() * 5)];
+        avatarEl.classList.add('scale-110');
+        setTimeout(() => avatarEl.classList.remove('scale-110'), 300);
+      } else if (type === 'retry') {
+        avatarEl.innerText = ['💡', '🦊', '🤗', '🦉', '🐱'][Math.floor(Math.random() * 5)];
+      } else {
+        avatarEl.innerText = ['🤖', '🦁', '🐻', '🐇', '🐨'][Math.floor(Math.random() * 5)];
+      }
+    }
+
+    // ==========================================
+    // SYNTHÈSE VOCALE (TEXT-TO-SPEECH)
+    // ==========================================
+    // Pre-initialize SpeechSynthesis voices
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+      
+      // Clean tags or excess spaces
+      const cleanText = text.replace(/<[^>]*>/g, '').trim();
+      
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'fr-FR';
+      
+      // Find a suitable French voice
+      const voices = window.speechSynthesis.getVoices();
+      const frenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang === 'fr-FR');
+      if (frenchVoice) {
+        utterance.voice = frenchVoice;
+      }
+      
+      utterance.rate = 0.92; // Slightly slower for CP children
+      utterance.pitch = 1.12; // Friendly child-friendly tone
+      
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function speakQuestion() {
+      const textEl = document.getElementById('game-question-text');
+      if (textEl) {
+        speakText(textEl.innerText);
+      }
+    }
+  </script>
+
+  <!-- Shake effect animation CSS helper -->
+  <style>
+    .shake {
+      animation: shake-anim 0.4s ease-in-out;
+    }
+    @keyframes shake-anim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+  </style>
+</body>
+</html>
