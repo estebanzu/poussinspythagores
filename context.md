@@ -1,29 +1,55 @@
-# Contexte du projet – PWA Mathématiques CP
+# Contexte du projet – Poussins Pythagorés
 
 ## Objectif général
-Créer une Progressive Web App (PWA) éducative, complètement en **français**, destinée aux enfants de 6‑7 ans (niveau CP du système français). L’application doit fonctionner dans un **fichier unique** (HTML avec JavaScript et Tailwind via CDN) afin d’être facilement installable sur un iPad.
+Progressive Web App (PWA) éducative, entièrement en **français**, destinée aux enfants de 6‑7 ans (niveau CP). Conçue pour fonctionner sur **iPad** en tant qu'application native (installable, hors-ligne).
 
-## État actuel (au 26 juillet 2026)
-- **Fichier principal** : `index.html` contenant toute la logique du jeu, les générateurs de questions et le système de difficulté adaptative (`facile`, `normal`, `challenge`).
-- **Interface** : design coloré, typographie Fredoka, boutons larges, animations de victoire (confettis) et système de badges/étoiles.
-- **Gamification** : compteur d’étoiles, 7 types de badges avec persistance via `localStorage`.
-- **Difficulté adaptative** : le niveau passe automatiquement après trois victoires ou échecs consécutifs.
-- **PWA** : manifest et service worker déjà inclus dans le fichier unique.
+## Stack technique
+| Couche | Technologie |
+|--------|-------------|
+| Frontend | HTML + JavaScript vanilla (single-file), Tailwind CSS via CDN |
+| Serveur | Node.js + Express (`server.js`) |
+| Déploiement | Vercel (déploiement continu via `make deploy`) |
+| Stockage | `localStorage` (données persistantes côté client) |
+| PWA | Service Worker (`public/service-worker.js`), manifest JSON |
+| Audio | Web Audio API (effets sonores), SpeechSynthesis API (TTS) |
+| Design | Typographie Fredoka, palette de couleurs brand, SVG inline |
 
-## Fonctionnalités implémentées
-- **Jeux** : formes, nombres, monnaie, heures, vocabulaire spatial.
-- **Feedback** : messages doux en français, animations de succès, encouragements dans le pied de page.
-- **Stockage** : sauvegarde du score et des badges dans le navigateur.
+## Fichiers du projet
+| Fichier | Rôle |
+|---------|------|
+| `index.html` | Application complète (~4500 lignes) : UI, logique, générateurs d'exercices, gamification |
+| `server.js` | Serveur Express servant les fichiers statiques + API routes |
+| `public/service-worker.js` | Service Worker pour le mode hors-ligne |
+| `public/manifest.json` | Manifest PWA (nom, icônes, couleurs) |
+| `public/logo.png` | Icône de l'application |
+| `Makefile` | Automatisation : `dev`, `deploy`, `stop`, `build`, `clean` |
+| `vercel.json` | Configuration de routage Vercel |
+| `.env` | Variables d'environnement (SUPABASE_ANON_KEY, VERCEL_TOKEN) — gitignoré |
 
-## Prochaines étapes (voir `roadmap.md`)
-1. Vérifier manuellement le passage de difficulté et ajuster les seuils.
-2. Ajouter des messages motivants dynamiques dans le footer.
-3. Étendre le catalogue de jeux et implémenter le système de points jusqu’à 100 points.
-4. Préparer la publication du PWA (HTTPS, documentation).
+## Système de données (localStorage)
+| Clé | Type | Description |
+|-----|------|-------------|
+| `mathscp_stars` | int | Total cumulé d'étoiles |
+| `mathscp_muted` | bool | État du son (muet/actif) |
+| `mathscp_unlocked_badges` | array | IDs des badges débloqués |
+| `mathscp_autoplay_voice` | bool | Lecture vocale automatique |
+| `mathscp_high_contrast` | bool | Mode contraste élevé |
+| `mathscp_adaptive_stats` | object | Statistiques par jeu (précision, temps, difficulté) |
+| `mathscp_session_history` | array | 20 dernières sessions (date, précision, durée, étoiles) |
+| `mathscp_multiplayer_history` | array | 10 derniers matchs multijoueur |
+| `mathscp_playtime_accumulated` | int | Temps de jeu cumulé (ms) |
+| `mathscp_last_active_time` | int | Dernière activité (timestamp) |
+| `mathscp_lockout_start_time` | int | Début de verrouillage (timestamp) |
+| `mathscp_companion` | object | Compagnon sélectionné (type, nom) |
 
-## Ressources externes consultées
-- Plusieurs applications PWA éducatives pour enfants afin d’inspirer le design et les mécanismes de gamification.
-- Directives d’accessibilité et bonnes pratiques UX pour les jeunes utilisateurs.
+## État actuel (27 juillet 2026)
+- **Déploiement** : https://poussinspythagores.vercel.app
+- **Modes de jeu** : Solo, Multijoueur local (tour par tour), Quêtes narratives (3 aventures)
+- **11 jeux** : 8 dans le catalogue + 3 interactifs (quêtes)
+- **3 catégories** : Nombres et Calculs, Espace et Géométrie, Grandeurs et Mesures
+- **Gamification** : étoiles, 7 badges, 5 niveaux de difficulté, compagnon évolutif
+- **Accessibilité** : TTS, mode contraste élevé, lecture automatique
+- **Analytics** : tableau de bord parental (précision, tendances, erreurs, historique)
 
----
-*Ce fichier résume la situation du projet pour permettre une reprise fluide demain.*
+## Équipe
+Projet personnel — un seul développeur.

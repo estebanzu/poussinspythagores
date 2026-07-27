@@ -244,6 +244,11 @@
         <span id="badge-count-text" class="hidden sm:inline font-title text-xs sm:text-sm">Badges (0/7)</span>
       </button>
 
+      <!-- Companion Button -->
+      <button onclick="openCompanionModal()" class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-md border-2 border-brand-pink/40 hover:scale-105 active:scale-95 transition-all" title="Mon Compagnon">
+        <span id="header-companion-icon" class="text-base sm:text-lg">🦉</span>
+      </button>
+
       <!-- Accessibility Settings Button -->
       <button onclick="openAccessibilityModal()" class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-md border-2 border-slate-200 hover:scale-105 active:scale-95 transition-all" title="Accessibilité">
         <span class="text-base sm:text-lg">⚙️</span>
@@ -791,6 +796,73 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL: COMPANION PICKER ==================== -->
+  <div id="modal-companion" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-4 border-brand-pink shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
+      <button onclick="closeCompanionModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
+        ✕
+      </button>
+      <div class="text-center mb-4">
+        <h2 class="text-3xl font-bold font-title text-brand-pink flex items-center justify-center gap-2">
+          <span>Mon Compagnon</span> 🐾
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Choisis ton compagnon d'aventure ! Il évolue avec tes étoiles.</p>
+      </div>
+      <div id="companion-progress" class="mb-4"></div>
+      <div id="companion-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: PARENT DASHBOARD ==================== -->
+  <div id="modal-dashboard" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-brand-blue shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
+      <button onclick="closeDashboard()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
+        ✕
+      </button>
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold font-title text-brand-blue flex items-center justify-center gap-2">
+          <span>Tableau de bord</span> 📋
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Rapport d'apprentissage et tendances de progression.</p>
+      </div>
+
+      <!-- Overview cards -->
+      <div id="dashboard-overview" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"></div>
+
+      <!-- Category breakdown -->
+      <div class="mb-6">
+        <h3 class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand-purple"></span> Progression par catégorie
+        </h3>
+        <div id="dashboard-categories" class="flex flex-col gap-3"></div>
+      </div>
+
+      <!-- Per-game detail -->
+      <div class="mb-6">
+        <h3 class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand-green"></span> Détail par jeu
+        </div>
+        <div id="dashboard-games" class="bg-slate-50 rounded-2xl border-2 border-slate-100 overflow-hidden"></div>
+      </div>
+
+      <!-- Error patterns -->
+      <div id="dashboard-errors-section" class="mb-6 hidden">
+        <h3 class="font-title font-bold text-rose-600 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-rose-400"></span> Points à améliorer
+        </h3>
+        <div id="dashboard-errors" class="flex flex-col gap-2"></div>
+      </div>
+
+      <!-- Session history -->
+      <div>
+        <h3 class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand-orange"></span> Historique des sessions
+        </h3>
+        <div id="dashboard-sessions" class="flex flex-col gap-2 max-h-60 overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== FOOTER: MOTIVATIONAL MESSAGE BOARD ==================== -->
   <footer class="relative z-10 w-full px-6 py-4 mt-auto bg-white/40 backdrop-blur-md border-t-2 border-slate-200/50 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
     <!-- Bubbly avatar helper -->
@@ -805,6 +877,9 @@
         </p>
       </div>
     </div>
+    <button onclick="openDashboard()" class="text-xs font-title font-bold text-slate-400 hover:text-brand-blue bg-white/60 hover:bg-white px-3 py-1.5 rounded-full border border-slate-200 hover:border-brand-blue/30 transition-all whitespace-nowrap">
+      📋 Tableau de bord
+    </button>
   </footer>
 
   <!-- Sound Mute Toggle (Floating bubble in bottom right) -->
@@ -871,6 +946,34 @@
     let adaptiveStats = JSON.parse(localStorage.getItem('mathscp_adaptive_stats') || '{}');
     let questionStartTime = null;
 
+    // Session tracking for analytics dashboard
+    let sessionHistory = JSON.parse(localStorage.getItem('mathscp_session_history') || '[]');
+    let currentSessionGames = new Set();
+    let currentSessionCorrect = 0;
+    let currentSessionTotal = 0;
+    let currentSessionStart = Date.now();
+
+    function recordSession() {
+      if (currentSessionTotal === 0) return;
+      const entry = {
+        date: new Date().toLocaleDateString('fr-FR'),
+        games: [...currentSessionGames],
+        accuracy: currentSessionCorrect / currentSessionTotal,
+        timeMs: Date.now() - currentSessionStart,
+        stars: state.sessionStars
+      };
+      sessionHistory.unshift(entry);
+      if (sessionHistory.length > 20) sessionHistory.length = 20;
+      localStorage.setItem('mathscp_session_history', JSON.stringify(sessionHistory));
+    }
+
+    function resetSessionTracking() {
+      currentSessionGames = new Set();
+      currentSessionCorrect = 0;
+      currentSessionTotal = 0;
+      currentSessionStart = Date.now();
+    }
+
     function saveAdaptiveStats() {
       localStorage.setItem('mathscp_adaptive_stats', JSON.stringify(adaptiveStats));
     }
@@ -905,6 +1008,10 @@
         if (stats.recentTimes.length > 10) stats.recentTimes.shift();
       }
       saveAdaptiveStats();
+
+      currentSessionGames.add(gameId);
+      currentSessionTotal++;
+      if (isCorrect) currentSessionCorrect++;
     }
 
     function getAccuracyRate(gameId) {
@@ -1052,6 +1159,198 @@
       document.getElementById('modal-learning-profile').classList.add('hidden');
     }
 
+    // =====================================================================
+    // PARENTAL ANALYTICS DASHBOARD
+    // =====================================================================
+
+    function openDashboard() {
+      playAudioTone('click');
+      parentGateMode = 'dashboard';
+      const a = getRandomInt(15, 45);
+      const b = getRandomInt(15, 45);
+      parentGateAnswer = a + b;
+      const gateEl = document.getElementById('parent-gate-container');
+      const qEl = document.getElementById('parent-gate-question');
+      const inputEl = document.getElementById('parent-gate-input');
+      const errEl = document.getElementById('parent-gate-error');
+      if (!gateEl || !qEl || !inputEl) return;
+      qEl.innerText = `${a} + ${b} = ?`;
+      inputEl.value = '';
+      if (errEl) errEl.classList.add('hidden');
+      gateEl.classList.remove('hidden');
+      inputEl.focus();
+    }
+
+    function verifyParentGate() {
+      const inputEl = document.getElementById('parent-gate-input');
+      const errEl = document.getElementById('parent-gate-error');
+      if (!inputEl) return;
+      const val = parseInt(inputEl.value);
+      if (val === parentGateAnswer) {
+        hideParentGate();
+        if (parentGateMode === 'dashboard') {
+          renderDashboard();
+          document.getElementById('modal-dashboard').classList.remove('hidden');
+        } else {
+          clearLockout();
+        }
+        parentGateAnswer = null;
+      } else {
+        if (errEl) errEl.classList.remove('hidden');
+        inputEl.value = '';
+        inputEl.focus();
+      }
+    }
+
+    function closeDashboard() {
+      document.getElementById('modal-dashboard').classList.add('hidden');
+    }
+
+    function renderDashboard() {
+      renderDashboardOverview();
+      renderCategoryBreakdown();
+      renderDashboardGames();
+      renderDashboardErrors();
+      renderDashboardSessions();
+    }
+
+    function renderDashboardOverview() {
+      const el = document.getElementById('dashboard-overview');
+      let totalExercises = 0, totalCorrect = 0;
+      for (const gid of Object.keys(adaptiveStats)) {
+        totalExercises += adaptiveStats[gid].total || 0;
+        totalCorrect += adaptiveStats[gid].correct || 0;
+      }
+      const avgAccuracy = totalExercises > 0 ? Math.round((totalCorrect / totalExercises) * 100) : 0;
+      const cards = [
+        { label: 'Étoiles', value: state.stars, icon: '⭐', color: 'bg-brand-yellow-light text-amber-700' },
+        { label: 'Exercices', value: totalExercises, icon: '📝', color: 'bg-brand-purple-light text-brand-purple' },
+        { label: 'Réussite', value: avgAccuracy + '%', icon: '🎯', color: 'bg-emerald-50 text-emerald-700' },
+        { label: 'Sessions', value: sessionHistory.length, icon: '📅', color: 'bg-brand-blue-light text-brand-blue' }
+      ];
+      el.innerHTML = cards.map(c => `
+        <div class="${c.color} rounded-2xl p-4 text-center border border-white/60">
+          <div class="text-2xl mb-1">${c.icon}</div>
+          <div class="text-2xl font-title font-bold">${c.value}</div>
+          <div class="text-[10px] font-bold uppercase tracking-wide opacity-70">${c.label}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderCategoryBreakdown() {
+      const el = document.getElementById('dashboard-categories');
+      el.innerHTML = '';
+      const profile = computeLearningProfile();
+      const catColors = { A: { bar: 'bg-brand-purple', light: 'bg-brand-purple-light', text: 'text-brand-purple' },
+                          B: { bar: 'bg-brand-green', light: 'bg-brand-green-light', text: 'text-brand-green' },
+                          C: { bar: 'bg-brand-orange', light: 'bg-brand-orange-light', text: 'text-brand-orange' } };
+      for (const [catId, data] of Object.entries(profile)) {
+        const c = catColors[catId];
+        const pct = data.accuracy !== null ? Math.round(data.accuracy * 100) : 0;
+        const barColor = pct >= 80 ? 'bg-emerald-400' : pct >= 50 ? 'bg-amber-400' : 'bg-rose-400';
+        el.innerHTML += `
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-title font-bold text-sm ${c.text}">${data.name}</span>
+              <span class="text-xs font-bold text-slate-500">${data.totalAttempts > 0 ? pct + '%' : '—'}</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5">
+              <div class="${barColor} h-2.5 rounded-full transition-all" style="width: ${pct}%"></div>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1">${data.totalAttempts} exercices · ${data.games.filter(g => g.attempts > 0).length}/${data.games.length} jeux explorés</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderDashboardGames() {
+      const el = document.getElementById('dashboard-games');
+      el.innerHTML = '';
+      let header = `<div class="grid grid-cols-[1fr_60px_60px_60px] gap-2 px-4 py-2 bg-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        <span>Jeu</span><span>Niveau</span><span>Réussite</span><span>Exercices</span>
+      </div>`;
+      let rows = '';
+      for (const [catId, cat] of Object.entries(CATEGORIES)) {
+        for (const g of cat.games) {
+          const stats = getGameStats(g.id);
+          if (stats.total === 0) continue;
+          const acc = Math.round((stats.correct / stats.total) * 100);
+          const accColor = acc >= 80 ? 'text-emerald-600' : acc >= 50 ? 'text-amber-600' : 'text-rose-600';
+          const diffBadge = stats.difficulty === 'easy' ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-bold">Facile</span>'
+            : stats.difficulty === 'challenge' ? '<span class="text-[10px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded-full font-bold">Défi</span>'
+            : '<span class="text-[10px] bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded-full font-bold">Normal</span>';
+          rows += `<div class="grid grid-cols-[1fr_60px_60px_60px] gap-2 px-4 py-2.5 border-t border-slate-100 items-center text-sm">
+            <span class="font-medium text-slate-700 truncate">${g.name}</span>
+            <span class="flex justify-center">${diffBadge}</span>
+            <span class="font-bold ${accColor} text-center">${acc}%</span>
+            <span class="text-slate-500 text-center">${stats.total}</span>
+          </div>`;
+        }
+      }
+      el.innerHTML = header + (rows || '<div class="px-4 py-6 text-center text-slate-400 text-sm">Aucune donnée pour le moment.</div>');
+    }
+
+    function renderDashboardErrors() {
+      const section = document.getElementById('dashboard-errors-section');
+      const el = document.getElementById('dashboard-errors');
+      el.innerHTML = '';
+      const weak = [];
+      for (const [catId, cat] of Object.entries(CATEGORIES)) {
+        for (const g of cat.games) {
+          const stats = getGameStats(g.id);
+          if (stats.total > 0 && (stats.correct / stats.total) < 0.6) {
+            weak.push({ ...g, catId, catName: cat.name, accuracy: Math.round((stats.correct / stats.total) * 100) });
+          }
+        }
+      }
+      if (weak.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+      section.classList.remove('hidden');
+      weak.forEach(w => {
+        el.innerHTML += `
+          <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 flex items-center justify-between">
+            <div>
+              <span class="font-title font-bold text-sm text-rose-800">${w.name}</span>
+              <span class="text-xs text-rose-500 ml-2">${w.catName} · ${w.accuracy}%</span>
+            </div>
+            <button onclick="closeDashboard(); setGameMode('solo'); launchGame('${w.id}')" class="text-xs font-bold text-white bg-rose-400 hover:bg-rose-500 px-3 py-1.5 rounded-full transition-all">
+              Entraîne-toi !
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    function renderDashboardSessions() {
+      const el = document.getElementById('dashboard-sessions');
+      el.innerHTML = '';
+      if (sessionHistory.length === 0) {
+        el.innerHTML = '<div class="px-4 py-6 text-center text-slate-400 text-sm">Pas encore de session enregistrée.</div>';
+        return;
+      }
+      sessionHistory.slice(0, 10).forEach(s => {
+        const pct = Math.round(s.accuracy * 100);
+        const barColor = pct >= 80 ? 'bg-emerald-400' : pct >= 50 ? 'bg-amber-400' : 'bg-rose-400';
+        const mins = Math.round(s.timeMs / 60000);
+        el.innerHTML += `
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 flex items-center gap-3">
+            <div class="text-xs font-bold text-slate-400 w-16 shrink-0">${s.date}</div>
+            <div class="flex-1">
+              <div class="w-full bg-slate-200 rounded-full h-2 mb-1">
+                <div class="${barColor} h-2 rounded-full" style="width: ${pct}%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>${s.games.length} jeu${s.games.length > 1 ? 'x' : ''}</span>
+                <span>${pct}% · ${mins}min · ${s.stars}⭐</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
     // Subgames metadata database
     const CATEGORIES = {
       'A': {
@@ -1085,6 +1384,173 @@
       }
     };
 
+    // =====================================================================
+    // COMPANION SYSTEM — Virtual companions that evolve with stars
+    // =====================================================================
+
+    const COMPANION_STAGES = [
+      { label: 'Bébé', minStars: 0 },
+      { label: 'Jeune', minStars: 10 },
+      { label: 'Adulte', minStars: 25 },
+      { label: 'Maître', minStars: 50 },
+      { label: 'Légende', minStars: 100 }
+    ];
+
+    const COMPANIONS = {
+      owl: {
+        name: 'Pytha',
+        emoji: '🦉',
+        color: 'brand-purple',
+        colorHex: '#6C5DD3',
+        lightHex: '#F3F0FF',
+        desc: 'Sage et curieux, Pytha adore les maths !',
+        stages: [
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="28" fill="#E8DEFF"/><circle cx="40" cy="42" r="24" fill="#6C5DD3"/><circle cx="32" cy="38" r="7" fill="white"/><circle cx="48" cy="38" r="7" fill="white"/><circle cx="33" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="49" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="34" cy="37" r="1.2" fill="white"/><circle cx="50" cy="37" r="1.2" fill="white"/><polygon points="40,44 36,50 44,50" fill="#FF8E53"/><ellipse cx="24" cy="30" rx="6" ry="8" fill="#6C5DD3"/><ellipse cx="56" cy="30" rx="6" ry="8" fill="#6C5DD3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="28" fill="#E8DEFF"/><circle cx="40" cy="42" r="24" fill="#6C5DD3"/><circle cx="32" cy="38" r="7" fill="white"/><circle cx="48" cy="38" r="7" fill="white"/><circle cx="33" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="49" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="34" cy="37" r="1.2" fill="white"/><circle cx="50" cy="37" r="1.2" fill="white"/><polygon points="40,44 36,50 44,50" fill="#FF8E53"/><ellipse cx="24" cy="30" rx="6" ry="8" fill="#6C5DD3"/><ellipse cx="56" cy="30" rx="6" ry="8" fill="#6C5DD3"/><rect x="33" y="16" width="14" height="8" rx="2" fill="#FFD93D"/><rect x="36" y="14" width="8" height="4" rx="1" fill="#FFD93D"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="28" fill="#E8DEFF"/><circle cx="40" cy="42" r="24" fill="#6C5DD3"/><circle cx="32" cy="38" r="7" fill="white"/><circle cx="48" cy="38" r="7" fill="white"/><circle cx="33" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="49" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="34" cy="37" r="1.2" fill="white"/><circle cx="50" cy="37" r="1.2" fill="white"/><polygon points="40,44 36,50 44,50" fill="#FF8E53"/><ellipse cx="24" cy="30" rx="6" ry="8" fill="#6C5DD3"/><ellipse cx="56" cy="30" rx="6" ry="8" fill="#6C5DD3"/><rect x="33" y="16" width="14" height="8" rx="2" fill="#FFD93D"/><rect x="36" y="14" width="8" height="4" rx="1" fill="#FFD93D"/><path d="M16 52 Q10 48 14 40" stroke="#6C5DD3" stroke-width="3" fill="none"/><path d="M64 52 Q70 48 66 40" stroke="#6C5DD3" stroke-width="3" fill="none"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="30" fill="#E8DEFF" opacity="0.5"/><circle cx="40" cy="42" r="28" fill="#E8DEFF"/><circle cx="40" cy="42" r="24" fill="#6C5DD3"/><circle cx="32" cy="38" r="7" fill="white"/><circle cx="48" cy="38" r="7" fill="white"/><circle cx="33" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="49" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="34" cy="37" r="1.2" fill="white"/><circle cx="50" cy="37" r="1.2" fill="white"/><polygon points="40,44 36,50 44,50" fill="#FF8E53"/><ellipse cx="24" cy="30" rx="6" ry="8" fill="#6C5DD3"/><ellipse cx="56" cy="30" rx="6" ry="8" fill="#6C5DD3"/><rect x="33" y="16" width="14" height="8" rx="2" fill="#FFD93D"/><rect x="36" y="14" width="8" height="4" rx="1" fill="#FFD93D"/><path d="M16 52 Q10 48 14 40" stroke="#6C5DD3" stroke-width="3" fill="none"/><path d="M64 52 Q70 48 66 40" stroke="#6C5DD3" stroke-width="3" fill="none"/><circle cx="40" cy="42" r="34" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="32" fill="#E8DEFF" opacity="0.3"/><circle cx="40" cy="42" r="30" fill="#E8DEFF" opacity="0.5"/><circle cx="40" cy="42" r="28" fill="#E8DEFF"/><circle cx="40" cy="42" r="24" fill="#6C5DD3"/><circle cx="32" cy="38" r="7" fill="white"/><circle cx="48" cy="38" r="7" fill="white"/><circle cx="33" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="49" cy="38" r="3.5" fill="#1e1b4b"/><circle cx="34" cy="37" r="1.2" fill="white"/><circle cx="50" cy="37" r="1.2" fill="white"/><polygon points="40,44 36,50 44,50" fill="#FF8E53"/><ellipse cx="24" cy="30" rx="6" ry="8" fill="#6C5DD3"/><ellipse cx="56" cy="30" rx="6" ry="8" fill="#6C5DD3"/><rect x="33" y="16" width="14" height="8" rx="2" fill="#FFD93D"/><rect x="36" y="14" width="8" height="4" rx="1" fill="#FFD93D"/><path d="M16 52 Q10 48 14 40" stroke="#6C5DD3" stroke-width="3" fill="none"/><path d="M64 52 Q70 48 66 40" stroke="#6C5DD3" stroke-width="3" fill="none"/><circle cx="40" cy="42" r="34" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/><polygon points="40,4 37,10 43,10" fill="#FFD93D"/><circle cx="28" cy="14" r="2" fill="#FFD93D" opacity="0.6"/><circle cx="52" cy="14" r="2" fill="#FFD93D" opacity="0.6"/></svg>`
+        ]
+      },
+      squirrel: {
+        name: 'Noisette',
+        emoji: '🐿️',
+        color: 'brand-orange',
+        colorHex: '#FF8E53',
+        lightHex: '#FFF5F0',
+        desc: 'Noisette est toujours en mouvement !',
+        stages: [
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="26" fill="#FFF0E6"/><circle cx="40" cy="44" r="22" fill="#FF8E53"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#1e1b4b"/><circle cx="30" cy="24" r="6" fill="#FF8E53"/><circle cx="50" cy="24" r="6" fill="#FF8E53"/><circle cx="30" cy="24" r="3" fill="#FFB088"/><circle cx="50" cy="24" r="3" fill="#FFB088"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="26" fill="#FFF0E6"/><circle cx="40" cy="44" r="22" fill="#FF8E53"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#1e1b4b"/><circle cx="30" cy="24" r="6" fill="#FF8E53"/><circle cx="50" cy="24" r="6" fill="#FF8E53"/><circle cx="30" cy="24" r="3" fill="#FFB088"/><circle cx="50" cy="24" r="3" fill="#FFB088"/><ellipse cx="40" cy="14" rx="8" ry="5" fill="#8B4513"/><ellipse cx="40" cy="13" rx="5" ry="3" fill="#A0522D"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="26" fill="#FFF0E6"/><circle cx="40" cy="44" r="22" fill="#FF8E53"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#1e1b4b"/><circle cx="30" cy="24" r="6" fill="#FF8E53"/><circle cx="50" cy="24" r="6" fill="#FF8E53"/><circle cx="30" cy="24" r="3" fill="#FFB088"/><circle cx="50" cy="24" r="3" fill="#FFB088"/><ellipse cx="40" cy="14" rx="8" ry="5" fill="#8B4513"/><ellipse cx="40" cy="13" rx="5" ry="3" fill="#A0522D"/><ellipse cx="62" cy="54" rx="10" ry="8" fill="#8B4513" transform="rotate(-30 62 54)"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="28" fill="#FFF0E6" opacity="0.5"/><circle cx="40" cy="44" r="26" fill="#FFF0E6"/><circle cx="40" cy="44" r="22" fill="#FF8E53"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#1e1b4b"/><circle cx="30" cy="24" r="6" fill="#FF8E53"/><circle cx="50" cy="24" r="6" fill="#FF8E53"/><circle cx="30" cy="24" r="3" fill="#FFB088"/><circle cx="50" cy="24" r="3" fill="#FFB088"/><ellipse cx="40" cy="14" rx="8" ry="5" fill="#8B4513"/><ellipse cx="40" cy="13" rx="5" ry="3" fill="#A0522D"/><ellipse cx="62" cy="54" rx="10" ry="8" fill="#8B4513" transform="rotate(-30 62 54)"/><circle cx="40" cy="44" r="30" fill="none" stroke="#FF8E53" stroke-width="1.5" stroke-dasharray="4 3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="30" fill="#FFF0E6" opacity="0.3"/><circle cx="40" cy="44" r="28" fill="#FFF0E6" opacity="0.5"/><circle cx="40" cy="44" r="26" fill="#FFF0E6"/><circle cx="40" cy="44" r="22" fill="#FF8E53"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#1e1b4b"/><circle cx="30" cy="24" r="6" fill="#FF8E53"/><circle cx="50" cy="24" r="6" fill="#FF8E53"/><circle cx="30" cy="24" r="3" fill="#FFB088"/><circle cx="50" cy="24" r="3" fill="#FFB088"/><ellipse cx="40" cy="14" rx="8" ry="5" fill="#8B4513"/><ellipse cx="40" cy="13" rx="5" ry="3" fill="#A0522D"/><ellipse cx="62" cy="54" rx="10" ry="8" fill="#8B4513" transform="rotate(-30 62 54)"/><circle cx="40" cy="44" r="32" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="24" cy="16" r="2" fill="#FFD93D" opacity="0.6"/><circle cx="56" cy="16" r="2" fill="#FFD93D" opacity="0.6"/></svg>`
+        ]
+      },
+      lion: {
+        name: 'Mufasa',
+        emoji: '🦁',
+        color: 'brand-yellow',
+        colorHex: '#FFD93D',
+        lightHex: '#FFFDF0',
+        desc: 'Mufasa est courageux et généreux !',
+        stages: [
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="30" fill="#FFF3D6"/><circle cx="40" cy="42" r="24" fill="#FFD93D"/><circle cx="34" cy="38" r="5" fill="white"/><circle cx="46" cy="38" r="5" fill="white"/><circle cx="35" cy="38" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="38" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="45" rx="4" ry="3" fill="#E0753A"/><line x1="30" y1="44" x2="22" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="30" y1="46" x2="22" y2="46" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="44" x2="58" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="46" x2="58" y2="46" stroke="#E0753A" stroke-width="1.5"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="34" fill="#E0753A" opacity="0.3"/><circle cx="40" cy="42" r="30" fill="#FFF3D6"/><circle cx="40" cy="42" r="24" fill="#FFD93D"/><circle cx="34" cy="38" r="5" fill="white"/><circle cx="46" cy="38" r="5" fill="white"/><circle cx="35" cy="38" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="38" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="45" rx="4" ry="3" fill="#E0753A"/><line x1="30" y1="44" x2="22" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="30" y1="46" x2="22" y2="46" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="44" x2="58" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="46" x2="58" y2="46" stroke="#E0753A" stroke-width="1.5"/><rect x="35" y="14" width="10" height="6" rx="2" fill="#FF6B8B"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="34" fill="#E0753A" opacity="0.3"/><circle cx="40" cy="42" r="30" fill="#FFF3D6"/><circle cx="40" cy="42" r="24" fill="#FFD93D"/><circle cx="34" cy="38" r="5" fill="white"/><circle cx="46" cy="38" r="5" fill="white"/><circle cx="35" cy="38" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="38" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="45" rx="4" ry="3" fill="#E0753A"/><line x1="30" y1="44" x2="22" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="30" y1="46" x2="22" y2="46" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="44" x2="58" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="46" x2="58" y2="46" stroke="#E0753A" stroke-width="1.5"/><rect x="35" y="14" width="10" height="6" rx="2" fill="#FF6B8B"/><path d="M16 54 Q10 48 16 42" stroke="#E0753A" stroke-width="2" fill="none"/><path d="M64 54 Q70 48 64 42" stroke="#E0753A" stroke-width="2" fill="none"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="36" fill="#FFD93D" opacity="0.3"/><circle cx="40" cy="42" r="34" fill="#E0753A" opacity="0.3"/><circle cx="40" cy="42" r="30" fill="#FFF3D6"/><circle cx="40" cy="42" r="24" fill="#FFD93D"/><circle cx="34" cy="38" r="5" fill="white"/><circle cx="46" cy="38" r="5" fill="white"/><circle cx="35" cy="38" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="38" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="45" rx="4" ry="3" fill="#E0753A"/><line x1="30" y1="44" x2="22" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="30" y1="46" x2="22" y2="46" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="44" x2="58" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="46" x2="58" y2="46" stroke="#E0753A" stroke-width="1.5"/><rect x="35" y="14" width="10" height="6" rx="2" fill="#FF6B8B"/><path d="M16 54 Q10 48 16 42" stroke="#E0753A" stroke-width="2" fill="none"/><path d="M64 54 Q70 48 64 42" stroke="#E0753A" stroke-width="2" fill="none"/><circle cx="40" cy="42" r="38" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="42" r="38" fill="#FFD93D" opacity="0.2"/><circle cx="40" cy="42" r="36" fill="#FFD93D" opacity="0.3"/><circle cx="40" cy="42" r="34" fill="#E0753A" opacity="0.3"/><circle cx="40" cy="42" r="30" fill="#FFF3D6"/><circle cx="40" cy="42" r="24" fill="#FFD93D"/><circle cx="34" cy="38" r="5" fill="white"/><circle cx="46" cy="38" r="5" fill="white"/><circle cx="35" cy="38" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="38" r="2.5" fill="#1e1b4b"/><ellipse cx="40" cy="45" rx="4" ry="3" fill="#E0753A"/><line x1="30" y1="44" x2="22" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="30" y1="46" x2="22" y2="46" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="44" x2="58" y2="42" stroke="#E0753A" stroke-width="1.5"/><line x1="50" y1="46" x2="58" y2="46" stroke="#E0753A" stroke-width="1.5"/><rect x="35" y="14" width="10" height="6" rx="2" fill="#FF6B8B"/><path d="M16 54 Q10 48 16 42" stroke="#E0753A" stroke-width="2" fill="none"/><path d="M64 54 Q70 48 64 42" stroke="#E0753A" stroke-width="2" fill="none"/><circle cx="40" cy="42" r="38" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/><polygon points="40,2 38,7 42,7" fill="#FFD93D"/><circle cx="26" cy="12" r="1.5" fill="#FFD93D" opacity="0.6"/><circle cx="54" cy="12" r="1.5" fill="#FFD93D" opacity="0.6"/></svg>`
+        ]
+      },
+      dolphin: {
+        name: 'Splash',
+        emoji: '🐬',
+        color: 'brand-blue',
+        colorHex: '#3B82F6',
+        lightHex: '#EFF6FF',
+        desc: 'Splash adore plonger dans les nombres !',
+        stages: [
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><ellipse cx="40" cy="42" rx="26" ry="20" fill="#DBEAFE"/><ellipse cx="40" cy="42" rx="22" ry="17" fill="#3B82F6"/><circle cx="32" cy="38" r="4" fill="white"/><circle cx="33" cy="38" r="2" fill="#1e1b4b"/><circle cx="34" cy="37" r="0.8" fill="white"/><path d="M38 46 Q42 50 48 46" stroke="white" stroke-width="1.5" fill="none"/><ellipse cx="16" cy="42" rx="8" ry="5" fill="#3B82F6" transform="rotate(-15 16 42)"/><path d="M40 26 Q38 20 34 22" stroke="#3B82F6" stroke-width="3" fill="none"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><ellipse cx="40" cy="42" rx="26" ry="20" fill="#DBEAFE"/><ellipse cx="40" cy="42" rx="22" ry="17" fill="#3B82F6"/><circle cx="32" cy="38" r="4" fill="white"/><circle cx="33" cy="38" r="2" fill="#1e1b4b"/><circle cx="34" cy="37" r="0.8" fill="white"/><path d="M38 46 Q42 50 48 46" stroke="white" stroke-width="1.5" fill="none"/><ellipse cx="16" cy="42" rx="8" ry="5" fill="#3B82F6" transform="rotate(-15 16 42)"/><path d="M40 26 Q38 20 34 22" stroke="#3B82F6" stroke-width="3" fill="none"/><rect x="34" y="20" width="8" height="5" rx="1.5" fill="#FFD93D"/><rect x="36" y="18" width="4" height="3" rx="1" fill="#FFD93D"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><ellipse cx="40" cy="42" rx="26" ry="20" fill="#DBEAFE"/><ellipse cx="40" cy="42" rx="22" ry="17" fill="#3B82F6"/><circle cx="32" cy="38" r="4" fill="white"/><circle cx="33" cy="38" r="2" fill="#1e1b4b"/><circle cx="34" cy="37" r="0.8" fill="white"/><path d="M38 46 Q42 50 48 46" stroke="white" stroke-width="1.5" fill="none"/><ellipse cx="16" cy="42" rx="8" ry="5" fill="#3B82F6" transform="rotate(-15 16 42)"/><path d="M40 26 Q38 20 34 22" stroke="#3B82F6" stroke-width="3" fill="none"/><rect x="34" y="20" width="8" height="5" rx="1.5" fill="#FFD93D"/><rect x="36" y="18" width="4" height="3" rx="1" fill="#FFD93D"/><circle cx="60" cy="34" r="3" fill="white" opacity="0.5"/><circle cx="64" cy="38" r="2" fill="white" opacity="0.4"/><circle cx="58" cy="30" r="2" fill="white" opacity="0.3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><ellipse cx="40" cy="42" rx="28" ry="22" fill="#DBEAFE" opacity="0.5"/><ellipse cx="40" cy="42" rx="26" ry="20" fill="#DBEAFE"/><ellipse cx="40" cy="42" rx="22" ry="17" fill="#3B82F6"/><circle cx="32" cy="38" r="4" fill="white"/><circle cx="33" cy="38" r="2" fill="#1e1b4b"/><circle cx="34" cy="37" r="0.8" fill="white"/><path d="M38 46 Q42 50 48 46" stroke="white" stroke-width="1.5" fill="none"/><ellipse cx="16" cy="42" rx="8" ry="5" fill="#3B82F6" transform="rotate(-15 16 42)"/><path d="M40 26 Q38 20 34 22" stroke="#3B82F6" stroke-width="3" fill="none"/><rect x="34" y="20" width="8" height="5" rx="1.5" fill="#FFD93D"/><rect x="36" y="18" width="4" height="3" rx="1" fill="#FFD93D"/><circle cx="60" cy="34" r="3" fill="white" opacity="0.5"/><circle cx="64" cy="38" r="2" fill="white" opacity="0.4"/><circle cx="58" cy="30" r="2" fill="white" opacity="0.3"/><ellipse cx="40" cy="42" r="30" fill="none" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="4 3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><ellipse cx="40" cy="42" r="32" fill="#DBEAFE" opacity="0.2"/><ellipse cx="40" cy="42" r="28" fill="#DBEAFE" opacity="0.5"/><ellipse cx="40" cy="42" rx="26" ry="20" fill="#DBEAFE"/><ellipse cx="40" cy="42" rx="22" ry="17" fill="#3B82F6"/><circle cx="32" cy="38" r="4" fill="white"/><circle cx="33" cy="38" r="2" fill="#1e1b4b"/><circle cx="34" cy="37" r="0.8" fill="white"/><path d="M38 46 Q42 50 48 46" stroke="white" stroke-width="1.5" fill="none"/><ellipse cx="16" cy="42" rx="8" ry="5" fill="#3B82F6" transform="rotate(-15 16 42)"/><path d="M40 26 Q38 20 34 22" stroke="#3B82F6" stroke-width="3" fill="none"/><rect x="34" y="20" width="8" height="5" rx="1.5" fill="#FFD93D"/><rect x="36" y="18" width="4" height="3" rx="1" fill="#FFD93D"/><circle cx="60" cy="34" r="3" fill="white" opacity="0.5"/><circle cx="64" cy="38" r="2" fill="white" opacity="0.4"/><circle cx="58" cy="30" r="2" fill="white" opacity="0.3"/><ellipse cx="40" cy="42" r="32" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="24" cy="14" r="1.5" fill="#FFD93D" opacity="0.6"/><circle cx="56" cy="14" r="1.5" fill="#FFD93D" opacity="0.6"/></svg>`
+        ]
+      },
+      unicorn: {
+        name: 'Stella',
+        emoji: '🦄',
+        color: 'brand-pink',
+        colorHex: '#FF6B8B',
+        lightHex: '#FFF0F3',
+        desc: 'Stella transforme les maths en magie !',
+        stages: [
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="26" fill="#FFF0F3"/><circle cx="40" cy="44" r="22" fill="#FF6B8B"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="36" cy="39" r="1" fill="white"/><circle cx="48" cy="39" r="1" fill="white"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#E05270"/><circle cx="30" cy="24" r="5" fill="#FF6B8B"/><circle cx="50" cy="24" r="5" fill="#FF6B8B"/><polygon points="40,10 38,18 42,18" fill="#FFD93D"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="26" fill="#FFF0F3"/><circle cx="40" cy="44" r="22" fill="#FF6B8B"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="36" cy="39" r="1" fill="white"/><circle cx="48" cy="39" r="1" fill="white"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#E05270"/><circle cx="30" cy="24" r="5" fill="#FF6B8B"/><circle cx="50" cy="24" r="5" fill="#FF6B8B"/><polygon points="40,10 38,18 42,18" fill="#FFD93D"/><path d="M22 34 Q18 30 20 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M58 34 Q62 30 60 24" stroke="#FF6B8B" stroke-width="2" fill="none"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="26" fill="#FFF0F3"/><circle cx="40" cy="44" r="22" fill="#FF6B8B"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="36" cy="39" r="1" fill="white"/><circle cx="48" cy="39" r="1" fill="white"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#E05270"/><circle cx="30" cy="24" r="5" fill="#FF6B8B"/><circle cx="50" cy="24" r="5" fill="#FF6B8B"/><polygon points="40,10 38,18 42,18" fill="#FFD93D"/><path d="M22 34 Q18 30 20 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M58 34 Q62 30 60 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M18 54 Q12 48 16 42" stroke="#C084FC" stroke-width="2" fill="none"/><path d="M62 54 Q68 48 64 42" stroke="#C084FC" stroke-width="2" fill="none"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="28" fill="#FFF0F3" opacity="0.5"/><circle cx="40" cy="44" r="26" fill="#FFF0F3"/><circle cx="40" cy="44" r="22" fill="#FF6B8B"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="36" cy="39" r="1" fill="white"/><circle cx="48" cy="39" r="1" fill="white"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#E05270"/><circle cx="30" cy="24" r="5" fill="#FF6B8B"/><circle cx="50" cy="24" r="5" fill="#FF6B8B"/><polygon points="40,10 38,18 42,18" fill="#FFD93D"/><path d="M22 34 Q18 30 20 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M58 34 Q62 30 60 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M18 54 Q12 48 16 42" stroke="#C084FC" stroke-width="2" fill="none"/><path d="M62 54 Q68 48 64 42" stroke="#C084FC" stroke-width="2" fill="none"/><circle cx="40" cy="44" r="32" fill="none" stroke="#FF6B8B" stroke-width="1.5" stroke-dasharray="4 3"/></svg>`,
+          (s) => `<svg viewBox="0 0 80 80" width="100%" height="100%"><circle cx="40" cy="44" r="30" fill="#FFF0F3" opacity="0.2"/><circle cx="40" cy="44" r="28" fill="#FFF0F3" opacity="0.5"/><circle cx="40" cy="44" r="26" fill="#FFF0F3"/><circle cx="40" cy="44" r="22" fill="#FF6B8B"/><circle cx="34" cy="40" r="5" fill="white"/><circle cx="46" cy="40" r="5" fill="white"/><circle cx="35" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="47" cy="40" r="2.5" fill="#1e1b4b"/><circle cx="36" cy="39" r="1" fill="white"/><circle cx="48" cy="39" r="1" fill="white"/><ellipse cx="40" cy="47" rx="3" ry="2" fill="#E05270"/><circle cx="30" cy="24" r="5" fill="#FF6B8B"/><circle cx="50" cy="24" r="5" fill="#FF6B8B"/><polygon points="40,10 38,18 42,18" fill="#FFD93D"/><path d="M22 34 Q18 30 20 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M58 34 Q62 30 60 24" stroke="#FF6B8B" stroke-width="2" fill="none"/><path d="M18 54 Q12 48 16 42" stroke="#C084FC" stroke-width="2" fill="none"/><path d="M62 54 Q68 48 64 42" stroke="#C084FC" stroke-width="2" fill="none"/><circle cx="40" cy="44" r="34" fill="none" stroke="#FFD93D" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="26" cy="14" r="1.5" fill="#FFD93D" opacity="0.6"/><circle cx="54" cy="14" r="1.5" fill="#FFD93D" opacity="0.6"/><circle cx="40" cy="4" r="1.5" fill="#FFD93D" opacity="0.6"/></svg>`
+        ]
+      }
+    };
+
+    // Companion state and helpers
+    let companionData = JSON.parse(localStorage.getItem('mathscp_companion') || '{"type":"owl"}');
+
+    function getCompanionStage() {
+      const stars = state.stars;
+      let stage = 0;
+      for (let i = COMPANION_STAGES.length - 1; i >= 0; i--) {
+        if (stars >= COMPANION_STAGES[i].minStars) { stage = i; break; }
+      }
+      return stage;
+    }
+
+    function getCompanion() {
+      return COMPANIONS[companionData.type] || COMPANIONS.owl;
+    }
+
+    function selectCompanion(type) {
+      companionData.type = type;
+      localStorage.setItem('mathscp_companion', JSON.stringify(companionData));
+      updateFooterCompanion();
+      renderCompanionPicker();
+    }
+
+    function updateFooterCompanion() {
+      const el = document.getElementById('footer-helper-avatar');
+      if (!el) return;
+      const comp = getCompanion();
+      const stage = getCompanionStage();
+      el.innerHTML = comp.stages[stage]();
+      el.className = `w-12 h-12 rounded-full flex items-center justify-center shadow-md border-2 border-white animate-bounce-slow bg-${comp.color}-light`;
+    }
+
+    function openCompanionModal() {
+      playAudioTone('click');
+      renderCompanionPicker();
+      document.getElementById('modal-companion').classList.remove('hidden');
+    }
+
+    function closeCompanionModal() {
+      document.getElementById('modal-companion').classList.add('hidden');
+    }
+
+    function renderCompanionPicker() {
+      const grid = document.getElementById('companion-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const stage = getCompanionStage();
+      const nextStage = stage < 4 ? COMPANION_STAGES[stage + 1] : null;
+      const progressPct = nextStage
+        ? Math.round(((state.stars - COMPANION_STAGES[stage].minStars) / (nextStage.minStars - COMPANION_STAGES[stage].minStars)) * 100)
+        : 100;
+
+      // Progress tracker
+      const progressEl = document.getElementById('companion-progress');
+      if (progressEl) {
+        const stageLabel = COMPANION_STAGES[stage].label;
+        progressEl.innerHTML = nextStage
+          ? `<div class="flex items-center gap-2 text-xs text-slate-500 mb-2"><span class="font-bold text-brand-purple">Étape ${stage + 1}/5 : ${stageLabel}</span><span>·</span><span>${state.stars}⭐ / ${nextStage.minStars}⭐ pour ${nextStage.label}</span></div>
+             <div class="w-full bg-slate-200 rounded-full h-2 mb-1"><div class="bg-brand-purple h-2 rounded-full transition-all" style="width:${progressPct}%"></div></div>`
+          : `<div class="flex items-center gap-2 text-xs text-slate-500"><span class="font-bold text-amber-500">Étape 5/5 : Légende</span><span>·</span><span>Forme maximale atteinte ! 👑</span></div>`;
+      }
+
+      for (const [type, comp] of Object.entries(COMPANIONS)) {
+        const isSelected = companionData.type === type;
+        const card = document.createElement('div');
+        card.className = `relative rounded-2xl p-4 border-3 cursor-pointer transition-all transform hover:scale-[1.02] ${isSelected ? `border-${comp.color} bg-${comp.color}-light shadow-lg ring-2 ring-${comp.color}/30` : 'border-slate-200 bg-white hover:border-slate-300'}`;
+        card.onclick = () => selectCompanion(type);
+        card.innerHTML = `
+          <div class="w-16 h-16 mx-auto mb-2">${comp.stages[stage]()}</div>
+          <p class="text-center font-title font-bold text-sm ${isSelected ? `text-${comp.color}` : 'text-slate-700'}">${comp.name}</p>
+          <p class="text-center text-[10px] text-slate-400 mt-0.5">${comp.desc}</p>
+          ${isSelected ? `<div class="absolute top-2 right-2 w-5 h-5 bg-${comp.color} rounded-full flex items-center justify-center"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>` : ''}
+        `;
+        grid.appendChild(card);
+      }
+    }
+
     // Encouraging phrases in French for success and failure
     const SUCCESS_PHRASES = [
       "Super ! C'est correct !",
@@ -1105,6 +1571,7 @@
     // Initialize application
     window.addEventListener('DOMContentLoaded', () => {
       updateStarsUI();
+      updateFooterCompanion();
       applySoundIcons();
       initParentalControls();
       initAccessibility();
@@ -1273,6 +1740,8 @@
       
       updateFooterMessage('idle');
       renderRecommendations();
+      if (currentSessionTotal > 0) recordSession();
+      resetSessionTracking();
     }
 
     function selectCategory(catId) {
@@ -1390,6 +1859,9 @@
       document.getElementById('global-stars-text').innerText = state.stars;
       checkBadgeUnlocks();
       updateBadgeCountUI();
+      updateFooterCompanion();
+      const headerIcon = document.getElementById('header-companion-icon');
+      if (headerIcon) headerIcon.innerText = getCompanion().emoji;
     }
 
     function updateSessionStarsUI() {
@@ -1707,6 +2179,7 @@
 
     function triggerVictorySession() {
       playAudioTone('trophy');
+      recordSession();
       confetti({
         particleCount: 150,
         spread: 80,
@@ -3461,9 +3934,9 @@
       const avatarEl = document.getElementById('footer-helper-avatar');
       if (!textEl || !avatarEl) return;
 
+      const comp = getCompanion();
       let msg = "";
       if (type === 'idle' && state.stars > 0) {
-        // Generate a dynamic progression message
         const nextBadge = BADGES.find(b => state.stars < b.starsReq);
         const remaining = nextBadge ? nextBadge.starsReq - state.stars : 0;
         const progressPhrases = [
@@ -3478,18 +3951,16 @@
         msg = list[Math.floor(Math.random() * list.length)];
       }
 
-      textEl.innerText = msg;
+      textEl.innerText = `"${comp.name} dit : ${msg}"`;
 
-      // Set avatar emoji based on state
+      // Pop animation on companion for success
       if (type === 'success') {
-        avatarEl.innerText = ['🥳', '😎', '🦖', '🎈', '🦄'][Math.floor(Math.random() * 5)];
         avatarEl.classList.add('scale-110');
         setTimeout(() => avatarEl.classList.remove('scale-110'), 300);
-      } else if (type === 'retry') {
-        avatarEl.innerText = ['💡', '🦊', '🤗', '🦉', '🐱'][Math.floor(Math.random() * 5)];
-      } else {
-        avatarEl.innerText = ['🤖', '🦁', '🐻', '🐇', '🐨'][Math.floor(Math.random() * 5)];
       }
+
+      // Keep companion SVG persistent (no random emoji replacement)
+      updateFooterCompanion();
     }
 
     // ==========================================
@@ -3556,6 +4027,7 @@
     };
 
     let parentGateAnswer = null;
+    let parentGateMode = 'lockout'; // 'lockout' or 'dashboard'
 
     function initParentalControls() {
       const now = Date.now();
@@ -3678,21 +4150,6 @@
       parentGateAnswer = null;
     }
 
-    function verifyParentGate() {
-      const inputEl = document.getElementById('parent-gate-input');
-      const errorEl = document.getElementById('parent-gate-error');
-      if (!inputEl) return;
-
-      const val = parseInt(inputEl.value);
-      if (val === parentGateAnswer) {
-        // Parents solved it! Clear lock.
-        clearLockout();
-      } else {
-        if (errorEl) errorEl.classList.remove('hidden');
-        inputEl.value = "";
-        inputEl.focus();
-      }
-    }
 
     // =========================================================================
     // INTERACTIVE MANIPULATIVES (PHASE 5)
