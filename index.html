@@ -158,6 +158,52 @@
 </head>
 <body class="bg-gradient-to-br from-brand-blue-light via-white to-brand-purple-light min-h-screen flex flex-col overflow-x-hidden text-slate-800">
 
+  <!-- Splash Screen -->
+  <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-brand-purple via-brand-blue to-brand-purple transition-opacity duration-700" style="animation: splash-bg 3s ease-in-out infinite alternate;">
+    <style>
+      @keyframes splash-bg {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+      }
+      @keyframes splash-logo-in {
+        0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+        60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      }
+      @keyframes splash-title-in {
+        0% { transform: translateY(30px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes splash-subtitle-in {
+        0% { transform: translateY(20px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes splash-dots {
+        0%, 20% { opacity: 0.3; }
+        50% { opacity: 1; }
+        80%, 100% { opacity: 0.3; }
+      }
+      @keyframes splash-fade-out {
+        0% { opacity: 1; }
+        100% { opacity: 0; pointer-events: none; }
+      }
+    </style>
+    <div style="animation: splash-logo-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; opacity: 0;">
+      <img src="/logo.png" alt="Logo" class="w-28 h-28 sm:w-36 sm:h-36 rounded-[2rem] shadow-2xl border-4 border-white/30"/>
+    </div>
+    <h1 class="mt-6 text-4xl sm:text-5xl font-title font-bold text-white drop-shadow-lg" style="animation: splash-title-in 0.6s 0.4s ease-out forwards; opacity: 0;">
+      Poussins Pythagorés
+    </h1>
+    <p class="mt-3 text-lg sm:text-xl text-white/80 font-title" style="animation: splash-subtitle-in 0.6s 0.7s ease-out forwards; opacity: 0;">
+      Apprendre les maths en s'amusant !
+    </p>
+    <div class="flex gap-2 mt-8">
+      <span class="w-3 h-3 bg-white rounded-full" style="animation: splash-dots 1.4s 0.8s ease-in-out infinite;"></span>
+      <span class="w-3 h-3 bg-white rounded-full" style="animation: splash-dots 1.4s 1.0s ease-in-out infinite;"></span>
+      <span class="w-3 h-3 bg-white rounded-full" style="animation: splash-dots 1.4s 1.2s ease-in-out infinite;"></span>
+    </div>
+  </div>
+
   <!-- Floating Background Elements (Pure Aesthetics for Kids) -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
     <div class="absolute top-10 left-10 w-24 h-24 bg-brand-pink opacity-10 rounded-full animate-float"></div>
@@ -240,6 +286,20 @@
           <button id="btn-mode-quest" onclick="setGameMode('quest')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
             ✨ Quêtes
           </button>
+        </div>
+        <button onclick="openLearningProfile()" class="mt-2 md:mt-0 bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-title font-bold py-2 px-4 rounded-2xl text-sm transition-all flex items-center gap-2">
+          📊 Mon Profil
+        </button>
+      </div>
+
+      <!-- Adaptive Recommendations (shown when data exists) -->
+      <div id="home-recommendations" class="col-span-full hidden">
+        <div class="bg-gradient-to-r from-brand-pink/10 to-brand-purple/10 rounded-3xl p-5 border-2 border-brand-pink/20 shadow-md">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-brand-pink-light rounded-xl flex items-center justify-center text-xl">🎯</div>
+            <h3 class="font-bold text-lg font-title text-slate-800">À toi de jouer !</h3>
+          </div>
+          <div id="home-recommendations-list" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
         </div>
       </div>
 
@@ -644,6 +704,22 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL: LEARNING PROFILE ==================== -->
+  <div id="modal-learning-profile" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-4 border-brand-orange shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
+      <button onclick="closeLearningProfile()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
+        ✕
+      </button>
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold font-title text-brand-orange flex items-center justify-center gap-2">
+          <span>Mon Profil</span> 📊
+        </h2>
+        <p class="text-slate-500 text-sm mt-1">Ton parcours d'apprentissage adaptatif.</p>
+      </div>
+      <div id="learning-profile-content" class="flex flex-col gap-4"></div>
+    </div>
+  </div>
+
   <!-- ==================== MODAL: ACCESSIBILITY CONFIG ==================== -->
   <div id="modal-accessibility" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in">
@@ -791,6 +867,191 @@
       highContrast: localStorage.getItem('mathscp_high_contrast') === 'true'
     };
 
+    // Adaptive learning: per-game performance stats
+    let adaptiveStats = JSON.parse(localStorage.getItem('mathscp_adaptive_stats') || '{}');
+    let questionStartTime = null;
+
+    function saveAdaptiveStats() {
+      localStorage.setItem('mathscp_adaptive_stats', JSON.stringify(adaptiveStats));
+    }
+
+    function getGameStats(gameId) {
+      if (!adaptiveStats[gameId]) {
+        adaptiveStats[gameId] = {
+          total: 0,
+          correct: 0,
+          wrong: 0,
+          difficulty: 'normal',
+          recentTimes: [],
+          streak: 0
+        };
+      }
+      return adaptiveStats[gameId];
+    }
+
+    function recordAnswer(gameId, isCorrect, responseTimeMs) {
+      const stats = getGameStats(gameId);
+      stats.total++;
+      if (isCorrect) {
+        stats.correct++;
+        stats.streak = Math.max(0, stats.streak) + 1;
+      } else {
+        stats.wrong++;
+        stats.streak = Math.min(0, stats.streak) - 1;
+      }
+      stats.difficulty = state.difficulty;
+      if (responseTimeMs != null) {
+        stats.recentTimes.push(responseTimeMs);
+        if (stats.recentTimes.length > 10) stats.recentTimes.shift();
+      }
+      saveAdaptiveStats();
+    }
+
+    function getAccuracyRate(gameId) {
+      const stats = getGameStats(gameId);
+      if (stats.total === 0) return 0.5;
+      return stats.correct / stats.total;
+    }
+
+    function getAvgResponseTime(gameId) {
+      const stats = getGameStats(gameId);
+      if (stats.recentTimes.length === 0) return 15000;
+      return stats.recentTimes.reduce((a, b) => a + b, 0) / stats.recentTimes.length;
+    }
+
+    function computeLearningProfile() {
+      const profile = {};
+      for (const [catId, cat] of Object.entries(CATEGORIES)) {
+        let totalCorrect = 0, totalAttempts = 0;
+        const gameDetails = [];
+        for (const g of cat.games) {
+          const stats = getGameStats(g.id);
+          totalCorrect += stats.correct;
+          totalAttempts += stats.total;
+          gameDetails.push({
+            id: g.id,
+            name: g.name,
+            accuracy: stats.total > 0 ? stats.correct / stats.total : null,
+            difficulty: stats.difficulty,
+            attempts: stats.total
+          });
+        }
+        profile[catId] = {
+          name: cat.name,
+          color: cat.color,
+          accuracy: totalAttempts > 0 ? totalCorrect / totalAttempts : null,
+          totalAttempts,
+          games: gameDetails
+        };
+      }
+      return profile;
+    }
+
+    function getAdaptiveThreshold(gameId) {
+      const stats = getGameStats(gameId);
+      const accuracy = stats.total > 0 ? stats.correct / stats.total : 0.5;
+      const avgTime = getAvgResponseTime(gameId);
+      let baseThreshold = 3;
+      if (accuracy >= 0.8 && avgTime < 8000) baseThreshold = 2;
+      if (accuracy < 0.5) baseThreshold = 4;
+      return baseThreshold;
+    }
+
+    function getRecommendations() {
+      const profile = computeLearningProfile();
+      const recs = [];
+      for (const [catId, data] of Object.entries(profile)) {
+        for (const g of data.games) {
+          if (g.attempts === 0) {
+            recs.push({ id: g.id, name: g.name, catId, catName: data.name, reason: 'Nouveau ! A essayer', priority: 1 });
+          } else if (g.accuracy !== null && g.accuracy < 0.6) {
+            recs.push({ id: g.id, name: g.name, catId, catName: data.name, reason: 'A besoin d\'entraînement', priority: 2 });
+          }
+        }
+      }
+      recs.sort((a, b) => a.priority - b.priority);
+      return recs.slice(0, 3);
+    }
+
+    function renderRecommendations() {
+      const recs = getRecommendations();
+      const container = document.getElementById('home-recommendations');
+      const list = document.getElementById('home-recommendations-list');
+      if (recs.length === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+      container.classList.remove('hidden');
+      list.innerHTML = '';
+      const colors = { 'A': 'brand-purple', 'B': 'brand-green', 'C': 'brand-orange' };
+      recs.forEach(r => {
+        const c = colors[r.catId] || 'brand-purple';
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-2xl p-4 border-2 border-${c}/30 cursor-pointer hover:shadow-md transition-all active:scale-95`;
+        card.onclick = () => { setGameMode('solo'); launchGame(r.id); };
+        card.innerHTML = `
+          <p class="text-xs font-bold text-${c} uppercase tracking-wide mb-1">${r.catName}</p>
+          <p class="font-bold font-title text-slate-800 text-sm">${r.name}</p>
+          <p class="text-slate-400 text-xs mt-1">${r.reason}</p>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function openLearningProfile() {
+      const modal = document.getElementById('modal-learning-profile');
+      const content = document.getElementById('learning-profile-content');
+      const profile = computeLearningProfile();
+      content.innerHTML = '';
+      const colors = { 'A': { bg: 'bg-brand-purple-light', text: 'text-brand-purple', border: 'border-brand-purple' },
+                        'B': { bg: 'bg-brand-green-light', text: 'text-brand-green', border: 'border-brand-green' },
+                        'C': { bg: 'bg-brand-orange-light', text: 'text-brand-orange', border: 'border-brand-orange' } };
+      for (const [catId, data] of Object.entries(profile)) {
+        const c = colors[catId];
+        const pct = data.accuracy !== null ? Math.round(data.accuracy * 100) : null;
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-2xl p-4 border-2 border-slate-100`;
+        let barHtml = '';
+        if (pct !== null) {
+          const barColor = pct >= 80 ? 'bg-emerald-400' : pct >= 50 ? 'bg-amber-400' : 'bg-rose-400';
+          barHtml = `
+            <div class="w-full bg-slate-100 rounded-full h-3 mt-2">
+              <div class="${barColor} h-3 rounded-full transition-all" style="width: ${pct}%"></div>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">${pct}% de réussite · ${data.totalAttempts} exercices</p>
+          `;
+        } else {
+          barHtml = `<p class="text-xs text-slate-400 mt-2">Pas encore joué</p>`;
+        }
+        let gamesHtml = '';
+        data.games.forEach(g => {
+          const gPct = g.accuracy !== null ? Math.round(g.accuracy * 100) : null;
+          const dot = gPct === null ? '⚪' : gPct >= 80 ? '🟢' : gPct >= 50 ? '🟡' : '🔴';
+          const diffLabel = g.difficulty === 'easy' ? 'Facile' : g.difficulty === 'challenge' ? 'Défi' : 'Normal';
+          gamesHtml += `<div class="flex items-center justify-between text-xs py-1 border-b border-slate-50 last:border-0">
+            <span class="text-slate-700 font-medium">${dot} ${g.name}</span>
+            <span class="text-slate-400">${gPct !== null ? gPct + '%' : '—'} · ${diffLabel}</span>
+          </div>`;
+        });
+        card.innerHTML = `
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 ${c.bg} rounded-xl flex items-center justify-center text-lg font-bold ${c.text}">${catId}</div>
+            <div>
+              <h4 class="font-bold font-title text-slate-800 text-sm">${data.name}</h4>
+            </div>
+          </div>
+          ${barHtml}
+          <div class="mt-3">${gamesHtml}</div>
+        `;
+        content.appendChild(card);
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeLearningProfile() {
+      document.getElementById('modal-learning-profile').classList.add('hidden');
+    }
+
     // Subgames metadata database
     const CATEGORIES = {
       'A': {
@@ -855,6 +1116,19 @@
           .then(reg => console.log('PWA Service Worker registered!', reg))
           .catch(err => console.error('PWA Service Worker registration failed:', err));
       }
+
+      // Dismiss splash screen after fonts load or timeout
+      const splash = document.getElementById('splash-screen');
+      function dismissSplash() {
+        if (!splash || splash.dataset.dismissed) return;
+        splash.dataset.dismissed = '1';
+        splash.style.animation = 'splash-fade-out 0.6s ease-out forwards';
+        setTimeout(() => splash.remove(), 650);
+      }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => setTimeout(dismissSplash, 800));
+      }
+      setTimeout(dismissSplash, 2500);
     });
 
     // Sound effects engine using Web Audio API
@@ -998,6 +1272,7 @@
       }
       
       updateFooterMessage('idle');
+      renderRecommendations();
     }
 
     function selectCategory(catId) {
@@ -1013,12 +1288,16 @@
       
       // Inject category colors & games
       cat.games.forEach(g => {
+        const stats = getGameStats(g.id);
+        const acc = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : null;
+        const diffLabel = stats.difficulty === 'easy' ? '🟢' : stats.difficulty === 'challenge' ? '🔥' : '🔵';
+        const accBadge = acc !== null ? `<span class="ml-2 text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">${diffLabel} ${acc}%</span>` : '';
         const item = document.createElement('div');
         item.className = `bg-white rounded-3xl p-5 border-4 border-${cat.color} shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer`;
         item.onclick = () => launchGame(g.id);
         item.innerHTML = `
           <div class="mb-4">
-            <h3 class="text-xl font-bold text-slate-800 font-title mb-1">${g.name}</h3>
+            <h3 class="text-xl font-bold text-slate-800 font-title mb-1">${g.name}${accBadge}</h3>
             <p class="text-slate-500 text-xs">${g.desc}</p>
           </div>
           <div class="flex items-center justify-between text-${cat.color} font-bold font-title">
@@ -1051,7 +1330,8 @@
       state.sessionStars = 0;
       state.consecutiveCorrect = 0;
       state.consecutiveWrong = 0;
-      state.difficulty = 'normal';
+      const savedStats = getGameStats(state.currentGame);
+      state.difficulty = savedStats.total > 0 ? savedStats.difficulty : 'normal';
       
       let gameName = getGameName(state.currentGame);
       document.getElementById('game-title').innerText = gameName;
@@ -1189,6 +1469,7 @@
     // ==========================================
     function generateExercise() {
       state.isAnswerSelected = false;
+      questionStartTime = Date.now();
       document.getElementById('btn-next-exercise').classList.add('hidden');
       
       const visualArea = document.getElementById('game-visual-area');
@@ -1302,18 +1583,25 @@
           updateSessionStarsUI();
         }
 
+        // Record performance for adaptive learning
+        if (!multiplayerState.isActive) {
+          const elapsed = questionStartTime ? Date.now() - questionStartTime : null;
+          recordAnswer(state.currentGame, true, elapsed);
+        }
+
         // Consecutive correct logic
         state.consecutiveCorrect++;
         state.consecutiveWrong = 0;
 
-        // Difficulty upgrades
+        // Difficulty upgrades (adaptive threshold per game)
         if (!multiplayerState.isActive && !questState.isActive) {
-          if (state.difficulty === 'easy' && state.consecutiveCorrect >= 3) {
+          const upThreshold = getAdaptiveThreshold(state.currentGame);
+          if (state.difficulty === 'easy' && state.consecutiveCorrect >= upThreshold) {
             state.difficulty = 'normal';
             state.consecutiveCorrect = 0;
             setTimeout(() => showToast(true, "Super ! Difficulté : Normal ! 🔵"), 500);
             updateDifficultyUI();
-          } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= 3) {
+          } else if (state.difficulty === 'normal' && state.consecutiveCorrect >= upThreshold) {
             state.difficulty = 'challenge';
             state.consecutiveCorrect = 0;
             setTimeout(() => showToast(true, "Incroyable ! Niveau Défi débloqué ! 🔥"), 500);
@@ -1388,17 +1676,22 @@
           // Reset state.isAnswerSelected to let them try again!
           state.isAnswerSelected = false;
 
+          // Record wrong answer for adaptive learning
+          const elapsed = questionStartTime ? Date.now() - questionStartTime : null;
+          recordAnswer(state.currentGame, false, elapsed);
+
           // Consecutive wrong logic
           state.consecutiveWrong++;
           state.consecutiveCorrect = 0;
 
-          // Difficulty downgrades
-          if (state.difficulty === 'challenge' && state.consecutiveWrong >= 3) {
+          // Difficulty downgrades (adaptive threshold per game)
+          const downThreshold = getAdaptiveThreshold(state.currentGame);
+          if (state.difficulty === 'challenge' && state.consecutiveWrong >= downThreshold) {
             state.difficulty = 'normal';
             state.consecutiveWrong = 0;
             setTimeout(() => showToast(false, "Retour au niveau Normal 🔵"), 500);
             updateDifficultyUI();
-          } else if (state.difficulty === 'normal' && state.consecutiveWrong >= 3) {
+          } else if (state.difficulty === 'normal' && state.consecutiveWrong >= downThreshold) {
             state.difficulty = 'easy';
             state.consecutiveWrong = 0;
             setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
