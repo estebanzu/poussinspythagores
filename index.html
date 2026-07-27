@@ -7,12 +7,11 @@
   <title>Poussins Pythagorés 🌟</title>
 
   <!-- PWA & iOS Safari Standard Tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Maths CP">
   
-  <!-- Embedded Manifest for PWA Support in a Single File -->
-  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIlN1cGVyIE1hdGhzIENQIC0gTWF0aMOpbWF0aXF1ZXMgcG91ciBFbmZhbnRzIiwKICAic2hvcnRfbmFtZSI6ICJNYXRocyBDUCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjRkZGOERFIiwKICAidGhlbWVfY29sb3IiOiAiIzZDNUQtMyIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDt1dGY4LDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMicgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInPjxyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTI4JyBmaWxsPScjNkM1REQzJy8+PHRleHQgeD0nNTAlJyB5PSc1NSUnIGZvbnQtZmFtaWx5PSdzYW5zLXNlcmlmJyBmb250LXNpemU9JzE2MCcgZmlsbD0nI0ZGRkZGRicgZm9udC13ZWlnaHQ9J2JvbGQnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGRvbWluYW50LWJhc2VsaW5lPSdtaWRkbGUnPs6bPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=" />
+  <link rel="manifest" href="/manifest.json" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -774,6 +773,17 @@
       currentPlayer: 1, // 1 or 2
       currentTurn: 1, // 1 to 10
       maxTurns: 10
+    };
+
+    let questState = {
+      isActive: false,
+      currentQuest: null,
+      progress: 0,
+      currentSequenceIndex: 0,
+      consecutiveCorrect: 0,
+      materialEmoji: "",
+      materialName: "",
+      gameSequence: []
     };
 
     let accessibilityState = {

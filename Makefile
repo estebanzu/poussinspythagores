@@ -7,9 +7,6 @@ export
 # Variables
 APP_NAME = super-maths-cp
 PORT ?= 3000
-VERCEL_TOKEN ?= $(VERCEL_TOKEN)
-SUPABASE_URL ?= $(SUPABASE_URL)
-SUPABASE_ANON_KEY ?= $(SUPABASE_ANON_KEY)
 
 # OS detection
 UNAME_S := $(shell uname -s 2>/dev/null || echo Windows)
