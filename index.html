@@ -3192,29 +3192,35 @@
     // ==========================================
     // SYNTHÈSE VOCALE (TEXT-TO-SPEECH)
     // ==========================================
-    // Pre-initialize SpeechSynthesis voices
+    let cachedFrenchVoice = null;
+    
+    function getFrenchVoice() {
+        if (cachedFrenchVoice) return cachedFrenchVoice;
+        const voices = window.speechSynthesis.getVoices();
+        cachedFrenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang === 'fr-FR') || null;
+        return cachedFrenchVoice;
+    }
+
+    // Initialize voices as early as possible
     if ('speechSynthesis' in window) {
       window.speechSynthesis.getVoices();
       window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
+        cachedFrenchVoice = null;
+        getFrenchVoice();
       };
     }
 
     function speakText(text) {
       if (!('speechSynthesis' in window)) return;
       
-      // Cancel any ongoing speech
       window.speechSynthesis.cancel();
       
-      // Clean tags or excess spaces
       const cleanText = text.replace(/<[^>]*>/g, '').trim();
-      
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'fr-FR';
       
-      // Find a suitable French voice
-      const voices = window.speechSynthesis.getVoices();
-      const frenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang === 'fr-FR');
+      // Use cached French voice if available
+      const frenchVoice = getFrenchVoice();
       if (frenchVoice) {
         utterance.voice = frenchVoice;
       }
