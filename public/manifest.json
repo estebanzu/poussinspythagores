@@ -1,0 +1,15 @@
+{
+  "name": "Super Maths CP - Mathématiques pour Enfants",
+  "short_name": "Maths CP",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFF8DE",
+  "theme_color": "#6C5DD3",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
