@@ -1,52 +1,63 @@
 # Makefile for Super Maths CP Node.js app
 
+# Load .env if present
+-include .env
+export
+
 # Variables
 APP_NAME = super-maths-cp
 PORT ?= 3000
-VERCEL_TOKEN ?= $(shell echo $$VERCEL_TOKEN)
-SUPABASE_URL ?= $(shell echo $$SUPABASE_URL)
-SUPABASE_ANON_KEY ?= $(shell echo $$SUPABASE_ANON_KEY)
+VERCEL_TOKEN ?= $(VERCEL_TOKEN)
+SUPABASE_URL ?= $(SUPABASE_URL)
+SUPABASE_ANON_KEY ?= $(SUPABASE_ANON_KEY)
 
-.PHONY: all install dev start stop build deploy clean
+# OS detection
+UNAME_S := $(shell uname -s 2>/dev/null || echo Windows)
+ifeq ($(UNAME_S),Darwin)
+  OPEN = open
+  KILL = kill -9 $$(lsof -t -i:$(PORT))
+else ifeq ($(findstring Linux,$(UNAME_S)),Linux)
+  OPEN = xdg-open
+  KILL = kill -9 $$(lsof -t -i:$(PORT))
+else
+  # Windows (MSYS, Git Bash, WSL, cmd)
+  OPEN = start http://localhost:$(PORT)
+  KILL = for /f "tokens=5" %a in ('netstat -aon ^| findstr :$(PORT)') do taskkill /F /PID %a
+endif
 
-all: install dev
+.PHONY: all dev start stop build deploy clean
 
-# Install all npm dependencies (including Supabase & Nodemon)
-install:
+all: dev
+
+node_modules: package.json
 	@echo "Installing npm dependencies..."
 	npm install
+	@touch node_modules
 
-# Development server with hot‑reload (nodemon)
-dev:
+dev: node_modules
 	@echo "Starting development server..."
-	@(sleep 1.5 && (cmd.exe /c start http://localhost:$(PORT) || open http://localhost:$(PORT) || xdg-open http://localhost:$(PORT) || true)) &
+	@(sleep 1.5 && ($(OPEN) http://localhost:$(PORT) || true)) &
 	npm run dev
 
-# Production start (node)
-start:
+start: node_modules
 	@echo "Starting production server..."
-	@(sleep 1.5 && (cmd.exe /c start http://localhost:$(PORT) || open http://localhost:$(PORT) || xdg-open http://localhost:$(PORT) || true)) &
+	@(sleep 1.5 && ($(OPEN) http://localhost:$(PORT) || true)) &
 	npm start
 
-# Stop the server (kills any node process using the defined PORT)
 stop:
 	@echo "Stopping server on port $(PORT)..."
-	@PID=$$(lsof -t -i:$(PORT)) && if [ -n "$$PID" ]; then kill -9 $$PID && echo "Killed PID $$PID"; else echo "No process running on port $(PORT)"; fi
+	@$(KILL) || echo "No process running on port $(PORT)"
 
-# Build step – Vercel needs a "build" script; for a static PWA we just copy files
 build:
 	@echo "Preparing build artefacts for Vercel..."
 	mkdir -p .vercel_build_output
 	cp -r index.html public server.js package.json README.md .vercel_build_output/
 
-# Deploy to Vercel (requires Vercel CLI installed and VERCEL_TOKEN set)
-# The token can be stored in a .env file or exported before running make.
 deploy:
 	@echo "Deploying to Vercel..."
 	@if [ -z "$(VERCEL_TOKEN)" ]; then echo "Error: VERCEL_TOKEN not set"; exit 1; fi
 	vercel --prod --token $(VERCEL_TOKEN)
 
-# Clean temporary build artefacts
 clean:
 	@echo "Cleaning build artefacts..."
 	rm -rf .vercel_build_output

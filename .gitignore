@@ -10,3 +10,5 @@ yarn-error.log
 .vercel_build_output/
 dist/
 coverage/
+.vercel
+.env*
