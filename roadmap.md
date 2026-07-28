@@ -63,16 +63,36 @@
 
 ## Phase 8 – Gamification avancée ⬜
 - [ ] Streaks quotidiens (jours consécutifs de jeu)
+- [ ] Bonus streak : trésor offert tous les 3 jours consécutifs de jeu
 - [ ] Tableau de bord local top scores
 - [ ] Défis du jour et défis hebdomadaires
 - [ ] Boutique d'accessoires pour compagnon
 - [ ] Niveaux globaux (barre XP au-delà des étoiles)
+- [ ] Minuteur par question (15-30s selon difficulté, visuel animé)
+- [ ] Système de vies (3 cœurs, perte par erreur ou timeout)
+- [ ] Score de performance composite (70% précision + 30% rapidité, rang 1-5)
+- [ ] Récompenses classées par rang (CRUD parent, 5 niveaux de performance)
+- [ ] Tâches pénalité amusantes (CRUD parent : jumping jacks, chant, danse...)
+- [ ] Carnet de stickers permanent (1 sticker thémé par bonne réponse, collection visible)
+- [ ] Trésors nommés pour fin de quête (Clé Dorée, Gemme Arc-en-ciel, Couronne Royale... 18 trésors uniques)
+- [ ] Vue « Ma Collection » (stickers par thème + trésors nommés, page dédiée)
+- [ ] Détection de plafond/plancher de difficulté par compétence (compétence la plus faible fixe le plafond pour tout le contenu)
 
 ## Phase 9 – Accessibilité et UX ⬜
 - [ ] Reconnaissance vocale pour répondre aux exercices
 - [ ] Mode daltonien (patterns en plus des couleurs)
 - [ ] Ajustement de la taille du texte
 - [ ] Audit WCAG 2.1 AA complet
+- [ ] Bouton « Annuler » pendant une partie en cours
+- [ ] Compte à rebours de passation multijoueur (5s, animation « Passe l'appareil ! »)
+- [ ] Nombre configurable de questions par manche (5/10/15/20)
+- [ ] Barre de progression pendant le jeu (« Question 3/10 »)
+- [ ] Adaptation des animations selon les performances de l'appareil
+- [ ] Système de secondes chances (indice après 1ère erreur, révélation après 2ème échec uniquement)
+- [ ] Faits « Le savais-tu ? » après chaque bonne réponse (sciences, animaux, géographie... 1 niveau au-dessus, jamais répétés)
+- [ ] Déduplication des faits affichés (localStorage, même fait jamais revoir)
+- [ ] Sélection de thème par session (licornes, dinosaures, espace, chats, dauphins... visuel + pool de stickers)
+- [ ] Carte d'îles de compétences / Parcours d'apprentissage visuel (Terre des Nombres, Monde des Mots, Grand Monde — statut : nouveau/appris/maitrisé)
 
 ## Phase 10 – Sécurité et confidentialité ⬜
 - [ ] Chiffrement des données localStorage (Web Crypto API)

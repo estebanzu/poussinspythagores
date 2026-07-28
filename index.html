@@ -468,6 +468,21 @@
               <!-- 5 Star icons dynamically filled/empty -->
             </div>
           </div>
+
+          <!-- Cancel Game Button -->
+          <button onclick="backToSubmenu()" class="ml-auto bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 font-title font-bold py-2 px-3 rounded-xl shadow border-2 border-slate-200 hover:border-rose-200 flex items-center gap-1.5 transform active:scale-95 transition-all text-xs" title="Annuler la partie">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <span>Quitter</span>
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-100 rounded-full h-3 mt-3 overflow-hidden hidden" id="game-progress-container">
+          <div id="game-progress-bar" class="h-3 rounded-full bg-gradient-to-r from-brand-purple to-brand-pink transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <div class="flex justify-between items-center mt-1 hidden" id="game-progress-text">
+          <span id="game-progress-label" class="text-xs font-bold text-slate-400 font-title">Question 1/10</span>
+          <span id="game-progress-pct" class="text-xs font-bold text-brand-purple font-title">0%</span>
         </div>
       </div>
 
@@ -764,6 +779,33 @@
             <div class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"></div>
           </button>
         </div>
+
+        <!-- Setting 3: Question count -->
+        <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <h4 class="font-bold text-slate-700 text-sm">Nombre de questions</h4>
+              <p class="text-[10px] text-slate-400 font-medium">Combien de questions par série solo.</p>
+            </div>
+          </div>
+          <div class="flex gap-2" id="question-count-options">
+            <button onclick="setQuestionCount(5)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="5">5</button>
+            <button onclick="setQuestionCount(10)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="10">10</button>
+            <button onclick="setQuestionCount(15)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="15">15</button>
+            <button onclick="setQuestionCount(20)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="20">20</button>
+          </div>
+        </div>
+
+        <!-- Streak display -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-2xl border-2 border-amber-200/60">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">🔥</span>
+            <div>
+              <h4 class="font-bold text-amber-700 text-sm">Série de jeu</h4>
+              <p id="streak-display-text" class="text-[10px] text-amber-500 font-medium">Joue aujourd'hui pour commencer une série !</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -895,8 +937,8 @@
   <!-- Encouraging feedback bottom toast -->
   <div id="feedback-toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
     <div id="feedback-toast-card" class="px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4">
-      <span id="feedback-toast-emoji" class="text-3xl">🌟</span>
-      <span id="feedback-toast-text" class="font-title font-bold text-lg">Super !</span>
+      <span id="feedback-toast-emoji" class="text-3xl shrink-0">🌟</span>
+      <span id="feedback-toast-text" class="font-title font-bold text-lg break-words leading-snug">Super !</span>
     </div>
   </div>
 
@@ -915,7 +957,52 @@
       consecutiveCorrect: 0,
       consecutiveWrong: 0,
       difficulty: 'normal',
+      questionCount: parseInt(localStorage.getItem('mathscp_question_count') || '10'),
+      questionNumber: 0,
+      secondChancesLeft: 0,
     };
+
+    // Streak system
+    let streakState = {
+      current: parseInt(localStorage.getItem('mathscp_streak_current') || '0'),
+      best: parseInt(localStorage.getItem('mathscp_streak_best') || '0'),
+      lastPlayDate: localStorage.getItem('mathscp_streak_last_date') || '',
+    };
+
+    // Math facts dedup
+    let shownFacts = JSON.parse(localStorage.getItem('mathscp_shown_facts') || '[]');
+    const MATH_FACTS = [
+      "Le zéro n'existe pas dans les nombres naturels ! Les Grecs ne l'avaient pas trouvé.",
+      "Les Romains utilisaient des lettres comme chiffres : I = 1, V = 5, X = 10, L = 50.",
+      "Un triangles a toujours 3 angles dont la somme fait exactement 180 degrés.",
+      "La pyramide de Khéops a environ 4500 ans et ses côtés sont presque parfaits.",
+      "Le nombre π (pi) commence par 3,14 mais ses décimales continuent à l'infini !",
+      "Un cercle a 360 degrés parce que les Babyloniens utilisaient un calendrier de 360 jours.",
+      "La multiplication, c'est une addition qui se répète : 3×4, c'est 3+3+3+3.",
+      "Le chiffre le plus joué au loto est le 7, car beaucoup de gens le choisissent.",
+      "En maths, un pair est divisible par 2, un impair ne l'est jamais.",
+      "Le plus grand nombre premier connu fait plus de 24 millions de chiffres !",
+      "Un carré est un rectangle spécial : tous ses côtés sont égaux.",
+      "La moitié de 1, c'est 0,5 : il est possible de partager en deux parts égales.",
+      "Le nombre 11 se lit pareil de gauche à droite et de droite à gauche.",
+      "Un hexagone a 6 côtés : les abeilles construisent leurs rayons en hexagones.",
+      "Si tu retournes le chiffre 6, ça fait un 9 !",
+      "La somme de tous les chiffres de 1 à 9 est 45.",
+      "Un demi-cercle a 180 degrés : la moitié d'un cercle complet.",
+      "Le plus petit nombre premier est 2, c'est aussi le seul pair premier.",
+      "1 mètre = 100 centimètres = 1000 millimètres.",
+      "Une heure a 60 minutes, et une minute a 60 secondes.",
+      "Le triangle le plus solide est le triangle : on l'utilise dans les ponts et les toits.",
+      "Les doigts de nos mains font 10 unités, c'est pour ça qu'on compte en base 10.",
+      "Le plus petit nombre qui n'est ni premier ni composé, c'est 1.",
+      "Un losange a 4 côtés égaux, comme un carré incliné.",
+      "La division, c'est comme partager des bonbons entre des amis.",
+      "5×5 = 25, c'est le même nombre en sens inverse !",
+      "Les couleurs de l'arc-en-ciel suivent l'ordre : ROUGE, ORANGE, JAUNE, VERT, BLEU, INDIGO, VIOLET.",
+      "Un millimètre, c'est aussi petit qu'un trait de crayon.",
+      "Un cube a 6 faces identiques, 12 arêtes et 8 sommets.",
+      "Quand on additionne tous les chiffres pairs de 2 à 8, on obtient 20.",
+    ];
 
     let multiplayerState = {
       isActive: false,
@@ -972,6 +1059,104 @@
       currentSessionCorrect = 0;
       currentSessionTotal = 0;
       currentSessionStart = Date.now();
+    }
+
+    // ==========================================
+    // STREAK SYSTEM (série quotidienne)
+    // ==========================================
+    function getTodayString() {
+      return new Date().toLocaleDateString('fr-FR');
+    }
+
+    function updateStreak() {
+      const today = getTodayString();
+      if (streakState.lastPlayDate === today) return; // already counted today
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toLocaleDateString('fr-FR');
+
+      if (streakState.lastPlayDate === yesterdayStr) {
+        streakState.current++;
+      } else if (streakState.lastPlayDate !== today) {
+        streakState.current = 1;
+      }
+      streakState.lastPlayDate = today;
+      if (streakState.current > streakState.best) {
+        streakState.best = streakState.current;
+        localStorage.setItem('mathscp_streak_best', streakState.best.toString());
+      }
+      localStorage.setItem('mathscp_streak_current', streakState.current.toString());
+      localStorage.setItem('mathscp_streak_last_date', streakState.lastPlayDate);
+    }
+
+    function checkStreakBonus() {
+      if (streakState.current > 0 && streakState.current % 3 === 0) {
+        const bonusStars = 3;
+        state.stars += bonusStars;
+        localStorage.setItem('mathscp_stars', state.stars);
+        setTimeout(() => {
+          showToast(true, `Série de ${streakState.current} jours ! +${bonusStars} étoiles bonus ! 🎁`);
+        }, 800);
+        return true;
+      }
+      return false;
+    }
+
+    function getStreakText() {
+      if (streakState.current === 0) return "Joue aujourd'hui pour commencer une série !";
+      return `🔥 Série de ${streakState.current} jour${streakState.current > 1 ? 's' : ''} — Record : ${streakState.best}`;
+    }
+
+    // ==========================================
+    // MATH FACTS (Le savais-tu ?)
+    // ==========================================
+    function showRandomFact() {
+      const available = MATH_FACTS.filter((_, i) => !shownFacts.includes(i));
+      let idx;
+      if (available.length === 0) {
+        shownFacts = [];
+        localStorage.setItem('mathscp_shown_facts', '[]');
+        idx = getRandomInt(0, MATH_FACTS.length - 1);
+      } else {
+        const rand = getRandomInt(0, available.length - 1);
+        idx = MATH_FACTS.indexOf(available[rand]);
+      }
+      shownFacts.push(idx);
+      if (shownFacts.length > MATH_FACTS.length) shownFacts = [];
+      localStorage.setItem('mathscp_shown_facts', JSON.stringify(shownFacts));
+
+      setTimeout(() => {
+        showToast(true, "🧠 Le savais-tu ? " + MATH_FACTS[idx]);
+      }, 1200);
+    }
+
+    // ==========================================
+    // PROGRESS BAR
+    // ==========================================
+    function updateProgressBar() {
+      const container = document.getElementById('game-progress-container');
+      const bar = document.getElementById('game-progress-bar');
+      const label = document.getElementById('game-progress-label');
+      const pct = document.getElementById('game-progress-pct');
+      if (!container || !bar || !label || !pct) return;
+
+      container.classList.remove('hidden');
+      const progText = document.getElementById('game-progress-text');
+      if (progText) progText.classList.remove('hidden');
+      const total = state.questionCount;
+      const current = Math.min(state.questionNumber, total);
+      const percent = Math.round((current / total) * 100);
+
+      bar.style.width = percent + '%';
+      label.innerText = `Question ${current}/${total}`;
+      pct.innerText = percent + '%';
+    }
+
+    function hideProgressBar() {
+      const container = document.getElementById('game-progress-container');
+      const progText = document.getElementById('game-progress-text');
+      if (container) container.classList.add('hidden');
+      if (progText) progText.classList.add('hidden');
     }
 
     function saveAdaptiveStats() {
@@ -1797,8 +1982,10 @@
 
     function startSoloGame() {
       state.sessionStars = 0;
+      state.questionNumber = 0;
       state.consecutiveCorrect = 0;
       state.consecutiveWrong = 0;
+      state.secondChancesLeft = 1;
       const savedStats = getGameStats(state.currentGame);
       state.difficulty = savedStats.total > 0 ? savedStats.difficulty : 'normal';
       
@@ -1812,6 +1999,7 @@
       
       updateSessionStarsUI();
       updateDifficultyUI();
+      updateStreak();
 
       hideAllScreens();
       document.getElementById('screen-game').classList.remove('hidden');
@@ -1901,7 +2089,7 @@
       const emoji = document.getElementById('feedback-toast-emoji');
 
       if (isSuccess) {
-        card.className = 'px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4 bg-brand-green-light border-brand-green text-brand-green-dark animate-pop-in';
+        card.className = 'px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4 bg-brand-green-light border-brand-green text-brand-green-dark animate-pop-in' + (message.length > 40 ? ' max-w-lg' : '');
         emoji.innerText = '🎉';
       } else {
         card.className = 'px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4 bg-brand-pink-light border-brand-pink text-brand-pink-dark animate-pop-in';
@@ -1916,7 +2104,7 @@
       
       window.toastTimeout = setTimeout(() => {
         toast.classList.add('translate-y-32', 'opacity-0');
-      }, 3000);
+      }, message.length > 40 ? 6000 : 3000);
     }
 
     // Helpers for dynamic math exercises
@@ -1970,8 +2158,11 @@
     // ==========================================
     function generateExercise() {
       state.isAnswerSelected = false;
+      state.secondChancesLeft = 1;
       questionStartTime = Date.now();
+      state.questionNumber++;
       document.getElementById('btn-next-exercise').classList.add('hidden');
+      updateProgressBar();
       
       const visualArea = document.getElementById('game-visual-area');
       const questionText = document.getElementById('game-question-text');
@@ -2128,6 +2319,11 @@
         showToast(true, phrase);
         updateFooterMessage('success');
 
+        // Show a random math fact (if not multiplayer/quest)
+        if (!multiplayerState.isActive && !questState.isActive && state.sessionStars < state.questionCount) {
+          showRandomFact();
+        }
+
         // Show next button or handle level victory
         if (multiplayerState.isActive) {
           const nextBtn = document.getElementById('btn-next-exercise');
@@ -2152,7 +2348,8 @@
             nextBtn.classList.remove('hidden');
           }
         } else {
-          if (state.sessionStars >= 5) {
+          if (state.sessionStars >= state.questionCount) {
+            checkStreakBonus();
             setTimeout(() => {
               triggerVictorySession();
             }, 1000);
@@ -2162,6 +2359,18 @@
         }
       } else {
         playAudioTone('fail');
+
+        // Second chance: show hint, let them try again
+        if (!multiplayerState.isActive && !questState.isActive && state.secondChancesLeft > 0) {
+          state.secondChancesLeft--;
+          state.isAnswerSelected = false;
+          buttonElement.classList.remove('border-slate-200');
+          buttonElement.classList.add('border-brand-pink', 'bg-brand-pink-light', 'text-brand-pink-dark', 'opacity-50', 'cursor-not-allowed');
+          buttonElement.onclick = null;
+          setTimeout(() => showToast(false, "Hmm, essaie encore ! 💪"), 300);
+          return;
+        }
+
         buttonElement.classList.remove('border-slate-200');
         buttonElement.classList.add('border-brand-pink', 'bg-brand-pink-light', 'text-brand-pink-dark', 'shake');
         
@@ -2221,6 +2430,7 @@
         spread: 80,
         origin: { y: 0.6 }
       });
+      hideProgressBar();
       hideAllScreens();
       document.getElementById('screen-victory').classList.remove('hidden');
     }
@@ -3694,6 +3904,20 @@
         contrastBtn.className = "w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative";
         contrastBtn.querySelector('div').className = "w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0";
       }
+
+      // Update question count buttons
+      document.querySelectorAll('#question-count-options button').forEach(btn => {
+        const count = parseInt(btn.dataset.count);
+        if (count === state.questionCount) {
+          btn.className = "flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 bg-brand-purple text-white border-brand-purple shadow transition-all";
+        } else {
+          btn.className = "flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 border-slate-200 text-slate-500 bg-white hover:border-brand-purple-light hover:text-brand-purple transition-all";
+        }
+      });
+
+      // Update streak display
+      const streakEl = document.getElementById('streak-display-text');
+      if (streakEl) streakEl.innerText = getStreakText();
     }
 
     function toggleAccVoice() {
@@ -3709,6 +3933,13 @@
       localStorage.setItem('mathscp_high_contrast', accessibilityState.highContrast.toString());
       updateAccessibilityUI();
       applyAccessibilitySettings();
+    }
+
+    function setQuestionCount(count) {
+      playAudioTone('click');
+      state.questionCount = count;
+      localStorage.setItem('mathscp_question_count', count.toString());
+      updateAccessibilityUI();
     }
 
     function applyAccessibilitySettings() {
