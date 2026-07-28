@@ -1924,6 +1924,35 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const recentlySeen = {};
+    const RECENTLY_SEEN_SIZE = 8;
+
+    function markSeen(gameId, key) {
+      if (!recentlySeen[gameId]) recentlySeen[gameId] = [];
+      const arr = recentlySeen[gameId];
+      const idx = arr.indexOf(key);
+      if (idx !== -1) arr.splice(idx, 1);
+      arr.push(key);
+      if (arr.length > RECENTLY_SEEN_SIZE) arr.shift();
+    }
+
+    function isRecentlySeen(gameId, key) {
+      return recentlySeen[gameId] && recentlySeen[gameId].indexOf(key) !== -1;
+    }
+
+    function clearRecentlySeen(gameId) {
+      recentlySeen[gameId] = [];
+    }
+
     function getDistractors(correctAnswer, count, min = 0, max = 100) {
       const set = new Set();
       while (set.size < count) {
@@ -1948,59 +1977,66 @@
       const questionText = document.getElementById('game-question-text');
       const optionsContainer = document.getElementById('game-options-container');
 
-      visualArea.innerHTML = '';
-      optionsContainer.innerHTML = '';
+      const MAX_DEDUP_ATTEMPTS = 6;
+      for (let attempt = 0; attempt < MAX_DEDUP_ATTEMPTS; attempt++) {
+        visualArea.innerHTML = '';
+        optionsContainer.innerHTML = '';
+        state.currentQuestionKey = null;
 
-      switch (state.currentGame) {
-        // Bloc A: Nombres et Calculs
-        case 'a_nombres_100':
-          genNombres100(visualArea, questionText, optionsContainer);
-          break;
-        case 'a_additions':
-          genAdditions(visualArea, questionText, optionsContainer);
-          break;
-        case 'a_soustractions':
-          genSoustractions(visualArea, questionText, optionsContainer);
-          break;
-        case 'a_doubles_moities':
-          genDoublesMoities(visualArea, questionText, optionsContainer);
-          break;
-        case 'a_complements_10':
-          genComplements10(visualArea, questionText, optionsContainer);
-          break;
-        case 'a_fractions':
-          genFractions(visualArea, questionText, optionsContainer);
-          break;
+        switch (state.currentGame) {
+          case 'a_nombres_100':
+            genNombres100(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_additions':
+            genAdditions(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_soustractions':
+            genSoustractions(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_doubles_moities':
+            genDoublesMoities(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_complements_10':
+            genComplements10(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_fractions':
+            genFractions(visualArea, questionText, optionsContainer);
+            break;
+          case 'b_figures':
+            genFigures(visualArea, questionText, optionsContainer);
+            break;
+          case 'b_vocabulaire_spatial':
+            genVocabulaireSpatial(visualArea, questionText, optionsContainer);
+            break;
+          case 'b_formes_tri':
+            genFormesTri(visualArea, questionText, optionsContainer);
+            break;
+          case 'c_monnaie':
+            genMonnaie(visualArea, questionText, optionsContainer);
+            break;
+          case 'c_heure':
+            genHeure(visualArea, questionText, optionsContainer);
+            break;
+          case 'c_mesures':
+            genMesures(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_fractions_interact':
+            genFractionsInteract(visualArea, questionText, optionsContainer);
+            break;
+          case 'a_blocs_dizaines':
+            genBlocsDizaines(visualArea, questionText, optionsContainer);
+            break;
+        }
 
-        // Bloc B: Espace et Géométrie
-        case 'b_figures':
-          genFigures(visualArea, questionText, optionsContainer);
+        const key = state.currentQuestionKey;
+        if (!key || !isRecentlySeen(state.currentGame, key)) {
+          if (key) markSeen(state.currentGame, key);
           break;
-        case 'b_vocabulaire_spatial':
-          genVocabulaireSpatial(visualArea, questionText, optionsContainer);
-          break;
-        case 'b_formes_tri':
-          genFormesTri(visualArea, questionText, optionsContainer);
-          break;
-
-        // Bloc C: Grandeurs et Mesures
-        case 'c_monnaie':
-          genMonnaie(visualArea, questionText, optionsContainer);
-          break;
-        case 'c_heure':
-          genHeure(visualArea, questionText, optionsContainer);
-          break;
-        case 'c_mesures':
-          genMesures(visualArea, questionText, optionsContainer);
-          break;
-
-        // Interactive games (Phase 5)
-        case 'a_fractions_interact':
-          genFractionsInteract(visualArea, questionText, optionsContainer);
-          break;
-        case 'a_blocs_dizaines':
-          genBlocsDizaines(visualArea, questionText, optionsContainer);
-          break;
+        }
+        if (attempt === MAX_DEDUP_ATTEMPTS - 1) {
+          clearRecentlySeen(state.currentGame);
+          markSeen(state.currentGame, key);
+        }
       }
 
       // Auto-read question text after a brief delay (if not muted or voice autoplay is on)
@@ -2012,7 +2048,7 @@
     }
 
     function renderOptions(correct, distractors, container) {
-      const allChoices = [correct, ...distractors].sort(() => Math.random() - 0.5);
+      const allChoices = shuffleArray([correct, ...distractors]);
       container.innerHTML = '';
 
       allChoices.forEach(choice => {
@@ -2214,6 +2250,7 @@
         number = getRandomInt(10, 99);
       }
       state.currentAnswer = number;
+      state.currentQuestionKey = 'n100_' + state.difficulty + '_' + number;
 
       const dizaines = Math.floor(number / 10);
       const unites = number % 10;
@@ -2320,6 +2357,7 @@
         }
         correct = a + b;
         state.currentAnswer = correct;
+        state.currentQuestionKey = 'add_h_' + a + '+' + b;
 
         questionText.innerText = "Trouve le résultat de cette addition en ligne :";
 
@@ -2357,6 +2395,7 @@
         const b = bTens * 10 + bUnits;
         const correct = a + b;
         state.currentAnswer = correct;
+        state.currentQuestionKey = 'add_v_' + a + '+' + b;
 
         questionText.innerText = "Calcule cette addition posée en colonne :";
 
@@ -2406,7 +2445,7 @@
       let a, b;
       
       if (state.difficulty === 'easy') {
-        a = getRandomInt(3, 5);
+        a = getRandomInt(3, 9);
         b = getRandomInt(1, a - 1);
       } else if (state.difficulty === 'challenge') {
         a = getRandomInt(15, 29);
@@ -2429,6 +2468,7 @@
       
       const correct = a - b;
       state.currentAnswer = correct;
+      state.currentQuestionKey = 'sous_' + a + '-' + b;
 
       questionText.innerText = `Trouve le résultat de la soustraction : ${a} - ${b}`;
 
@@ -2483,7 +2523,7 @@
         // Double
         let x;
         if (state.difficulty === 'easy') {
-          x = getRandomInt(2, 5);
+          x = getRandomInt(2, 8);
         } else if (state.difficulty === 'challenge') {
           x = getRandomInt(10, 15);
         } else {
@@ -2492,6 +2532,7 @@
         
         const correct = x * 2;
         state.currentAnswer = correct;
+        state.currentQuestionKey = 'dm_d_' + state.difficulty + '_' + x;
 
         questionText.innerText = `Quel est le double de ${x} ? (${x} + ${x})`;
 
@@ -2533,7 +2574,7 @@
         // Moitié
         let Y;
         if (state.difficulty === 'easy') {
-          Y = getRandomInt(2, 5) * 2; // Even number 4 to 10
+          Y = getRandomInt(2, 8) * 2; // Even number 4 to 16
         } else if (state.difficulty === 'challenge') {
           Y = getRandomInt(6, 10) * 2; // Even number 12 to 20
         } else {
@@ -2542,6 +2583,7 @@
         
         const correct = Y / 2;
         state.currentAnswer = correct;
+        state.currentQuestionKey = 'dm_m_' + state.difficulty + '_' + Y;
 
         questionText.innerText = `Quelle est la moitié de ${Y} ?`;
 
@@ -2587,7 +2629,7 @@
       let x, correct;
       
       if (state.difficulty === 'easy') {
-        x = getRandomInt(7, 9);
+        x = getRandomInt(4, 9);
         correct = 10 - x;
       } else if (state.difficulty === 'challenge') {
         x = getRandomInt(11, 18);
@@ -2598,6 +2640,7 @@
       }
       
       state.currentAnswer = correct;
+      state.currentQuestionKey = 'comp10_' + state.difficulty + '_' + x;
 
       if (state.difficulty === 'challenge') {
         questionText.innerText = `Combien de jetons manque-t-il pour faire 20 ? (${x} + ? = 20)`;
@@ -2708,6 +2751,7 @@
         ];
         const item = questions[getRandomInt(0, questions.length - 1)];
         state.currentAnswer = `${item.ans}`;
+        state.currentQuestionKey = 'fig_c_' + item.q;
         questionText.innerText = item.q;
 
         // Draw the scene
@@ -2757,6 +2801,7 @@
         const idx = getRandomInt(0, 3);
         const chosen = shapes[idx];
         state.currentAnswer = chosen.name;
+        state.currentQuestionKey = 'fig_n_' + chosen.id;
 
         questionText.innerText = "Comment s'appelle cette figure géométrique ?";
 
@@ -2827,6 +2872,7 @@
       const idx = getRandomInt(0, positions.length - 1);
       const chosen = positions[idx];
       state.currentAnswer = chosen.label;
+      state.currentQuestionKey = 'spat_' + state.difficulty + '_' + chosen.id;
 
       questionText.innerText = "Où est le petit oiseau bleu ?";
 
@@ -2946,6 +2992,7 @@
       }
 
       state.currentAnswer = `${total} €`;
+      state.currentQuestionKey = 'mon_' + state.difficulty + '_' + items.map(i => i.val).sort().join(',');
       questionText.innerText = "Combien d'argent y a-t-il dans le porte-monnaie ?";
 
       // Render Wallet SVG containing coins and bills
@@ -3036,6 +3083,7 @@
 
       const correctText = getHeureText(hour, min);
       state.currentAnswer = correctText;
+      state.currentQuestionKey = 'heure_' + hour + '_' + min;
 
       questionText.innerText = "Quelle heure indique cette horloge ?";
 
@@ -3123,6 +3171,7 @@
 
       const n = getRandomInt(1, d - 1);
       state.currentAnswer = `${n}/${d}`;
+      state.currentQuestionKey = 'frac_' + state.difficulty + '_' + n + '_' + d;
 
       questionText.innerText = "Quelle fraction de cette barre est coloriée ?";
 
@@ -3163,6 +3212,7 @@
       }
       
       state.currentAnswer = `${length} cm`;
+      state.currentQuestionKey = 'mes_' + state.difficulty + '_' + length;
       questionText.innerText = "Combien mesure ce crayon de couleur ?";
 
       let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
@@ -4164,6 +4214,7 @@
       targetFractionDenominator = [2, 3, 4][getRandomInt(0, 2)];
       targetFractionNumerator = getRandomInt(1, targetFractionDenominator - 1);
       state.currentAnswer = `${targetFractionNumerator}/${targetFractionDenominator}`;
+      state.currentQuestionKey = 'fint_' + targetFractionNumerator + '_' + targetFractionDenominator;
       userFractionSelected = Array(targetFractionDenominator).fill(false);
 
       questionText.innerText = `Colorie la fraction ${state.currentAnswer} de cette barre :`;
@@ -4218,6 +4269,7 @@
     function genBlocsDizaines(visualArea, questionText, optionsContainer) {
       targetNumber = getRandomInt(11, 49);
       state.currentAnswer = targetNumber;
+      state.currentQuestionKey = 'bloc_' + targetNumber;
       userTens = 0;
       userUnits = 0;
 
@@ -4329,13 +4381,14 @@
         });
       }
 
-      shapesArray.sort(() => Math.random() - 0.5);
+      shapesArray = shuffleArray(shapesArray);
       shapesArray.forEach((shape, idx) => {
         shape.x = 55 + (idx % 3) * 95;
         shape.y = 55 + Math.floor(idx / 3) * 75;
       });
 
       state.currentAnswer = "correct";
+      state.currentQuestionKey = 'form_' + targetShapeType + '_' + shapesArray.map(s => s.type).join(',');
       renderFormesTriSVG(visualArea);
 
       optionsContainer.innerHTML = `
