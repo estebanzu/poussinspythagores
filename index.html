@@ -95,6 +95,23 @@
       border-left: 2px solid rgba(239, 68, 68, 0.4);
     }
 
+    /* Question Timer */
+    .timer-ring-bg { fill: none; stroke: #e2e8f0; stroke-width: 5; }
+    .timer-ring-progress { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke 0.3s, stroke-dashoffset 0.3s linear; transform: rotate(-90deg); transform-origin: center; }
+    .timer-container { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+    .timer-number { position: absolute; font-family: 'Fredoka', sans-serif; font-weight: 700; }
+    .timer-urgent .timer-number { animation: timer-pulse 0.5s ease-in-out infinite; }
+    @keyframes timer-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    @keyframes timer-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px) rotate(-2deg); }
+      75% { transform: translateX(4px) rotate(2deg); }
+    }
+    .timer-shake-anim { animation: timer-shake 0.3s ease-in-out; }
+
     /* Floating Bubble Animations */
     @keyframes float {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -503,11 +520,21 @@
             <div class="absolute right-2 -bottom-2 text-brand-blue/20 text-7xl select-none font-bold">?</div>
             <div class="flex items-center justify-between mb-1 relative z-10">
               <p class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title">Question</p>
-              <button onclick="speakQuestion()" id="btn-speak-question" class="text-brand-blue hover:text-brand-blue-dark hover:scale-105 active:scale-95 transition-all w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center shadow-sm" title="Écouter la question">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/>
-                </svg>
-              </button>
+              <div class="flex items-center gap-2">
+                <button onclick="speakQuestion()" id="btn-speak-question" class="text-brand-blue hover:text-brand-blue-dark hover:scale-105 active:scale-95 transition-all w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center shadow-sm" title="Écouter la question">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/>
+                  </svg>
+                </button>
+                <!-- Question Timer -->
+                <div id="question-timer" class="timer-container">
+                  <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle class="timer-ring-bg" cx="20" cy="20" r="16"/>
+                    <circle id="timer-ring" class="timer-ring-progress" cx="20" cy="20" r="16" stroke="#22c55e" stroke-dasharray="100.53" stroke-dashoffset="0"/>
+                  </svg>
+                  <span id="timer-text" class="timer-number text-sm text-brand-green-dark">15</span>
+                </div>
+              </div>
             </div>
             <h4 id="game-question-text" class="text-lg md:text-xl font-bold text-slate-800 leading-snug relative z-10">
               Combien y a-t-il d'étoiles ?
@@ -1032,6 +1059,11 @@
     // Adaptive learning: per-game performance stats
     let adaptiveStats = JSON.parse(localStorage.getItem('mathscp_adaptive_stats') || '{}');
     let questionStartTime = null;
+
+    // Question timer (15 seconds)
+    const QUESTION_TIME_LIMIT = 15;
+    let questionTimerInterval = null;
+    let questionTimeRemaining = QUESTION_TIME_LIMIT;
 
     // Session tracking for analytics dashboard
     let sessionHistory = JSON.parse(localStorage.getItem('mathscp_session_history') || '[]');
@@ -2154,6 +2186,144 @@
     }
 
     // ==========================================
+    // QUESTION TIMER (15 seconds)
+    // ==========================================
+    function startQuestionTimer() {
+      stopQuestionTimer();
+      questionTimeRemaining = QUESTION_TIME_LIMIT;
+      updateTimerUI();
+      const timerEl = document.getElementById('question-timer');
+      if (timerEl) timerEl.classList.remove('timer-urgent');
+
+      questionTimerInterval = setInterval(() => {
+        questionTimeRemaining--;
+        updateTimerUI();
+
+        if (questionTimeRemaining <= 5 && questionTimeRemaining > 0) {
+          const timerEl = document.getElementById('question-timer');
+          if (timerEl) timerEl.classList.add('timer-urgent');
+          const timerText = document.getElementById('timer-text');
+          if (timerText) timerText.classList.add('timer-shake-anim');
+          setTimeout(() => { if (timerText) timerText.classList.remove('timer-shake-anim'); }, 300);
+        }
+
+        if (questionTimeRemaining <= 0) {
+          stopQuestionTimer();
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function stopQuestionTimer() {
+      if (questionTimerInterval) {
+        clearInterval(questionTimerInterval);
+        questionTimerInterval = null;
+      }
+    }
+
+    function updateTimerUI() {
+      const timerText = document.getElementById('timer-text');
+      const timerRing = document.getElementById('timer-ring');
+      if (!timerText || !timerRing) return;
+
+      timerText.innerText = questionTimeRemaining;
+
+      const circumference = 2 * Math.PI * 16;
+      const progress = questionTimeRemaining / QUESTION_TIME_LIMIT;
+      const offset = circumference * (1 - progress);
+      timerRing.style.strokeDashoffset = offset;
+
+      if (questionTimeRemaining > 10) {
+        timerRing.style.stroke = '#22c55e';
+        timerText.className = 'timer-number text-sm text-brand-green-dark';
+      } else if (questionTimeRemaining > 5) {
+        timerRing.style.stroke = '#f59e0b';
+        timerText.className = 'timer-number text-sm text-amber-600';
+      } else {
+        timerRing.style.stroke = '#ef4444';
+        timerText.className = 'timer-number text-sm text-red-500';
+      }
+    }
+
+    function handleTimeout() {
+      if (state.isAnswerSelected) return;
+      state.isAnswerSelected = true;
+      playAudioTone('fail');
+
+      // Disable all option buttons
+      const optionsContainer = document.getElementById('game-options-container');
+      if (optionsContainer) {
+        optionsContainer.querySelectorAll('button').forEach(btn => {
+          btn.onclick = null;
+          btn.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+      }
+
+      // Reveal the correct answer
+      if (optionsContainer) {
+        optionsContainer.querySelectorAll('button').forEach(btn => {
+          if (btn.innerText == state.currentAnswer) {
+            btn.classList.remove('border-slate-200');
+            btn.classList.add('border-brand-green', 'bg-brand-green-light', 'text-brand-green-dark');
+          }
+        });
+      }
+
+      if (multiplayerState.isActive) {
+        // No points awarded
+      } else if (questState.isActive) {
+        questState.consecutiveCorrect = 0;
+      } else {
+        const elapsed = questionStartTime ? QUESTION_TIME_LIMIT * 1000 : null;
+        recordAnswer(state.currentGame, false, elapsed);
+
+        state.consecutiveWrong++;
+        state.consecutiveCorrect = 0;
+
+        const downThreshold = getAdaptiveThreshold(state.currentGame);
+        if (state.difficulty === 'challenge' && state.consecutiveWrong >= downThreshold) {
+          state.difficulty = 'normal';
+          state.consecutiveWrong = 0;
+          setTimeout(() => showToast(false, "Retour au niveau Normal 🔵"), 500);
+          updateDifficultyUI();
+        } else if (state.difficulty === 'normal' && state.consecutiveWrong >= downThreshold) {
+          state.difficulty = 'easy';
+          state.consecutiveWrong = 0;
+          setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
+          updateDifficultyUI();
+        }
+      }
+
+      showToast(false, "Temps écoulé ! ⏰");
+      updateFooterMessage('retry');
+
+      // Show next button
+      if (multiplayerState.isActive) {
+        const nextBtn = document.getElementById('btn-next-exercise');
+        if (nextBtn) {
+          if (multiplayerState.currentTurn >= multiplayerState.maxTurns) {
+            nextBtn.querySelector('span').innerText = "Voir les résultats 🏁";
+          } else {
+            const nextPlayer = multiplayerState.currentPlayer === 1 ? multiplayerState.player2 : multiplayerState.player1;
+            const nextMascot = multiplayerState.currentPlayer === 1 ? "🦁" : "🐣";
+            nextBtn.querySelector('span').innerText = `Passer au tour de ${nextPlayer.name} ${nextMascot}`;
+          }
+          nextBtn.classList.remove('hidden');
+        }
+      } else if (questState.isActive) {
+        state.isAnswerSelected = false;
+        const nextBtn = document.getElementById('btn-next-exercise');
+        if (nextBtn) {
+          nextBtn.querySelector('span').innerText = "Continuer l'aventure 🚀";
+          nextBtn.classList.remove('hidden');
+        }
+      } else {
+        state.isAnswerSelected = false;
+        document.getElementById('btn-next-exercise').classList.remove('hidden');
+      }
+    }
+
+    // ==========================================
     // EXERCISE GENERATION MOTOR
     // ==========================================
     function generateExercise() {
@@ -2236,6 +2406,9 @@
           speakQuestion();
         }
       }, 350);
+
+      // Start 15-second countdown timer
+      startQuestionTimer();
     }
 
     function renderOptions(correct, distractors, container) {
@@ -2254,6 +2427,7 @@
     function checkAnswer(selected, buttonElement) {
       if (state.isAnswerSelected) return;
       state.isAnswerSelected = true;
+      stopQuestionTimer();
 
       const isCorrect = (selected === state.currentAnswer);
 
