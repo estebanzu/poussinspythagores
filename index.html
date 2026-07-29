@@ -1065,6 +1065,11 @@
     let questionTimerInterval = null;
     let questionTimeRemaining = QUESTION_TIME_LIMIT;
 
+    // Badge tracking: sessions and perfect sessions
+    let totalSessionsPlayed = parseInt(localStorage.getItem('mathscp_total_sessions') || '0');
+    let perfectSessions = parseInt(localStorage.getItem('mathscp_perfect_sessions') || '0');
+    let totalTimePlayed = parseInt(localStorage.getItem('mathscp_playtime_accumulated') || '0');
+
     // Session tracking for analytics dashboard
     let sessionHistory = JSON.parse(localStorage.getItem('mathscp_session_history') || '[]');
     let currentSessionGames = new Set();
@@ -1084,6 +1089,14 @@
       sessionHistory.unshift(entry);
       if (sessionHistory.length > 20) sessionHistory.length = 20;
       localStorage.setItem('mathscp_session_history', JSON.stringify(sessionHistory));
+
+      // Track total sessions and perfect sessions for badges
+      totalSessionsPlayed++;
+      localStorage.setItem('mathscp_total_sessions', totalSessionsPlayed.toString());
+      if (currentSessionCorrect === currentSessionTotal && currentSessionTotal >= 5) {
+        perfectSessions++;
+        localStorage.setItem('mathscp_perfect_sessions', perfectSessions.toString());
+      }
     }
 
     function resetSessionTracking() {
@@ -2032,6 +2045,7 @@
       updateSessionStarsUI();
       updateDifficultyUI();
       updateStreak();
+      checkBadgeUnlocks();
 
       hideAllScreens();
       document.getElementById('screen-game').classList.remove('hidden');
@@ -2292,6 +2306,7 @@
           setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
           updateDifficultyUI();
         }
+        checkBadgeUnlocks();
       }
 
       showToast(false, "Temps écoulé ! ⏰");
@@ -2489,6 +2504,9 @@
           origin: { y: 0.75 }
         });
 
+        // Check for new badge unlocks (consecutive, difficulty, etc.)
+        checkBadgeUnlocks();
+
         const phrase = SUCCESS_PHRASES[getRandomInt(0, SUCCESS_PHRASES.length - 1)];
         showToast(true, phrase);
         updateFooterMessage('success');
@@ -2588,6 +2606,7 @@
             setTimeout(() => showToast(false, "Mode Facile activé pour t'aider ! 🟢"), 500);
             updateDifficultyUI();
           }
+          checkBadgeUnlocks();
         }
 
         const phrase = FAIL_PHRASES[getRandomInt(0, FAIL_PHRASES.length - 1)];
@@ -2599,6 +2618,7 @@
     function triggerVictorySession() {
       playAudioTone('trophy');
       recordSession();
+      checkBadgeUnlocks();
       confetti({
         particleCount: 150,
         spread: 80,
@@ -4128,144 +4148,104 @@
     // ==========================================
     // SYSTEME DE BADGES & GAMIFICATION
     // ==========================================
+
+    // Helper to generate simple badge SVGs
+    function badgeSvg(shape, bgColor, borderColor, icon, iconColor, isLocked) {
+      const lock = isLocked ? 'grayscale opacity-40' : '';
+      const bg = shape === 'shield'
+        ? `<path d="M50 5 L88 27 V55 C88 78 50 95 50 95 C50 95 12 78 12 55 V27 L50 5 Z" fill="${bgColor}" stroke="${borderColor}" stroke-width="4"/>
+           <path d="M50 12 L82 30 V52 C82 72 50 86 50 86 C50 86 18 72 18 52 V30 L50 12 Z" fill="white" stroke="${borderColor}" stroke-width="1.5" opacity="0.85"/>`
+        : `<circle cx="50" cy="50" r="45" fill="${bgColor}" stroke="${borderColor}" stroke-width="4"/>
+           <circle cx="50" cy="50" r="39" fill="white" stroke="${borderColor}" stroke-width="1.5" opacity="0.85"/>`;
+      return `<svg class="w-full h-full ${lock}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        ${bg}
+        <text x="50" y="58" text-anchor="middle" font-size="36" fill="${iconColor}" font-family="serif">${icon}</text>
+      </svg>`;
+    }
+
+    // Badge condition types: 'stars', 'streak', 'accuracy', 'speed', 'game_total', 'game_correct', 'category_correct', 'difficulty', 'sessions', 'perfect_session', 'special'
     const BADGES = [
-      {
-        id: 'badge_squirrel',
-        name: 'L\'Écureuil Calculateur',
-        desc: 'Tu as débloqué ce badge à 5 étoiles !',
-        starsReq: 5,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 5 L85 25 V60 C85 80 50 95 50 95 C50 95 15 80 15 60 V25 L50 5 Z" fill="#D38B5D" stroke="#A0522D" stroke-width="4"/>
-            <path d="M50 10 L80 28 V57 C80 75 50 88 50 88 C50 88 20 75 20 57 V28 L50 10 Z" fill="#FFF" stroke="#CD853F" stroke-width="2" opacity="0.9"/>
-            <path d="M50 35 C65 35 65 55 50 68 C35 55 35 35 50 35 Z" fill="#8B4513"/>
-            <path d="M35 35 C35 30 65 30 65 35 C65 40 35 40 35 35 Z" fill="#A0522D" stroke="#8B4513" stroke-width="1"/>
-            <circle cx="50" cy="30" r="3" fill="#A0522D"/>
-            <path d="M50 72 L52 76 L57 77 L53 80 L54 85 L50 83 L46 85 L47 80 L43 77 L48 76 Z" fill="#FFD93D" stroke="#E0BE2F" stroke-width="0.5"/>
-          </svg>
-        `
-      },
-      {
-        id: 'badge_rabbit',
-        name: 'Le Lapin Rapide',
-        desc: 'Tu as débloqué ce badge à 10 étoiles !',
-        starsReq: 10,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="#E2E8F0" stroke="#94A3B8" stroke-width="4"/>
-            <circle cx="50" cy="50" r="39" fill="#FFF" stroke="#CBD5E1" stroke-width="2"/>
-            <path d="M38 25 C30 5 42 5 44 25 Z" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
-            <path d="M40 23 C34 9 41 9 42 23 Z" fill="#FFB6C1"/>
-            <path d="M62 25 C70 5 58 5 56 25 Z" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
-            <path d="M60 23 C66 9 59 9 58 23 Z" fill="#FFB6C1"/>
-            <circle cx="50" cy="52" r="18" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
-            <circle cx="44" cy="48" r="2" fill="#1E293B"/>
-            <circle cx="56" cy="48" r="2" fill="#1E293B"/>
-            <polygon points="50,53 48,51 52,51" fill="#FFB6C1"/>
-            <path d="M50 53 Q48 56 46 55 M50 53 Q52 56 54 55" stroke="#1E293B" stroke-width="1.5" fill="none"/>
-          </svg>
-        `
-      },
-      {
-        id: 'badge_owl',
-        name: 'Le Hibou Sage',
-        desc: 'Tu as débloqué ce badge à 20 étoiles !',
-        starsReq: 20,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="#FEF08A" stroke="#EAB308" stroke-width="4"/>
-            <circle cx="50" cy="50" r="39" fill="#FFF" stroke="#FEF08A" stroke-width="2"/>
-            <polygon points="32,45 32,32 45,40" fill="#CA8A04"/>
-            <polygon points="68,45 68,32 55,40" fill="#CA8A04"/>
-            <circle cx="50" cy="55" r="22" fill="#D97706" stroke="#B45309" stroke-width="2"/>
-            <circle cx="42" cy="48" r="8" fill="#FFF" stroke="#CA8A04" stroke-width="1.5"/>
-            <circle cx="58" cy="48" r="8" fill="#FFF" stroke="#CA8A04" stroke-width="1.5"/>
-            <circle cx="42" cy="48" r="3" fill="#1E293B"/>
-            <circle cx="58" cy="48" r="3" fill="#1E293B"/>
-            <line x1="48" y1="48" x2="52" y2="48" stroke="#1E293B" stroke-width="2"/>
-            <polygon points="50,52 47,58 53,58" fill="#EA580C"/>
-          </svg>
-        `
-      },
-      {
-        id: 'badge_dolphin',
-        name: 'Le Dauphin Malin',
-        desc: 'Tu as débloqué ce badge à 35 étoiles !',
-        starsReq: 35,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="4"/>
-            <circle cx="50" cy="50" r="39" fill="#FFF" stroke="#E0F2FE" stroke-width="2"/>
-            <path d="M15 65 Q32.5 55 50 65 T85 65 L85 85 L15 85 Z" fill="#38BDF8" opacity="0.6"/>
-            <path d="M15 72 Q32.5 65 50 72 T85 72 L85 85 L15 85 Z" fill="#0284C7"/>
-            <path d="M30 55 C35 30 65 28 72 45 C65 42 55 45 48 55 Z" fill="#0EA5E9" stroke="#0284C7" stroke-width="1.5"/>
-            <path d="M50 35 C52 28 58 28 56 36 Z" fill="#0EA5E9"/>
-            <circle cx="62" cy="38" r="1.5" fill="white"/>
-          </svg>
-        `
-      },
-      {
-        id: 'badge_lion',
-        name: 'Le Lion Champion',
-        desc: 'Tu as débloqué ce badge à 50 étoiles !',
-        starsReq: 50,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 5 L90 25 V60 C90 78 50 95 50 95 C50 95 10 78 10 60 V25 L50 5 Z" fill="#FEE2E2" stroke="#EF4444" stroke-width="4"/>
-            <circle cx="50" cy="52" r="26" fill="#F97316"/>
-            <path d="M50 20 Q56 26 50 32 Q62 26 62 38" stroke="#EA580C" stroke-width="2" fill="none"/>
-            <circle cx="50" cy="52" r="18" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
-            <circle cx="36" cy="40" r="5" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
-            <circle cx="64" cy="40" r="5" fill="#FCD34D" stroke="#D97706" stroke-width="1.5"/>
-            <circle cx="44" cy="48" r="2.5" fill="#1E293B"/>
-            <circle cx="56" cy="48" r="2.5" fill="#1E293B"/>
-            <polygon points="50,54 47,51 53,51" fill="#EA580C"/>
-            <path d="M50 54 V58 Q48 60 46 59 M50 58 Q52 60 54 59" stroke="#1E293B" stroke-width="1.5" fill="none"/>
-            <polygon points="42,28 50,20 58,28 53,32 47,32" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
-          </svg>
-        `
-      },
-      {
-        id: 'badge_unicorn',
-        name: 'La Licorne Magique',
-        desc: 'Tu as débloqué ce badge à 75 étoiles !',
-        starsReq: 75,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 5 L88 27 V55 C88 78 50 95 50 95 C50 95 12 78 12 55 V27 L50 5 Z" fill="#F5F3FF" stroke="#D946EF" stroke-width="4"/>
-            <path d="M50 10 L83 30 V52 C83 72 50 88 50 88 C50 88 17 72 17 52 V30 L50 10 Z" fill="#FFF" stroke="#E879F9" stroke-width="2" opacity="0.9"/>
-            <path d="M35 45 C25 55 35 75 55 75 C60 70 50 60 45 45 Z" fill="#A855F7"/>
-            <path d="M32 50 C20 62 30 82 50 82" stroke="#EC4899" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <path d="M42 45 C45 35 60 32 68 42 C72 47 70 55 60 55 C52 55 48 55 42 45 Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-            <polygon points="45,35 48,15 54,32" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
-            <circle cx="58" cy="43" r="2" fill="#D946EF"/>
-            <path d="M72 25 L74 29 L78 30 L74 31 L72 35 L70 31 L66 30 L70 29 Z" fill="#FFD93D"/>
-          </svg>
-        `
-      },
-      {
-        id: 'badge_dragon',
-        name: 'Le Dragon de Légende',
-        desc: 'Tu as débloqué ce badge à 100 étoiles !',
-        starsReq: 100,
-        svg: (isLocked) => `
-          <svg class="w-full h-full ${isLocked ? 'grayscale opacity-40' : ''}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 5 L88 27 V55 C88 78 50 95 50 95 C50 95 12 78 12 55 V27 L50 5 Z" fill="#FFFBEB" stroke="#F59E0B" stroke-width="5"/>
-            <path d="M22 45 C5 25 15 65 35 55 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
-            <path d="M78 45 C95 25 85 65 65 55 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
-            <circle cx="50" cy="58" r="18" fill="#10B981" stroke="#047857" stroke-width="2"/>
-            <circle cx="50" cy="42" r="14" fill="#10B981" stroke="#047857" stroke-width="2"/>
-            <ellipse cx="50" cy="62" rx="10" ry="12" fill="#A7F3D0"/>
-            <polygon points="42,32 35,22 46,29" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
-            <polygon points="58,32 65,22 54,29" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
-            <circle cx="45" cy="40" r="2.5" fill="#1E293B"/>
-            <circle cx="55" cy="40" r="2.5" fill="#1E293B"/>
-            <circle cx="48" cy="46" r="1" fill="#047857"/>
-            <circle cx="52" cy="46" r="1" fill="#047857"/>
-            <polygon points="45,28 50,18 55,28 52,30 48,30" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
-          </svg>
-        `
-      }
+      // === ORIGINAL 7 STAR-BASED BADGES ===
+      { id: 'badge_squirrel', name: "L'Écureuil Calculateur", desc: '5 étoiles', cond: { type: 'stars', value: 5 }, svg: (l) => badgeSvg('shield','#D38B5D','#A0522D','🐿️','#8B4513',l) },
+      { id: 'badge_rabbit', name: 'Le Lapin Rapide', desc: '10 étoiles', cond: { type: 'stars', value: 10 }, svg: (l) => badgeSvg('circle','#E2E8F0','#94A3B8','🐇','#64748B',l) },
+      { id: 'badge_owl', name: 'Le Hibou Sage', desc: '20 étoiles', cond: { type: 'stars', value: 20 }, svg: (l) => badgeSvg('circle','#FEF08A','#EAB308','🦉','#92400E',l) },
+      { id: 'badge_dolphin', name: 'Le Dauphin Malin', desc: '35 étoiles', cond: { type: 'stars', value: 35 }, svg: (l) => badgeSvg('circle','#E0F2FE','#0EA5E9','🐬','#0369A1',l) },
+      { id: 'badge_lion', name: 'Le Lion Champion', desc: '50 étoiles', cond: { type: 'stars', value: 50 }, svg: (l) => badgeSvg('shield','#FEE2E2','#EF4444','🦁','#B91C1C',l) },
+      { id: 'badge_unicorn', name: 'La Licorne Magique', desc: '75 étoiles', cond: { type: 'stars', value: 75 }, svg: (l) => badgeSvg('shield','#F5F3FF','#D946EF','🦄','#7C3AED',l) },
+      { id: 'badge_dragon', name: 'Le Dragon de Légende', desc: '100 étoiles', cond: { type: 'stars', value: 100 }, svg: (l) => badgeSvg('shield','#FFFBEB','#F59E0B','🐉','#92400E',l) },
+
+      // === NEW: STAR MILESTONES (8) ===
+      { id: 'badge_phoenix', name: 'Le Phénix Ardent', desc: '150 étoiles', cond: { type: 'stars', value: 150 }, svg: (l) => badgeSvg('shield','#FEF3C7','#F97316','🔥','#9A3412',l) },
+      { id: 'badge_griffin', name: 'Le Griffe Royal', desc: '200 étoiles', cond: { type: 'stars', value: 200 }, svg: (l) => badgeSvg('shield','#FEE2E2','#DC2626','👑','#7F1D1D',l) },
+      { id: 'badge_kraken', name: 'Le Kraken des Océans', desc: '250 étoiles', cond: { type: 'stars', value: 250 }, svg: (l) => badgeSvg('circle','#E0F2FE','#0284C7','🐙','#0C4A6E',l) },
+      { id: 'badge_pegasus', name: 'Le Pégase Céleste', desc: '300 étoiles', cond: { type: 'stars', value: 300 }, svg: (l) => badgeSvg('shield','#F0F9FF','#0EA5E9','🐴','#0C4A6E',l) },
+      { id: 'badge_phoenix2', name: 'Le Simurgh Antique', desc: '400 étoiles', cond: { type: 'stars', value: 400 }, svg: (l) => badgeSvg('shield','#ECFDF5','#10B981','🦅','#064E3B',l) },
+      { id: 'badge_titan', name: 'Le Titan de l\'Olympe', desc: '500 étoiles', cond: { type: 'stars', value: 500 }, svg: (l) => badgeSvg('shield','#FEF9C3','#EAB308','⚡','#713F12',l) },
+      { id: 'badge_void', name: 'Le Gardien du Cosmos', desc: '750 étoiles', cond: { type: 'stars', value: 750 }, svg: (l) => badgeSvg('circle','#1E1B4B','#6366F1','🌌','#A5B4FC',l) },
+      { id: 'badge_immortal', name: 'L\'Immortel Mathématique', desc: '1000 étoiles', cond: { type: 'stars', value: 1000 }, svg: (l) => badgeSvg('shield','#FFFBEB','#F59E0B','✨','#78350F',l) },
+
+      // === NEW: STREAK BADGES (5) ===
+      { id: 'badge_streak3', name: 'Flamme naissante', desc: 'Série de 3 jours', cond: { type: 'streak', value: 3 }, svg: (l) => badgeSvg('circle','#FEF3C7','#FB923C','🔥','#9A3412',l) },
+      { id: 'badge_streak7', name: 'Braise Ardente', desc: 'Série de 7 jours', cond: { type: 'streak', value: 7 }, svg: (l) => badgeSvg('circle','#FEE2E2','#EF4444','🔥','#991B1B',l) },
+      { id: 'badge_streak14', name: 'Feu de Joie', desc: 'Série de 14 jours', cond: { type: 'streak', value: 14 }, svg: (l) => badgeSvg('shield','#FEF3C7','#F97316','🔥','#7C2D12',l) },
+      { id: 'badge_streak30', name: 'Incendie Céleste', desc: 'Série de 30 jours', cond: { type: 'streak', value: 30 }, svg: (l) => badgeSvg('shield','#FEE2E2','#DC2626','🔥','#7F1D1D',l) },
+      { id: 'badge_streak60', name: 'Légende de la Flamme', desc: 'Série de 60 jours', cond: { type: 'streak', value: 60 }, svg: (l) => badgeSvg('shield','#FDE68A','#D97706','🔥','#451A03',l) },
+
+      // === NEW: ACCURACY BADGES (5) ===
+      { id: 'badge_acc60', name: 'Bon Début', desc: '60% de précision', cond: { type: 'accuracy', value: 0.6 }, svg: (l) => badgeSvg('circle','#D1FAE5','#34D399','🎯','#065F46',l) },
+      { id: 'badge_acc70', name: 'Tireur d\'Élite', desc: '70% de précision', cond: { type: 'accuracy', value: 0.7 }, svg: (l) => badgeSvg('circle','#D1FAE5','#10B981','🎯','#064E3B',l) },
+      { id: 'badge_acc80', name: 'Précision Parfaite', desc: '80% de précision', cond: { type: 'accuracy', value: 0.8 }, svg: (l) => badgeSvg('shield','#D1FAE5','#059669','🎯','#064E3B',l) },
+      { id: 'badge_acc90', name: 'Maître de la Vise', desc: '90% de précision', cond: { type: 'accuracy', value: 0.9 }, svg: (l) => badgeSvg('shield','#ECFDF5','#047857','🎯','#022C22',l) },
+      { id: 'badge_acc100', name: 'Infaillible', desc: '100% de précision (20+ questions)', cond: { type: 'accuracy', value: 1.0 }, svg: (l) => badgeSvg('shield','#F0FDF4','#16A34A','💎','#14532D',l) },
+
+      // === NEW: SPEED BADGES (5) ===
+      { id: 'badge_speed8', name: 'Éclair', desc: 'Répondre en <8s en moyenne', cond: { type: 'speed', value: 8000 }, svg: (l) => badgeSvg('circle','#FEF3C7','#FBBF24','⚡','#78350F',l) },
+      { id: 'badge_speed6', name: 'Foudre', desc: 'Répondre en <6s en moyenne', cond: { type: 'speed', value: 6000 }, svg: (l) => badgeSvg('circle','#FEF9C3','#F59E0B','⚡','#713F12',l) },
+      { id: 'badge_speed5', name: 'Supersonique', desc: 'Répondre en <5s en moyenne', cond: { type: 'speed', value: 5000 }, svg: (l) => badgeSvg('shield','#FEF3C7','#D97706','⚡','#451A03',l) },
+      { id: 'badge_speed4', name: 'Flash Mathématique', desc: 'Répondre en <4s en moyenne', cond: { type: 'speed', value: 4000 }, svg: (l) => badgeSvg('shield','#FEF3C7','#B45309','⚡','#451A03',l) },
+      { id: 'badge_speed3', name: 'Vitesse de la Pensée', desc: 'Répondre en <3s en moyenne', cond: { type: 'speed', value: 3000 }, svg: (l) => badgeSvg('shield','#FEF9C3','#92400E','⚡','#451A03',l) },
+
+      // === NEW: GAME-SPECIFIC BADGES (12) ===
+      { id: 'badge_nombres50', name: 'Explorateur des Nombres', desc: '50 réponses en Nombres', cond: { type: 'game_total', game: 'a_nombres_100', value: 50 }, svg: (l) => badgeSvg('circle','#F3E8FF','#A855F7','🔢','#6B21A8',l) },
+      { id: 'badge_additions50', name: 'Roi des Additions', desc: '50 réponses en Additions', cond: { type: 'game_total', game: 'a_additions', value: 50 }, svg: (l) => badgeSvg('circle','#DBEAFE','#3B82F6','➕','#1E3A5F',l) },
+      { id: 'badge_sous50', name: 'Maître des Soustractions', desc: '50 réponses en Soustractions', cond: { type: 'game_total', game: 'a_soustractions', value: 50 }, svg: (l) => badgeSvg('circle','#FEE2E2','#EF4444','➖','#7F1D1D',l) },
+      { id: 'badge_doubles50', name: 'Le Doubleur', desc: '50 réponses en Doubles', cond: { type: 'game_total', game: 'a_doubles_moities', value: 50 }, svg: (l) => badgeSvg('circle','#FEF3C7','#F59E0B','✖️','#713F12',l) },
+      { id: 'badge_comp1050', name: 'Complémentiste', desc: '50 réponses en Compléments', cond: { type: 'game_total', game: 'a_complements_10', value: 50 }, svg: (l) => badgeSvg('circle','#D1FAE5','#10B981','🔟','#064E3B',l) },
+      { id: 'badge_figures50', name: 'Architecte des Formes', desc: '50 réponses en Figures', cond: { type: 'game_total', game: 'b_figures', value: 50 }, svg: (l) => badgeSvg('circle','#E0E7FF','#6366F1','🔷','#3730A3',l) },
+      { id: 'badge_spatial50', name: 'Navigateur Spatial', desc: '50 réponses en Vocabulaire', cond: { type: 'game_total', game: 'b_vocabulaire_spatial', value: 50 }, svg: (l) => badgeSvg('circle','#FCE7F3','#EC4899','🧭','#831843',l) },
+      { id: 'badge_monnaie50', name: 'Le Banquier', desc: '50 réponses en Monnaie', cond: { type: 'game_total', game: 'c_monnaie', value: 50 }, svg: (l) => badgeSvg('circle','#FEF9C3','#EAB308','💰','#713F12',l) },
+      { id: 'badge_heure50', name: 'Maître du Temps', desc: '50 réponses en Heure', cond: { type: 'game_total', game: 'c_heure', value: 50 }, svg: (l) => badgeSvg('circle','#F3E8FF','#C084FC','⏰','#581C87',l) },
+      { id: 'badge_mesures50', name: 'Le Mesureur', desc: '50 réponses en Mesures', cond: { type: 'game_total', game: 'c_mesures', value: 50 }, svg: (l) => badgeSvg('circle','#DBEAFE','#93C5FD','📏','#1E3A5F',l) },
+      { id: 'badge_fractions50', name: 'Découpeur de Parts', desc: '50 réponses en Fractions', cond: { type: 'game_total', game: 'a_fractions', value: 50 }, svg: (l) => badgeSvg('circle','#EDE9FE','#A78BFA','🍕','#4C1D95',l) },
+      { id: 'badge_100total', name: 'Centurion', desc: '100 réponses en un seul jeu', cond: { type: 'game_total_any', value: 100 }, svg: (l) => badgeSvg('shield','#FEF3C7','#F59E0B','💯','#713F12',l) },
+
+      // === NEW: CATEGORY MASTERY (3) ===
+      { id: 'badge_catA', name: 'Maître des Nombres', desc: '100 bonnes réponses en Nombres et Calculs', cond: { type: 'category_correct', category: 'A', value: 100 }, svg: (l) => badgeSvg('shield','#F3E8FF','#9333EA','📐','#581C87',l) },
+      { id: 'badge_catB', name: 'Géomètre en Chef', desc: '100 bonnes réponses en Espace et Géométrie', cond: { type: 'category_correct', category: 'B', value: 100 }, svg: (l) => badgeSvg('shield','#D1FAE5','#059669','📐','#022C22',l) },
+      { id: 'badge_catC', name: 'Mesureur Expert', desc: '100 bonnes réponses en Grandeurs et Mesures', cond: { type: 'category_correct', category: 'C', value: 100 }, svg: (l) => badgeSvg('shield','#FFF7ED','#EA580C','📐','#7C2D12',l) },
+
+      // === NEW: DIFFICULTY BADGES (3) ===
+      { id: 'badge_diff_normal', name: 'Niveau Normal', desc: 'Atteindre le niveau Normal', cond: { type: 'difficulty', value: 'normal' }, svg: (l) => badgeSvg('circle','#DBEAFE','#3B82F6','🔵','#1E3A5F',l) },
+      { id: 'badge_diff_challenge', name: 'Défi Relevé', desc: 'Atteindre le niveau Défi', cond: { type: 'difficulty', value: 'challenge' }, svg: (l) => badgeSvg('circle','#FEE2E2','#EF4444','🔥','#991B1B',l) },
+      { id: 'badge_diff_legend', name: 'Légende du Défi', desc: 'Réussir 50 questions en Défi', cond: { type: 'challenge_mastered', value: 50 }, svg: (l) => badgeSvg('shield','#FEF3C7','#D97706','🏆','#451A03',l) },
+
+      // === NEW: SESSION & EXPLORATION (5) ===
+      { id: 'badge_sessions10', name: 'Habitué', desc: '10 sessions jouées', cond: { type: 'sessions', value: 10 }, svg: (l) => badgeSvg('circle','#F0F9FF','#0EA5E9','📚','#0C4A6E',l) },
+      { id: 'badge_sessions25', name: 'Assidu', desc: '25 sessions jouées', cond: { type: 'sessions', value: 25 }, svg: (l) => badgeSvg('circle','#EDE9FE','#8B5CF6','📚','#4C1D95',l) },
+      { id: 'badge_sessions50', name: 'Infatigable', desc: '50 sessions jouées', cond: { type: 'sessions', value: 50 }, svg: (l) => badgeSvg('shield','#F3E8FF','#7C3AED','📚','#4C1D95',l) },
+      { id: 'badge_perfect5', name: 'Session Parfaite', desc: '5 sessions sans erreur', cond: { type: 'perfect_session', value: 5 }, svg: (l) => badgeSvg('circle','#ECFDF5','#10B981','💎','#064E3B',l) },
+      { id: 'badge_perfect15', name: 'Perfection Absolue', desc: '15 sessions sans erreur', cond: { type: 'perfect_session', value: 15 }, svg: (l) => badgeSvg('shield','#F0FDF4','#16A34A','💎','#14532D',l) },
+
+      // === NEW: SPECIAL ACHIEVEMENTS (9) ===
+      { id: 'badge_first_star', name: 'Premier Pas', desc: 'Gagner sa première étoile', cond: { type: 'stars', value: 1 }, svg: (l) => badgeSvg('circle','#FEF9C3','#FBBF24','⭐','#78350F',l) },
+      { id: 'badge_all_games', name: 'Explorateur Complet', desc: 'Jouer à tous les jeux', cond: { type: 'all_games_played' }, svg: (l) => badgeSvg('shield','#E0E7FF','#6366F1','🗺️','#3730A3',l) },
+      { id: 'badge_5_stars_session', name: 'Session Dorée', desc: 'Gagner 5 étoiles en une session', cond: { type: 'session_stars', value: 5 }, svg: (l) => badgeSvg('circle','#FEF3C7','#F59E0B','🌟','#713F12',l) },
+      { id: 'badge_10_stars_session', name: 'Session Légendaire', desc: 'Gagner 10 étoiles en une session', cond: { type: 'session_stars', value: 10 }, svg: (l) => badgeSvg('shield','#FEF3C7','#D97706','🌟','#451A03',l) },
+      { id: 'badge_consecutive5', name: 'Enchaînement', desc: '5 bonnes réponses d\'affilée', cond: { type: 'consecutive', value: 5 }, svg: (l) => badgeSvg('circle','#D1FAE5','#34D399','🔗','#065F46',l) },
+      { id: 'badge_consecutive10', name: 'Combo Dévastateur', desc: '10 bonnes réponses d\'affilée', cond: { type: 'consecutive', value: 10 }, svg: (l) => badgeSvg('circle','#D1FAE5','#10B981','🔗','#064E3B',l) },
+      { id: 'badge_consecutive20', name: 'Invincible', desc: '20 bonnes réponses d\'affilée', cond: { type: 'consecutive', value: 20 }, svg: (l) => badgeSvg('shield','#ECFDF5','#059669','🔗','#022C22',l) },
+      { id: 'badge_night_owl', name: 'Choucheur Nocturne', desc: 'Jouer après 20h', cond: { type: 'time_of_day', value: 20 }, svg: (l) => badgeSvg('circle','#1E1B4B','#6366F1','🌙','#A5B4FC',l) },
+      { id: 'badge_early_bird', name: 'Petit Matin', desc: 'Jouer avant 8h', cond: { type: 'time_of_day', value: 8 }, svg: (l) => badgeSvg('circle','#FEF9C3','#FBBF24','🌅','#78350F',l) },
     ];
 
     function updateBadgeCountUI() {
@@ -4276,10 +4256,119 @@
       }
     }
 
+    function isBadgeConditionMet(cond) {
+      switch (cond.type) {
+        case 'stars':
+          return state.stars >= cond.value;
+        case 'streak':
+          return streakState.current >= cond.value;
+        case 'accuracy': {
+          let totalCorrect = 0, totalAttempts = 0;
+          for (const stats of Object.values(adaptiveStats)) {
+            totalCorrect += stats.correct;
+            totalAttempts += stats.total;
+          }
+          if (totalAttempts < 20) return false;
+          return (totalCorrect / totalAttempts) >= cond.value;
+        }
+        case 'speed': {
+          let allTimes = [];
+          for (const stats of Object.values(adaptiveStats)) {
+            allTimes = allTimes.concat(stats.recentTimes);
+          }
+          if (allTimes.length < 10) return false;
+          const avg = allTimes.reduce((a, b) => a + b, 0) / allTimes.length;
+          return avg <= cond.value;
+        }
+        case 'game_total': {
+          const stats = adaptiveStats[cond.game];
+          return stats && stats.total >= cond.value;
+        }
+        case 'game_total_any': {
+          for (const stats of Object.values(adaptiveStats)) {
+            if (stats.total >= cond.value) return true;
+          }
+          return false;
+        }
+        case 'game_correct': {
+          const stats = adaptiveStats[cond.game];
+          return stats && stats.correct >= cond.value;
+        }
+        case 'category_correct': {
+          const cat = CATEGORIES[cond.category];
+          if (!cat) return false;
+          let total = 0;
+          for (const g of cat.games) {
+            const stats = adaptiveStats[g.id];
+            if (stats) total += stats.correct;
+          }
+          return total >= cond.value;
+        }
+        case 'difficulty':
+          return state.difficulty === cond.value;
+        case 'challenge_mastered': {
+          let totalChallenge = 0;
+          for (const stats of Object.values(adaptiveStats)) {
+            if (stats.difficulty === 'challenge') totalChallenge += stats.correct;
+          }
+          return totalChallenge >= cond.value;
+        }
+        case 'sessions':
+          return totalSessionsPlayed >= cond.value;
+        case 'perfect_session':
+          return perfectSessions >= cond.value;
+        case 'all_games_played': {
+          const allGameIds = [];
+          for (const cat of Object.values(CATEGORIES)) {
+            for (const g of cat.games) allGameIds.push(g.id);
+          }
+          return allGameIds.every(id => {
+            const s = adaptiveStats[id];
+            return s && s.total > 0;
+          });
+        }
+        case 'session_stars':
+          return state.sessionStars >= cond.value;
+        case 'consecutive':
+          return state.consecutiveCorrect >= cond.value;
+        case 'time_of_day': {
+          const hour = new Date().getHours();
+          if (cond.value === 20) return hour >= 20;
+          if (cond.value === 8) return hour < 8;
+          return false;
+        }
+        default:
+          return false;
+      }
+    }
+
+    function getBadgeReqText(badge) {
+      const c = badge.cond;
+      switch (c.type) {
+        case 'stars': return `${c.value} 🌟`;
+        case 'streak': return `Série ${c.value}j`;
+        case 'accuracy': return `${Math.round(c.value * 100)}%`;
+        case 'speed': return `<${c.value / 1000}s`;
+        case 'game_total': return `${c.value} rep.`;
+        case 'game_total_any': return `${c.value} rep.`;
+        case 'game_correct': return `${c.value} ✓`;
+        case 'category_correct': return `${c.value} ✓`;
+        case 'difficulty': return c.value === 'normal' ? 'Niv. Normal' : 'Niv. Défi';
+        case 'challenge_mastered': return `${c.value} ✓ Défi`;
+        case 'sessions': return `${c.value} sessions`;
+        case 'perfect_session': return `${c.value} parfaites`;
+        case 'all_games_played': return 'Tous les jeux';
+        case 'session_stars': return `${c.value} ⭐/session`;
+        case 'consecutive': return `${c.value} d\'affilée`;
+        case 'time_of_day': return c.value === 20 ? 'Après 20h' : 'Avant 8h';
+        default: return '';
+      }
+    }
+
     function checkBadgeUnlocks() {
       let newlyUnlocked = [];
       BADGES.forEach(badge => {
-        if (state.stars >= badge.starsReq && !state.unlockedBadges.includes(badge.id)) {
+        if (!state.unlockedBadges.includes(badge.id) && isBadgeConditionMet(badge.cond)) {
           state.unlockedBadges.push(badge.id);
           newlyUnlocked.push(badge);
         }
@@ -4307,7 +4396,7 @@
 
       if (svgContainer) svgContainer.innerHTML = badge.svg(false);
       if (titleEl) titleEl.innerText = badge.name;
-      if (descEl) descEl.innerText = `Félicitations ! Tu as franchi le palier de ${badge.starsReq} étoiles et tu as gagné ce magnifique badge de niveau ! 🏆`;
+      if (descEl) descEl.innerText = `Félicitations ! Tu as débloqué le badge "${badge.name}" ! ${badge.desc} 🏆`;
 
       const popup = document.getElementById('popup-badge-unlock');
       if (popup) popup.classList.remove('hidden');
@@ -4335,7 +4424,7 @@
           </div>
           <span class="text-[11px] font-bold font-title text-slate-800 text-center leading-tight h-8 flex items-center justify-center">${badge.name}</span>
           <span class="text-[9px] text-slate-500 mt-1 font-medium bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
-            ${isLocked ? `Req: ${badge.starsReq} 🌟` : 'Débloqué !'}
+            ${isLocked ? getBadgeReqText(badge) : 'Débloqué !'}
           </span>
         `;
         grid.appendChild(card);
@@ -4392,8 +4481,9 @@
       const comp = getCompanion();
       let msg = "";
       if (type === 'idle' && state.stars > 0) {
-        const nextBadge = BADGES.find(b => state.stars < b.starsReq);
-        const remaining = nextBadge ? nextBadge.starsReq - state.stars : 0;
+        const starBadges = BADGES.filter(b => b.cond.type === 'stars').sort((a, b) => a.cond.value - b.cond.value);
+        const nextBadge = starBadges.find(b => state.stars < b.cond.value);
+        const remaining = nextBadge ? nextBadge.cond.value - state.stars : 0;
         const progressPhrases = [
           `Waouh ! Tu as déjà accumulé ${state.stars} étoile${state.stars > 1 ? 's' : ''} !${nextBadge ? ` Encore ${remaining} pour le badge "${nextBadge.name}" ! 🏅` : ''}`,
           `Félicitations pour tes ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! Tu travailles comme un vrai champion ! 🏆`,
