@@ -22,9 +22,13 @@ else
   KILL = for /f "tokens=5" %a in ('netstat -aon ^| findstr :$(PORT)') do taskkill /F /PID %a
 endif
 
-.PHONY: all dev start stop build deploy clean
+.PHONY: all install dev start stop build deploy clean security security-fix
 
 all: dev
+
+install:
+	@echo "Installing npm dependencies..."
+	npm install
 
 node_modules: package.json
 	@echo "Installing npm dependencies..."
@@ -54,6 +58,14 @@ deploy:
 	@echo "Deploying to Vercel..."
 	@if [ -z "$(VERCEL_TOKEN)" ]; then echo "Error: VERCEL_TOKEN not set"; exit 1; fi
 	vercel --prod --token $(VERCEL_TOKEN)
+
+security:
+	@echo "Running npm security audit..."
+	npm audit
+
+security-fix:
+	@echo "Running npm audit fix..."
+	npm audit fix
 
 clean:
 	@echo "Cleaning build artefacts..."
