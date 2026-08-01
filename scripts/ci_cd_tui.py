@@ -511,11 +511,11 @@ def _tui_classes():
             i = 0
             while not self.finished:
                 if self.running:
-                    self._animate(frames[i % len(frames)])
+                    self._update_spinner_row(frames[i % len(frames)])
                     i += 1
                 await asyncio.sleep(0.12)
 
-        def _animate(self, ch: str) -> None:
+        def _update_spinner_row(self, ch: str) -> None:
             if self.running:
                 self.query_one(f"#row-{self.running}", Static).update(
                     self.render_row(self.running, status="RUNNING", spinner=ch)

@@ -24,10 +24,7 @@ import {
   updateProgressBar,
   getAdaptiveThreshold,
 } from './ui.js';
-import {
-  recordAnswer,
-  recordSession,
-} from './storage.js';
+import { recordAnswer, recordSession } from './storage.js';
 import { hideAllScreens } from './navigation.js';
 import { SUCCESS_PHRASES, FAIL_PHRASES } from './constants.js';
 
