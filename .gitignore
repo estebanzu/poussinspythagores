@@ -12,3 +12,7 @@ dist/
 coverage/
 .vercel
 .env*
+.venv/
+ci-cd-report.html
+__pycache__/
+*.pyc

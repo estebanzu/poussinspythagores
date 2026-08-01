@@ -22,10 +22,10 @@ import {
   updateFooterMessage,
   renderOptions,
   updateProgressBar,
+  getAdaptiveThreshold,
 } from './ui.js';
 import {
   recordAnswer,
-  getAdaptiveThreshold,
   recordSession,
 } from './storage.js';
 import { hideAllScreens } from './navigation.js';

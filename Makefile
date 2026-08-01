@@ -14,7 +14,12 @@ ifeq ($(UNAME_S),Darwin)
   OPEN = open
   KILL = kill -9 $$(lsof -t -i:$(PORT))
 else ifeq ($(findstring Linux,$(UNAME_S)),Linux)
-  OPEN = xdg-open
+  # WSL has no GUI browser: forward to the Windows default browser
+  ifeq ($(shell uname -r | grep -i -c microsoft 2>/dev/null),1)
+    OPEN = cmd.exe /c start "" http://localhost:$(PORT)
+  else
+    OPEN = xdg-open
+  endif
   KILL = kill -9 $$(lsof -t -i:$(PORT))
 else
   # Windows (MSYS, Git Bash, WSL, cmd)
@@ -22,7 +27,7 @@ else
   KILL = for /f "tokens=5" %a in ('netstat -aon ^| findstr :$(PORT)') do taskkill /F /PID %a
 endif
 
-.PHONY: all install dev start stop build deploy clean security security-fix lint geome frontend-qa check test help css format format-check gitleaks verify css-check audit-prod
+.PHONY: all install dev start stop build deploy clean security security-fix lint geome frontend-qa check test help css format format-check gitleaks verify css-check audit-prod ci-cd
 
 all: dev
 
@@ -42,13 +47,14 @@ help:
 	@echo "  make geome          Geometry game QA"
 	@echo "  make frontend-qa    Frontend QA"
 	@echo "  make check          Run format-check, lint, test, geome and frontend-qa"
-	@echo "  make security       Run npm security audit"
+	@echo "  make security       Run npm audit (all deps, includes dev tooling)"
 	@echo "  make security-fix   Run npm audit fix"
 	@echo "  make audit-prod     Run npm audit (production deps only)"
 	@echo "  make gitleaks       Scan for secrets with Gitleaks"
 	@echo "  make css            Rebuild Tailwind CSS"
 	@echo "  make css-check      Verify public/styles.css is up to date"
-	@echo "  make verify         Run check, security and gitleaks"
+	@echo "  make verify         Run check, audit-prod and gitleaks"
+	@echo "  make ci-cd          Run full CI/CD pipeline (scripts/ci-cd.sh)"
 	@echo "  make clean          Remove build artefacts"
 	@echo "  make help           Show this help"
 
@@ -83,7 +89,7 @@ build:
 deploy:
 	@echo "Deploying to Vercel..."
 	@if [ -z "$(VERCEL_TOKEN)" ]; then echo "Error: VERCEL_TOKEN not set"; exit 1; fi
-	vercel --prod --token $(VERCEL_TOKEN)
+	npx vercel --yes --prod --token $(VERCEL_TOKEN)
 
 security:
 	@echo "Running npm security audit..."
@@ -128,7 +134,7 @@ gitleaks:
 	@echo "Scanning for secrets with Gitleaks..."
 	gitleaks detect --source . --no-banner
 
-verify: check security gitleaks
+verify: check audit-prod gitleaks
 	@echo "All verification checks passed."
 
 css-check:
@@ -139,6 +145,15 @@ css-check:
 audit-prod:
 	@echo "Running npm audit (production dependencies only)..."
 	npm audit --omit=dev
+
+ci-cd:
+	@echo "Running full CI/CD pipeline (Textual UI)..."
+	@if [ -x .venv/bin/python ] && .venv/bin/python -c "import textual" 2>/dev/null; then \
+		.venv/bin/python scripts/ci_cd_tui.py; \
+	else \
+		./scripts/install-textual.sh; \
+		.venv/bin/python scripts/ci_cd_tui.py; \
+	fi
 
 clean:
 	@echo "Cleaning build artefacts..."

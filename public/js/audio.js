@@ -8,6 +8,25 @@ let audioCtx = null;
 let audioUnlocked = false;
 let cachedFrenchVoice = null;
 
+function pickFrenchVoice(voices) {
+  if (!voices || voices.length === 0) return null;
+  const frFR = voices.find((v) => v.lang.toLowerCase() === 'fr-fr');
+  if (frFR) return frFR;
+  return voices.find((v) => v.lang.toLowerCase().startsWith('fr')) || null;
+}
+
+function refreshFrenchVoiceCache() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  cachedFrenchVoice = pickFrenchVoice(window.speechSynthesis.getVoices());
+}
+
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  window.speechSynthesis.addEventListener(
+    'voiceschanged',
+    refreshFrenchVoiceCache
+  );
+}
+
 function unlockAudio() {
   if (audioUnlocked) return;
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -109,10 +128,7 @@ export function applySoundIcons() {
 }
 
 export function getFrenchVoice() {
-  if (cachedFrenchVoice) return cachedFrenchVoice;
-  const voices = window.speechSynthesis.getVoices();
-  cachedFrenchVoice =
-    voices.find((v) => v.lang.startsWith('fr') || v.lang === 'fr-FR') || null;
+  refreshFrenchVoiceCache();
   return cachedFrenchVoice;
 }
 
