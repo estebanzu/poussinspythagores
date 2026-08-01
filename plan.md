@@ -11,7 +11,7 @@
 | 6.3 | Migrer le CSS inline vers Tailwind JIT + CSS custom                                           | Moyenne  | Moyen  | [x]
 | 6.4 | Écrire des tests unitaires (Vitest) pour game engine et adaptive learning                     | Haute    | Moyen  | [x]
 | 6.5 | Ajouter ESLint + Prettier pour la cohérence de code                                           | Basse    | Petit  | [x]
-| 6.6 | Ajouter TypeScript (types partiels) pour les états et générateurs                             | Basse    | Gros   |
+| 6.6 | Ajouter TypeScript (types partiels) pour les états et générateurs                             | Basse    | Gros   | [x]
 
 ## Phase 7 – Contenu éducatif élargi
 

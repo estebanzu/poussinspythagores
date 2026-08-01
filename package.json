@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "test": "jest",
     "test:vitest": "vitest run",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
   },
   "author": "",
   "license": "MIT",
