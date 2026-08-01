@@ -124,6 +124,22 @@ export const CATEGORIES = {
       },
     ],
   },
+  D: {
+    name: 'Logique',
+    color: 'brand-pink',
+    games: [
+      {
+        id: 'd_sequences',
+        name: 'Séquences logiques',
+        desc: 'Trouver l’élément manquant dans une série.',
+      },
+      {
+        id: 'd_analogies',
+        name: 'Analogies simples',
+        desc: 'Compléter des paires logiques du quotidien.',
+      },
+    ],
+  },
   C: {
     name: 'Grandeurs et Mesures',
     color: 'brand-orange',

@@ -54,6 +54,8 @@ export function getGameName(gameId) {
   if (gameId === 'a_sous_rapide') return 'Soustraction rapide';
   if (gameId === 'a_add_sous_rapide') return 'Addition / Soustraction rapide';
   if (gameId === 'a_tables_rapides') return 'Tables de multiplication rapides';
+  if (gameId === 'd_sequences') return 'Séquences logiques';
+  if (gameId === 'd_analogies') return 'Analogies simples';
   for (const cat in CATEGORIES) {
     const found = CATEGORIES[cat].games.find((g) => g.id === gameId);
     if (found) return found.name;

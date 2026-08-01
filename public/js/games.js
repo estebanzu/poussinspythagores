@@ -436,6 +436,12 @@ export function generateExercise() {
       case 'a_tables_rapides':
         genTablesRapides(visualArea, questionText, optionsContainer);
         break;
+      case 'd_sequences':
+        genSequences(visualArea, questionText, optionsContainer);
+        break;
+      case 'd_analogies':
+        genAnalogies(visualArea, questionText, optionsContainer);
+        break;
       case 'a_doubles_moities':
         genDoublesMoities(visualArea, questionText, optionsContainer);
         break;
@@ -1459,6 +1465,156 @@ function renderBlocsDizainesSVG(visualArea) {
   }
   svg += `</svg>`;
   visualArea.innerHTML = svg;
+}
+
+// ---- Logic: Sequences ----
+function genSequences(visualArea, questionText, optionsContainer) {
+  const families = [
+    { type: 'numbers', label: 'chiffres' },
+    { type: 'shapes', label: 'formes' },
+    { type: 'animals', label: 'animaux' },
+  ];
+  const family = families[getRandomInt(0, families.length - 1)];
+  const items = generateSequenceFamily(family.type, 6);
+  const missingIndex = getRandomInt(2, 4);
+  const answer = items[missingIndex];
+  items[missingIndex] = '?';
+
+  state.currentAnswer = `${answer}`;
+  state.currentQuestionKey = `seq_${family.type}_${items.join('-')}`;
+  questionText.innerText = `Trouve l’élément manquant dans cette séquence de ${family.label} :`;
+
+  const svgItems = items
+    .map((item, idx) => {
+      const x = 45 + idx * 48;
+      const y = 90;
+      if (family.type === 'numbers') {
+        return `<text x="${x}" y="${y + 10}" font-family="Fredoka" font-size="26" font-weight="bold" fill="${idx === missingIndex ? '#EF4444' : '#1f2937'}" text-anchor="middle">${item}</text>`;
+      }
+      if (family.type === 'shapes') {
+        const shapeSvg =
+          item === 'triangle'
+            ? `<polygon points="${x},${y - 25} ${x - 20},${y + 25} ${x + 20},${y + 25}" fill="#FFD93D" stroke="#F59E0B" stroke-width="3" stroke-linejoin="round"/>`
+            : item === 'square'
+              ? `<rect x="${x - 20}" y="${y - 20}" width="40" height="40" fill="#FFD93D" stroke="#F59E0B" stroke-width="3" rx="4"/>`
+              : `<circle cx="${x}" cy="${y}" r="20" fill="#FFD93D" stroke="#F59E0B" stroke-width="3"/>`;
+        const q =
+          idx === missingIndex
+            ? `<text x="${x}" y="${y + 45}" font-family="Fredoka" font-size="22" font-weight="bold" fill="#EF4444" text-anchor="middle">?</text>`
+            : '';
+        return shapeSvg + q;
+      }
+      const emojiMap = {
+        chat: '🐱',
+        chien: '🐶',
+        lapin: '🐰',
+        lion: '🦁',
+        oiseau: '🐦',
+      };
+      return `<text x="${x}" y="${y + 14}" font-size="34" text-anchor="middle">${emojiMap[item] || item}</text>`;
+    })
+    .join('');
+
+  visualArea.innerHTML = `<svg class="w-full h-full max-h-[260px]" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">${svgItems}</svg>`;
+  renderOptions(
+    `${answer}`,
+    generateSequenceDistractors(family.type, answer),
+    optionsContainer
+  );
+}
+
+function generateSequenceFamily(type, count) {
+  if (type === 'numbers') {
+    const start = getRandomInt(1, 6);
+    const step = getRandomInt(1, 3);
+    return Array.from({ length: count }, (_, i) => `${start + step * i}`);
+  }
+  if (type === 'shapes') {
+    const all = ['triangle', 'square', 'circle'];
+    const order = shuffleArray(all).slice(0, 2);
+    return Array.from({ length: count }, (_, i) => order[i % order.length]);
+  }
+  const pool = ['chat', 'chien', 'lapin', 'lion', 'oiseau'];
+  const chosen = shuffleArray(pool).slice(0, 3);
+  return Array.from({ length: count }, (_, i) => chosen[i % chosen.length]);
+}
+
+function generateSequenceDistractors(type, answer) {
+  const set = new Set();
+  while (set.size < 3) {
+    let d;
+    if (type === 'numbers') d = `${parseInt(answer, 10) + getRandomInt(-3, 3)}`;
+    else if (type === 'shapes')
+      d = ['triangle', 'square', 'circle'][getRandomInt(0, 2)];
+    else d = ['chat', 'chien', 'lapin', 'lion', 'oiseau'][getRandomInt(0, 4)];
+    if (d !== answer) set.add(d);
+  }
+  return Array.from(set);
+}
+
+// ---- Logic: Analogies ----
+function genAnalogies(visualArea, questionText, optionsContainer) {
+  const analogies = [
+    {
+      left: ['🐔', 'œuf'],
+      right: '🐣',
+      answer: '🐣',
+      distractorPool: ['🐤', '🦆', '🐓'],
+    },
+    {
+      left: ['🌱', 'arbre'],
+      right: 'fruit',
+      answer: '🍎',
+      distractorPool: ['🍌', '🍇', '🍉'],
+    },
+    {
+      left: ['graine', 'fleur'],
+      right: 'pétale',
+      answer: '🌸',
+      distractorPool: ['🌼', '🌷', '🌻'],
+    },
+    {
+      left: ['nuage', 'pluie'],
+      right: 'arc-en-ciel',
+      answer: '🌈',
+      distractorPool: ['⛈️', '❄️', '☀️'],
+    },
+    {
+      left: ['abeille', 'miel'],
+      right: 'rayon',
+      answer: '🍯',
+      distractorPool: ['🧈', '🍞', '🥖'],
+    },
+    {
+      left: ['livre', 'page'],
+      right: 'mot',
+      answer: '📖',
+      distractorPool: ['📕', '📘', '📗'],
+    },
+  ];
+  const item = analogies[getRandomInt(0, analogies.length - 1)];
+  state.currentAnswer = item.answer;
+  state.currentQuestionKey = `analogie_${item.right}_${item.answer}`;
+  questionText.innerText = `Quel élément complète cette analogie ? ${item.left[0]} est à ${item.left[1]} comme ${item.right} est à :`;
+
+  visualArea.innerHTML = `<div class="flex flex-wrap items-center justify-center gap-4 bg-brand-pink-light/40 border-2 border-brand-pink/15 p-6 rounded-3xl shadow-sm w-full font-title">
+    <div class="flex items-center gap-2 text-4xl">
+      <span>${item.left[0]}</span>
+      <span class="text-2xl text-slate-500">→</span>
+      <span class="font-bold text-slate-700">${item.left[1]}</span>
+    </div>
+    <div class="flex items-center gap-2 text-4xl">
+      <span>${item.right}</span>
+      <span class="text-2xl text-slate-500">→</span>
+      <span class="font-black text-brand-pink">?</span>
+    </div>
+  </div>`;
+
+  renderOptions(
+    item.answer,
+    shuffleArray(item.distractorPool).slice(0, 3),
+    optionsContainer
+  );
 }
 
 export function addBaseTen(value) {
