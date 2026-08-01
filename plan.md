@@ -6,11 +6,11 @@
 
 | #   | Tâche                                                                                         | Priorité | Effort |
 | --- | --------------------------------------------------------------------------------------------- | -------- | ------ |
-| 6.1 | Découper index.html en modules JS séparés (game engine, analytics, companions, accessibility) | Haute    | Gros   |
-| 6.2 | Ajouter un build step (Vite) avec Tree-shaking et minification                                | Haute    | Moyen  |
-| 6.3 | Migrer le CSS inline vers Tailwind JIT + CSS custom                                           | Moyenne  | Moyen  |
-| 6.4 | Écrire des tests unitaires (Vitest) pour game engine et adaptive learning                     | Haute    | Moyen  |
-| 6.5 | Ajouter ESLint + Prettier pour la cohérence de code                                           | Basse    | Petit  |
+| 6.1 | Découper index.html en modules JS séparés (game engine, analytics, companions, accessibility) | Haute    | Gros   | [x]
+| 6.2 | Ajouter un build step (Vite) avec Tree-shaking et minification                                | Haute    | Moyen  | 
+| 6.3 | Migrer le CSS inline vers Tailwind JIT + CSS custom                                           | Moyenne  | Moyen  | [x]
+| 6.4 | Écrire des tests unitaires (Vitest) pour game engine et adaptive learning                     | Haute    | Moyen  | [x]
+| 6.5 | Ajouter ESLint + Prettier pour la cohérence de code                                           | Basse    | Petit  | [x]
 | 6.6 | Ajouter TypeScript (types partiels) pour les états et générateurs                             | Basse    | Gros   |
 
 ## Phase 7 – Contenu éducatif élargi
@@ -19,9 +19,9 @@
 
 | #   | Tâche                                                                              | Priorité | Effort |
 | --- | ---------------------------------------------------------------------------------- | -------- | ------ |
-| 7.1 | Ajouter 4 jeux de calcul mental (addition rapide, soustraction rapide)             | Haute    | Moyen  |
-| 7.2 | Ajouter 3 jeux de numération (compter jusqu'à 100, decomposer en dizaines/unities) | Haute    | Moyen  |
-| 7.3 | Ajouter 2 jeux de logique (séquences, analogies simples)                           | Moyenne  | Moyen  |
+| 7.1 | Ajouter 4 jeux de calcul mental (addition rapide, soustraction rapide)             | Haute    | Moyen  | [x]
+| 7.2 | Ajouter 3 jeux de numération (compter jusqu'à 100, decomposer en dizaines/unities) | Haute    | Moyen  | [x]
+| 7.3 | Ajouter 2 jeux de logique (séquences, analogies simples)                           | Moyenne  | Moyen  | [x]
 | 7.4 | Créer 2 nouvelles quêtes narratives (règle de 3, résolution de problèmes)          | Moyenne  | Gros   |
 | 7.5 | Ajouter des images/illustrations pour chaque type d'exercice                       | Basse    | Gros   |
 | 7.6 | Implémenter un système de « leçon » avant les quiz (explication interactive)       | Basse    | Gros   |
@@ -32,7 +32,7 @@
 
 | #   | Tâche                                                           | Priorité | Effort |
 | --- | --------------------------------------------------------------- | -------- | ------ |
-| 8.1 | Système de streaks quotidiens (jours consécutifs de jeu)        | Haute    | Moyen  |
+| 8.1 | Système de streaks quotidiens (jours consécutifs de jeu)        | Haute    | Moyen  | [x]
 | 8.2 | Tableau de bord local top scores (frères/sœurs/amis)            | Moyenne  | Moyen  |
 | 8.3 | Système de récompenses temporelles (défis du jour, défis hebdo) | Moyenne  | Moyen  |
 | 8.4 | Boutique d'accessoires pour compagnon (achats avec étoiles)     | Basse    | Gros   |
@@ -62,8 +62,8 @@
 | 10.2 | Politique de confidentialité affichée dans l'app           | Haute    | Petit  |
 | 10.3 | Consentement parental avant collecte de données            | Moyenne  | Moyen  |
 | 10.4 | Content Security Policy (CSP) stricte dans vercel.json     | Haute    | Petit  |
-| 10.5 | Validation/sanitisation des entrées pour prévenir XSS      | Haute    | Moyen  |
-| 10.6 | Audit de dépendances (npm audit) automatique en CI         | Basse    | Petit  |
+| 10.5 | Validation/sanitisation des entrées pour prévenir XSS      | Haute    | Moyen  | [x]
+| 10.6 | Audit de dépendances (npm audit) automatique en CI         | Basse    | Petit  | [x]
 
 ## Phase 11 – Multilingue et internationalisation
 

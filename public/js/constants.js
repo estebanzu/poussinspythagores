@@ -106,6 +106,11 @@ export const CATEGORIES = {
         name: 'Découvrir les fractions',
         desc: 'Représenter des moitiés, tiers et quarts.',
       },
+      {
+        id: 'a_compter_100',
+        name: 'Compter jusqu’à 100',
+        desc: 'Compter des objets et retrouver le bon nombre.',
+      },
     ],
   },
   B: {

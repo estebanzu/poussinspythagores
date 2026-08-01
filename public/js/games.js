@@ -418,6 +418,9 @@ export function generateExercise() {
       case 'a_nombres_100':
         genNombres100(visualArea, questionText, optionsContainer);
         break;
+      case 'a_compter_100':
+        genCompter100(visualArea, questionText, optionsContainer);
+        break;
       case 'a_additions':
         genAdditions(visualArea, questionText, optionsContainer);
         break;
@@ -623,6 +626,69 @@ function genNombres100(visualArea, questionText, optionsContainer) {
       ),
       optionsContainer
     );
+  }
+}
+
+// ---- A5. Compter jusqu’à 100 ----
+function genCompter100(visualArea, questionText, optionsContainer) {
+  const counts = [
+    8, 12, 15, 18, 22, 25, 28, 33, 37, 42, 47, 55, 63, 71, 84, 96,
+  ];
+  let count;
+  if (state.difficulty === 'easy') count = getRandomInt(5, 19);
+  else if (state.difficulty === 'challenge') count = getRandomInt(40, 100);
+  else count = counts[getRandomInt(0, counts.length - 1)];
+
+  state.currentAnswer = count;
+  state.currentQuestionKey = 'compter100_' + state.difficulty + '_' + count;
+
+  const cols = 8;
+  const rows = Math.ceil(count / cols);
+  const spacingX = 34;
+  const spacingY = 34;
+  const startX = 20;
+  const startY = 20;
+  let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 ${Math.max(
+    180,
+    rows * spacingY + 40
+  )}" xmlns="http://www.w3.org/2000/svg">`;
+  for (let i = 0; i < count; i++) {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const cx = startX + col * spacingX;
+    const cy = startY + row * spacingY;
+    svg += `<g class="animate-float" style="animation-delay: ${(i * 0.02).toFixed(2)}s; animation-duration: ${3 + (i % 3)}s">`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="12" fill="#FFD93D" stroke="#F59E0B" stroke-width="2"/>`;
+    svg += `<text x="${cx}" y="${cy + 5}" font-family="Fredoka" font-size="14" font-weight="bold" fill="#78350F" text-anchor="middle">${i + 1}</text>`;
+    svg += `</g>`;
+  }
+  if (count < 64) {
+    const emptyCols = (cols - (count % cols)) % cols;
+    const lastRow = Math.floor((count - 1) / cols);
+    for (let j = 0; j < emptyCols; j++) {
+      const cx = startX + ((count % cols) + j) * spacingX;
+      const cy = startY + lastRow * spacingY;
+      svg += `<circle cx="${cx}" cy="${cy}" r="12" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="2"/>`;
+    }
+  }
+  svg += `</svg>`;
+  visualArea.innerHTML = svg;
+
+  const min =
+    state.difficulty === 'easy' ? 1 : state.difficulty === 'challenge' ? 40 : 8;
+  const max =
+    state.difficulty === 'easy'
+      ? 20
+      : state.difficulty === 'challenge'
+        ? 100
+        : 55;
+
+  renderOptions(count, getDistractors(count, 3, min, max), optionsContainer);
+
+  if (state.difficulty !== 'easy') {
+    questionText.innerText = 'Compte les éléments et trouve le bon nombre :';
+  } else {
+    questionText.innerText = 'Compte les éléments :';
   }
 }
 
