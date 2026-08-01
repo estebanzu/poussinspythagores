@@ -2,12 +2,7 @@
 // MAIN — Entry point, window exports, initialization
 // =============================================
 
-import {
-  state,
-  accessibilityState,
-  questState,
-  multiplayerState,
-} from './state.js';
+import { state } from './state.js';
 import {
   updateStarsUI,
   updateFooterCompanion,
@@ -25,7 +20,7 @@ import {
   backToSubmenu,
   restartCurrentGame,
 } from './navigation.js';
-import { playAudioTone, applySoundIcons, toggleMute } from './audio.js';
+import { applySoundIcons, toggleMute } from './audio.js';
 import {
   generateExercise,
   setGamesCallbacks,
@@ -36,14 +31,11 @@ import {
   validateBaseTen,
   toggleShapeSelected,
   validateFormesTri,
-  triggerVictorySession,
   checkAnswer,
 } from './games.js';
 import {
   initParentalControls,
   initAccessibility,
-  applyAccessibilitySettings,
-  updateAccessibilityUI,
   openAccessibilityModal,
   closeAccessibilityModal,
   toggleAccVoice,
@@ -54,17 +46,12 @@ import {
   closeBadgesModal,
   closeUnlockPopup,
   updateStreak,
-  getStreakText,
   checkStreakBonus,
   showRandomFact,
   launchQuest,
   closeQuestStoryModal,
-  nextQuestStep,
-  triggerQuestVictory,
   startMultiplayerMatch,
-  nextMultiplayerTurn,
   handleNextExerciseClick,
-  triggerMultiplayerMatchOver,
   restartMultiplayerMatch,
   openScoreboardModal,
   closeScoreboardModal,
