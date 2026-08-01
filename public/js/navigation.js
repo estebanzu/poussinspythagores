@@ -2,12 +2,16 @@
 // NAVIGATION — Screen routing & category selection
 // =============================================
 
-import { state, questState, multiplayerState, currentSessionTotal } from './state.js';
+import {
+  state,
+  questState,
+  multiplayerState,
+  currentSessionTotal,
+} from './state.js';
 import { CATEGORIES } from './constants.js';
-import { updateFooterMessage, updateSessionStarsUI, updateDifficultyUI, updateBadgeCountUI, updateFooterCompanion, renderRecommendations, setUICallbacks } from './ui.js';
+import { updateFooterMessage, renderRecommendations } from './ui.js';
 import { getGameStats } from './storage.js';
 import { playAudioTone } from './audio.js';
-import { getGameName } from './utils.js';
 import { recordSession, resetSessionTracking } from './storage.js';
 
 export function hideAllScreens() {
@@ -41,9 +45,12 @@ export function goHome() {
   const btnMulti = document.getElementById('btn-mode-multi');
   const btnQuest = document.getElementById('btn-mode-quest');
   if (btnSolo && btnMulti && btnQuest) {
-    btnSolo.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple";
-    btnMulti.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
-    btnQuest.className = "px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600";
+    btnSolo.className =
+      'px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple';
+    btnMulti.className =
+      'px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600';
+    btnQuest.className =
+      'px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600';
   }
   updateFooterMessage('idle');
   renderRecommendations();
@@ -58,11 +65,20 @@ export function selectCategory(catId) {
   document.getElementById('submenu-title').innerText = cat.name;
   const listEl = document.getElementById('submenu-list');
   listEl.innerHTML = '';
-  cat.games.forEach(g => {
+  cat.games.forEach((g) => {
     const stats = getGameStats(g.id);
-    const acc = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : null;
-    const diffLabel = stats.difficulty === 'easy' ? '🟢' : stats.difficulty === 'challenge' ? '🔥' : '🔵';
-    const accBadge = acc !== null ? `<span class="ml-2 text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">${diffLabel} ${acc}%</span>` : '';
+    const acc =
+      stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : null;
+    const diffLabel =
+      stats.difficulty === 'easy'
+        ? '🟢'
+        : stats.difficulty === 'challenge'
+          ? '🔥'
+          : '🔵';
+    const accBadge =
+      acc !== null
+        ? `<span class="ml-2 text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">${diffLabel} ${acc}%</span>`
+        : '';
     const item = document.createElement('div');
     item.className = `bg-white rounded-3xl p-5 border-4 border-${cat.color} shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex flex-col justify-between cursor-pointer`;
     item.onclick = () => launchGame(g.id);
@@ -96,7 +112,9 @@ export function launchGame(gameId) {
   state.currentGame = gameId;
   if (multiplayerState.isActive) {
     hideAllScreens();
-    document.getElementById('screen-multiplayer-setup').classList.remove('hidden');
+    document
+      .getElementById('screen-multiplayer-setup')
+      .classList.remove('hidden');
   } else {
     startSoloGameImpl();
   }

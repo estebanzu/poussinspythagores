@@ -22,9 +22,30 @@ else
   KILL = for /f "tokens=5" %a in ('netstat -aon ^| findstr :$(PORT)') do taskkill /F /PID %a
 endif
 
-.PHONY: all install dev start stop build deploy clean security security-fix
+.PHONY: all install dev start stop build deploy clean security security-fix lint geome frontend-qa check test help css format format-check
 
 all: dev
+
+help:
+	@echo "Super Maths CP - available targets:"
+	@echo "  make install        Install npm dependencies"
+	@echo "  make dev            Start development server"
+	@echo "  make start          Start production server"
+	@echo "  make stop           Stop server on port $(PORT)"
+	@echo "  make build          Prepare build artefacts for Vercel"
+	@echo "  make deploy         Deploy to Vercel (requires VERCEL_TOKEN)"
+	@echo "  make css            Rebuild Tailwind CSS"
+	@echo "  make lint           Run ESLint"
+	@echo "  make format         Format all files with Prettier"
+	@echo "  make format-check   Check Prettier formatting"
+	@echo "  make test           Run unit tests"
+	@echo "  make geome          Geometry game QA"
+	@echo "  make frontend-qa    Frontend QA"
+	@echo "  make check          Run format-check, lint, test, geome and frontend-qa"
+	@echo "  make security       Run npm security audit"
+	@echo "  make security-fix   Run npm audit fix"
+	@echo "  make clean          Remove build artefacts"
+	@echo "  make help           Show this help"
 
 install:
 	@echo "Installing npm dependencies..."
@@ -66,6 +87,37 @@ security:
 security-fix:
 	@echo "Running npm audit fix..."
 	npm audit fix
+
+lint:
+	@echo "Running ESLint..."
+	npm run lint
+
+geome:
+	@echo "Geometry game QA..."
+	node scripts/qa.js --geome
+
+frontend-qa:
+	@echo "Frontend QA..."
+	node scripts/qa.js --frontend
+
+check: format-check lint test geome frontend-qa
+	@echo "All checks passed."
+
+test:
+	@echo "Running tests..."
+	npm test
+
+css:
+	@echo "Rebuilding Tailwind CSS..."
+	npm run build:css
+
+format:
+	@echo "Formatting files with Prettier..."
+	npm run format
+
+format-check:
+	@echo "Checking Prettier formatting..."
+	npx prettier --check .
 
 clean:
 	@echo "Cleaning build artefacts..."

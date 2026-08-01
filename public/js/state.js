@@ -117,3 +117,55 @@ export let targetShapeType = '';
 export let shapesArray = [];
 
 export let windowToastTimeout = null;
+
+export function setQuestionTimeRemaining(v) {
+  questionTimeRemaining = v;
+}
+export function setQuestionTimerInterval(v) {
+  questionTimerInterval = v;
+}
+export function setQuestionStartTime(v) {
+  questionStartTime = v;
+}
+export function setTargetFractionDenominator(v) {
+  targetFractionDenominator = v;
+}
+export function setTargetFractionNumerator(v) {
+  targetFractionNumerator = v;
+}
+export function setUserFractionSelected(v) {
+  userFractionSelected = v;
+}
+export function setTargetNumber(v) {
+  targetNumber = v;
+}
+export function setUserTens(v) {
+  userTens = v;
+}
+export function setUserUnits(v) {
+  userUnits = v;
+}
+export function setTargetShapeType(v) {
+  targetShapeType = v;
+}
+export function setShapesArray(v) {
+  shapesArray = v;
+}
+export function setCurrentSessionTotal(v) {
+  currentSessionTotal = v;
+}
+export function setCurrentSessionCorrect(v) {
+  currentSessionCorrect = v;
+}
+export function setTotalSessionsPlayed(v) {
+  totalSessionsPlayed = v;
+}
+export function setPerfectSessions(v) {
+  perfectSessions = v;
+}
+export function setCurrentSessionStart(v) {
+  currentSessionStart = v;
+}
+export function setWindowToastTimeout(v) {
+  windowToastTimeout = v;
+}

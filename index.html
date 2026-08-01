@@ -1,993 +1,2127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <link rel="icon" href="/logo.png" type="image/png">
-  <title>Poussins Pythagorés 🌟</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <title>Poussins Pythagorés 🌟</title>
 
-  <!-- PWA & iOS Safari Standard Tags -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Maths CP">
-  
-  <link rel="manifest" href="/manifest.json" />
+    <!-- PWA & iOS Safari Standard Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Maths CP" />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json" />
 
-  <!-- Tailwind CSS (built by the Tailwind CLI) -->
-  <link rel="stylesheet" href="/styles.css">
-  
-  <!-- Canvas Confetti CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    body {
-      font-family: 'Nunito', sans-serif;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    h1, h2, h3, h4, .font-title {
-      font-family: 'Fredoka', sans-serif;
-    }
-    
-    /* Seyès Notebook Grid Background for Vertical Additions */
-    .seyes-grid {
-      background-color: #f8fafc;
-      background-image: 
-        linear-gradient(rgba(173, 216, 230, 0.5) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(173, 216, 230, 0.5) 1px, transparent 1px);
-      background-size: 20px 20px;
-      border: 2px solid #94a3b8;
-    }
-    .seyes-red-line {
-      border-left: 2px solid rgba(239, 68, 68, 0.4);
-    }
+    <!-- Tailwind CSS (built by the Tailwind CLI) -->
+    <link rel="stylesheet" href="/styles.css" />
 
-    /* Question Timer */
-    .timer-ring-bg { fill: none; stroke: #e2e8f0; stroke-width: 5; }
-    .timer-ring-progress { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke 0.3s, stroke-dashoffset 0.3s linear; transform: rotate(-90deg); transform-origin: center; }
-    .timer-container { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-    .timer-number { position: absolute; font-family: 'Fredoka', sans-serif; font-weight: 700; }
-    .timer-urgent .timer-number { animation: timer-pulse 0.5s ease-in-out infinite; }
-    @keyframes timer-pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-    }
-    @keyframes timer-shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px) rotate(-2deg); }
-      75% { transform: translateX(4px) rotate(2deg); }
-    }
-    .timer-shake-anim { animation: timer-shake 0.3s ease-in-out; }
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    /* Floating Bubble Animations */
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(3deg); }
-    }
-    @keyframes float-slow {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-24px) rotate(-4deg); }
-    }
-    @keyframes bounce-slow {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    @keyframes pop-in {
-      0% { transform: scale(0.85); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .animate-float {
-      animation: float 4s ease-in-out infinite;
-    }
-    .animate-float-slow {
-      animation: float-slow 7s ease-in-out infinite;
-    }
-    .animate-bounce-slow {
-      animation: bounce-slow 3s ease-in-out infinite;
-    }
-    .animate-pop-in {
-      animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-
-    /* High contrast accessibility dark theme override */
-    body.dark-contrast {
-      background-color: #0f172a !important;
-      background-image: none !important;
-      color: #f8fafc !important;
-    }
-    body.dark-contrast .bg-white {
-      background-color: #1e293b !important;
-      color: #f8fafc !important;
-      border-color: #475569 !important;
-    }
-    body.dark-contrast .text-slate-800,
-    body.dark-contrast .text-slate-700,
-    body.dark-contrast .text-slate-600 {
-      color: #f8fafc !important;
-    }
-    body.dark-contrast .bg-slate-50 {
-      background-color: #334155 !important;
-    }
-    body.dark-contrast header,
-    body.dark-contrast footer {
-      background-color: #0f172a !important;
-      border-color: #475569 !important;
-    }
-    body.dark-contrast button.bg-white {
-      background-color: #1e293b !important;
-      color: #f8fafc !important;
-    }
-  </style>
-</head>
-<body class="bg-gradient-to-br from-brand-blue-light via-white to-brand-purple-light min-h-screen flex flex-col overflow-x-hidden text-slate-800">
-
-  <!-- Splash Screen -->
-  <div id="splash-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-brand-purple via-brand-blue to-brand-purple transition-opacity duration-700" style="animation: splash-bg 3s ease-in-out infinite alternate;">
     <style>
-      @keyframes splash-bg {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
+      body {
+        font-family: 'Nunito', sans-serif;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
       }
-      @keyframes splash-logo-in {
-        0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
-        60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
-        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+      h1,
+      h2,
+      h3,
+      h4,
+      .font-title {
+        font-family: 'Fredoka', sans-serif;
       }
-      @keyframes splash-title-in {
-        0% { transform: translateY(30px); opacity: 0; }
-        100% { transform: translateY(0); opacity: 1; }
+
+      /* Seyès Notebook Grid Background for Vertical Additions */
+      .seyes-grid {
+        background-color: #f8fafc;
+        background-image:
+          linear-gradient(rgba(173, 216, 230, 0.5) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(173, 216, 230, 0.5) 1px, transparent 1px);
+        background-size: 20px 20px;
+        border: 2px solid #94a3b8;
       }
-      @keyframes splash-subtitle-in {
-        0% { transform: translateY(20px); opacity: 0; }
-        100% { transform: translateY(0); opacity: 1; }
+      .seyes-red-line {
+        border-left: 2px solid rgba(239, 68, 68, 0.4);
       }
-      @keyframes splash-dots {
-        0%, 20% { opacity: 0.3; }
-        50% { opacity: 1; }
-        80%, 100% { opacity: 0.3; }
+
+      /* Question Timer */
+      .timer-ring-bg {
+        fill: none;
+        stroke: #e2e8f0;
+        stroke-width: 5;
       }
-      @keyframes splash-fade-out {
-        0% { opacity: 1; }
-        100% { opacity: 0; pointer-events: none; }
+      .timer-ring-progress {
+        fill: none;
+        stroke-width: 5;
+        stroke-linecap: round;
+        transition:
+          stroke 0.3s,
+          stroke-dashoffset 0.3s linear;
+        transform: rotate(-90deg);
+        transform-origin: center;
+      }
+      .timer-container {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .timer-number {
+        position: absolute;
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 700;
+      }
+      .timer-urgent .timer-number {
+        animation: timer-pulse 0.5s ease-in-out infinite;
+      }
+      @keyframes timer-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+      @keyframes timer-shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px) rotate(-2deg);
+        }
+        75% {
+          transform: translateX(4px) rotate(2deg);
+        }
+      }
+      .timer-shake-anim {
+        animation: timer-shake 0.3s ease-in-out;
+      }
+
+      /* Floating Bubble Animations */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-12px) rotate(3deg);
+        }
+      }
+      @keyframes float-slow {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-24px) rotate(-4deg);
+        }
+      }
+      @keyframes bounce-slow {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      @keyframes pop-in {
+        0% {
+          transform: scale(0.85);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+      .animate-float-slow {
+        animation: float-slow 7s ease-in-out infinite;
+      }
+      .animate-bounce-slow {
+        animation: bounce-slow 3s ease-in-out infinite;
+      }
+      .animate-pop-in {
+        animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      /* High contrast accessibility dark theme override */
+      body.dark-contrast {
+        background-color: #0f172a !important;
+        background-image: none !important;
+        color: #f8fafc !important;
+      }
+      body.dark-contrast .bg-white {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        border-color: #475569 !important;
+      }
+      body.dark-contrast .text-slate-800,
+      body.dark-contrast .text-slate-700,
+      body.dark-contrast .text-slate-600 {
+        color: #f8fafc !important;
+      }
+      body.dark-contrast .bg-slate-50 {
+        background-color: #334155 !important;
+      }
+      body.dark-contrast header,
+      body.dark-contrast footer {
+        background-color: #0f172a !important;
+        border-color: #475569 !important;
+      }
+      body.dark-contrast button.bg-white {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
       }
     </style>
-    <div style="animation: splash-logo-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; opacity: 0;">
-      <img src="/logo.png" alt="Logo" class="w-28 h-28 sm:w-36 sm:h-36 rounded-[2rem] shadow-2xl border-4 border-white/30"/>
-    </div>
-    <h1 class="mt-6 text-4xl sm:text-5xl font-title font-bold text-white drop-shadow-lg" style="animation: splash-title-in 0.6s 0.4s ease-out forwards; opacity: 0;">
-      Poussins Pythagorés
-    </h1>
-    <p class="mt-3 text-lg sm:text-xl text-white/80 font-title" style="animation: splash-subtitle-in 0.6s 0.7s ease-out forwards; opacity: 0;">
-      Apprendre les maths en s'amusant !
-    </p>
-    <div class="flex gap-2 mt-8">
-      <span class="w-3 h-3 bg-white rounded-full" style="animation: splash-dots 1.4s 0.8s ease-in-out infinite;"></span>
-      <span class="w-3 h-3 bg-white rounded-full" style="animation: splash-dots 1.4s 1.0s ease-in-out infinite;"></span>
-      <span class="w-3 h-3 bg-white rounded-full" style="animation: splash-dots 1.4s 1.2s ease-in-out infinite;"></span>
-    </div>
-  </div>
-
-  <!-- Floating Background Elements (Pure Aesthetics for Kids) -->
-  <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    <div class="absolute top-10 left-10 w-24 h-24 bg-brand-pink opacity-10 rounded-full animate-float"></div>
-    <div class="absolute top-1/4 right-8 w-32 h-32 bg-brand-blue opacity-10 rounded-full animate-float-slow"></div>
-    <div class="absolute bottom-16 left-12 w-28 h-28 bg-brand-yellow opacity-10 rounded-full animate-float-slow"></div>
-    <div class="absolute bottom-1/3 right-1/4 w-20 h-20 bg-brand-green opacity-10 rounded-full animate-float"></div>
-    <!-- Tiny Math symbols -->
-    <div class="absolute top-20 right-1/3 text-brand-purple opacity-10 text-5xl font-title animate-bounce-slow font-bold">+</div>
-    <div class="absolute bottom-24 left-1/3 text-brand-pink opacity-10 text-5xl font-title animate-bounce-slow font-bold">-</div>
-    <div class="absolute top-1/2 left-8 text-brand-orange opacity-10 text-5xl font-title animate-float font-bold">=</div>
-  </div>
-
-  <!-- Header Section -->
-  <header class="relative z-10 w-full px-3 sm:px-6 py-2.5 sm:py-4 flex justify-between items-center bg-white/70 backdrop-blur-md border-b-4 border-brand-purple/20">
-    <div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="goHome()">
-      <img src="/logo.png" alt="Poussins Pythagorés logo" class="h-10 w-10 sm:h-12 sm:w-12"/>
-      <div class="hidden sm:flex bg-gradient-to-tr from-brand-purple to-brand-blue w-12 h-12 rounded-2xl items-center justify-center shadow-lg transform hover:scale-105 active:scale-95 transition-all">
-        <span class="text-white text-2xl font-title font-bold">∑</span>
+  </head>
+  <body
+    class="bg-gradient-to-br from-brand-blue-light via-white to-brand-purple-light min-h-screen flex flex-col overflow-x-hidden text-slate-800"
+  >
+    <!-- Splash Screen -->
+    <div
+      id="splash-screen"
+      class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-brand-purple via-brand-blue to-brand-purple transition-opacity duration-700"
+      style="animation: splash-bg 3s ease-in-out infinite alternate"
+    >
+      <style>
+        @keyframes splash-bg {
+          0% {
+            background-position: 0% 50%;
+          }
+          100% {
+            background-position: 100% 50%;
+          }
+        }
+        @keyframes splash-logo-in {
+          0% {
+            transform: scale(0.3) rotate(-15deg);
+            opacity: 0;
+          }
+          60% {
+            transform: scale(1.15) rotate(3deg);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+          }
+        }
+        @keyframes splash-title-in {
+          0% {
+            transform: translateY(30px);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes splash-subtitle-in {
+          0% {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes splash-dots {
+          0%,
+          20% {
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 1;
+          }
+          80%,
+          100% {
+            opacity: 0.3;
+          }
+        }
+        @keyframes splash-fade-out {
+          0% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+            pointer-events: none;
+          }
+        }
+      </style>
+      <div
+        style="
+          animation: splash-logo-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)
+            forwards;
+          opacity: 0;
+        "
+      >
+        <img
+          src="/logo.png"
+          alt="Logo"
+          class="w-28 h-28 sm:w-36 sm:h-36 rounded-[2rem] shadow-2xl border-4 border-white/30"
+        />
       </div>
-      <div>
-        <h1 class="hidden min-content-block min-[480px]:block text-lg sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent drop-shadow-sm font-title">
-          Poussins Pythagorés
-        </h1>
-        <p class="hidden sm:block text-xs text-slate-500 font-medium tracking-wide">6 - 7 ANS • ÉCOLE ÉLÉMENTAIRE</p>
+      <h1
+        class="mt-6 text-4xl sm:text-5xl font-title font-bold text-white drop-shadow-lg"
+        style="
+          animation: splash-title-in 0.6s 0.4s ease-out forwards;
+          opacity: 0;
+        "
+      >
+        Poussins Pythagorés
+      </h1>
+      <p
+        class="mt-3 text-lg sm:text-xl text-white/80 font-title"
+        style="
+          animation: splash-subtitle-in 0.6s 0.7s ease-out forwards;
+          opacity: 0;
+        "
+      >
+        Apprendre les maths en s'amusant !
+      </p>
+      <div class="flex gap-2 mt-8">
+        <span
+          class="w-3 h-3 bg-white rounded-full"
+          style="animation: splash-dots 1.4s 0.8s ease-in-out infinite"
+        ></span>
+        <span
+          class="w-3 h-3 bg-white rounded-full"
+          style="animation: splash-dots 1.4s 1s ease-in-out infinite"
+        ></span>
+        <span
+          class="w-3 h-3 bg-white rounded-full"
+          style="animation: splash-dots 1.4s 1.2s ease-in-out infinite"
+        ></span>
       </div>
     </div>
 
-    <div class="flex items-center gap-1.5 sm:gap-3">
-      <!-- Scoreboard Button -->
-      <button onclick="openScoreboardModal()" class="flex items-center gap-1.5 bg-gradient-to-r from-brand-purple to-brand-blue text-white font-bold px-3 sm:px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all" title="Historique des Scores">
-        <span class="text-base sm:text-lg">📊</span>
-        <span class="hidden sm:inline font-title text-xs sm:text-sm">Scores</span>
-      </button>
-
-      <!-- Badges Gallery Button -->
-      <button onclick="openBadgesModal()" class="flex items-center gap-1.5 bg-gradient-to-r from-brand-pink to-brand-purple text-white font-bold px-3 sm:px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all">
-        <span class="text-base sm:text-lg">🏅</span>
-        <span id="badge-count-text" class="hidden sm:inline font-title text-xs sm:text-sm">Badges (0/7)</span>
-      </button>
-
-      <!-- Companion Button -->
-      <button onclick="openCompanionModal()" class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-md border-2 border-brand-pink/40 hover:scale-105 active:scale-95 transition-all" title="Mon Compagnon">
-        <span id="header-companion-icon" class="text-base sm:text-lg">🦉</span>
-      </button>
-
-      <!-- Accessibility Settings Button -->
-      <button onclick="openAccessibilityModal()" class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-md border-2 border-slate-200 hover:scale-105 active:scale-95 transition-all" title="Accessibilité">
-        <span class="text-base sm:text-lg">⚙️</span>
-      </button>
-
-      <!-- Global Stars Counter -->
-      <div class="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-brand-yellow to-brand-orange text-slate-900 font-bold px-3 sm:px-4 py-2 rounded-full shadow-md border-2 border-white animate-bounce-slow">
-        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-amber-900 fill-amber-400" viewBox="0 0 24 24">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-        </svg>
-        <span id="global-stars-text" class="text-base sm:text-lg md:text-xl font-title">0</span>
+    <!-- Floating Background Elements (Pure Aesthetics for Kids) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      <div
+        class="absolute top-10 left-10 w-24 h-24 bg-brand-pink opacity-10 rounded-full animate-float"
+      ></div>
+      <div
+        class="absolute top-1/4 right-8 w-32 h-32 bg-brand-blue opacity-10 rounded-full animate-float-slow"
+      ></div>
+      <div
+        class="absolute bottom-16 left-12 w-28 h-28 bg-brand-yellow opacity-10 rounded-full animate-float-slow"
+      ></div>
+      <div
+        class="absolute bottom-1/3 right-1/4 w-20 h-20 bg-brand-green opacity-10 rounded-full animate-float"
+      ></div>
+      <!-- Tiny Math symbols -->
+      <div
+        class="absolute top-20 right-1/3 text-brand-purple opacity-10 text-5xl font-title animate-bounce-slow font-bold"
+      >
+        +
+      </div>
+      <div
+        class="absolute bottom-24 left-1/3 text-brand-pink opacity-10 text-5xl font-title animate-bounce-slow font-bold"
+      >
+        -
+      </div>
+      <div
+        class="absolute top-1/2 left-8 text-brand-orange opacity-10 text-5xl font-title animate-float font-bold"
+      >
+        =
       </div>
     </div>
-  </header>
 
-  <!-- Main Content Container -->
-  <main class="relative z-10 flex-grow w-full max-w-6xl mx-auto px-4 py-6 flex flex-col justify-center">
-    
-    <!-- ==================== SCREEN: HOME ==================== -->
-    <div id="screen-home" class="animate-pop-in grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-      
-      <!-- Game Mode Selector -->
-      <div class="col-span-full bg-white/70 backdrop-blur-md rounded-3xl p-5 border-4 border-brand-purple/20 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
-        <div class="flex items-center gap-3 text-center md:text-left">
-          <div class="w-12 h-12 bg-brand-purple-light rounded-2xl flex items-center justify-center text-2xl shadow">
-            🎮
-          </div>
-          <div>
-            <h3 class="font-bold text-lg font-title text-slate-800">Mode de Jeu</h3>
-            <p class="text-xs text-slate-500 font-medium">Joue seul, défie un ami en face-à-face, ou pars en Quête Aventure avec Pytha !</p>
-          </div>
+    <!-- Header Section -->
+    <header
+      class="relative z-10 w-full px-3 sm:px-6 py-2.5 sm:py-4 flex justify-between items-center bg-white/70 backdrop-blur-md border-b-4 border-brand-purple/20"
+    >
+      <div
+        class="flex items-center gap-2 sm:gap-3 cursor-pointer"
+        onclick="goHome()"
+      >
+        <img
+          src="/logo.png"
+          alt="Poussins Pythagorés logo"
+          class="h-10 w-10 sm:h-12 sm:w-12"
+        />
+        <div
+          class="hidden sm:flex bg-gradient-to-tr from-brand-purple to-brand-blue w-12 h-12 rounded-2xl items-center justify-center shadow-lg transform hover:scale-105 active:scale-95 transition-all"
+        >
+          <span class="text-white text-2xl font-title font-bold">∑</span>
         </div>
-        <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner flex-wrap justify-center gap-1">
-          <button id="btn-mode-solo" onclick="setGameMode('solo')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple">
-            👤 Solo
-          </button>
-          <button id="btn-mode-multi" onclick="setGameMode('multi')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
-            👥 Défis
-          </button>
-          <button id="btn-mode-quest" onclick="setGameMode('quest')" class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600">
-            ✨ Quêtes
-          </button>
-        </div>
-        <button onclick="openLearningProfile()" class="mt-2 md:mt-0 bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-title font-bold py-2 px-4 rounded-2xl text-sm transition-all flex items-center gap-2">
-          📊 Mon Profil
-        </button>
-      </div>
-
-      <!-- Adaptive Recommendations (shown when data exists) -->
-      <div id="home-recommendations" class="col-span-full hidden">
-        <div class="bg-gradient-to-r from-brand-pink/10 to-brand-purple/10 rounded-3xl p-5 border-2 border-brand-pink/20 shadow-md">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 bg-brand-pink-light rounded-xl flex items-center justify-center text-xl">🎯</div>
-            <h3 class="font-bold text-lg font-title text-slate-800">À toi de jouer !</h3>
-          </div>
-          <div id="home-recommendations-list" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
-        </div>
-      </div>
-
-      <!-- Category A: Nombres et Calculs -->
-      <div class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
         <div>
-          <div class="w-16 h-16 bg-brand-purple-light rounded-2xl flex items-center justify-center mb-4">
-            <svg class="w-10 h-10 text-brand-purple" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-brand-purple mb-2">Nombres et Calculs</h2>
-          <p class="text-slate-600 text-sm mb-6 leading-relaxed">Apprendre à compter jusqu'à 100, faire des additions, des soustractions et des doubles !</p>
+          <h1
+            class="hidden min-content-block min-[480px]:block text-lg sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent drop-shadow-sm font-title"
+          >
+            Poussins Pythagorés
+          </h1>
+          <p
+            class="hidden sm:block text-xs text-slate-500 font-medium tracking-wide"
+          >
+            6 - 7 ANS • ÉCOLE ÉLÉMENTAIRE
+          </p>
         </div>
-        <button onclick="selectCategory('A')" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-purple/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <span>S'entraîner</span>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </div>
+
+      <div class="flex items-center gap-1.5 sm:gap-3">
+        <!-- Scoreboard Button -->
+        <button
+          onclick="openScoreboardModal()"
+          class="flex items-center gap-1.5 bg-gradient-to-r from-brand-purple to-brand-blue text-white font-bold px-3 sm:px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all"
+          title="Historique des Scores"
+        >
+          <span class="text-base sm:text-lg">📊</span>
+          <span class="hidden sm:inline font-title text-xs sm:text-sm"
+            >Scores</span
+          >
         </button>
-      </div>
 
-      <!-- Category B: Espace et Géométrie -->
-      <div class="bg-white rounded-3xl p-6 border-4 border-brand-green shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
-        <div>
-          <div class="w-16 h-16 bg-brand-green-light rounded-2xl flex items-center justify-center mb-4">
-            <svg class="w-10 h-10 text-brand-green" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-brand-green mb-2">Espace et Géométrie</h2>
-          <p class="text-slate-600 text-sm mb-6 leading-relaxed">Découvrir les formes géométriques et apprendre à se repérer dans l'espace.</p>
-        </div>
-        <button onclick="selectCategory('B')" class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <span>S'entraîner</span>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        <!-- Badges Gallery Button -->
+        <button
+          onclick="openBadgesModal()"
+          class="flex items-center gap-1.5 bg-gradient-to-r from-brand-pink to-brand-purple text-white font-bold px-3 sm:px-4 py-2 rounded-full shadow-md border-2 border-white hover:scale-105 active:scale-95 transition-all"
+        >
+          <span class="text-base sm:text-lg">🏅</span>
+          <span
+            id="badge-count-text"
+            class="hidden sm:inline font-title text-xs sm:text-sm"
+            >Badges (0/7)</span
+          >
         </button>
-      </div>
 
-      <!-- Category C: Grandeurs et Mesures -->
-      <div class="bg-white rounded-3xl p-6 border-4 border-brand-orange shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
-        <div>
-          <div class="w-16 h-16 bg-brand-orange-light rounded-2xl flex items-center justify-center mb-4">
-            <svg class="w-10 h-10 text-brand-orange" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-brand-orange mb-2">Grandeurs et Mesures</h2>
-          <p class="text-slate-600 text-sm mb-6 leading-relaxed">Jouer avec des pièces et billets en euros et apprendre à lire l'heure.</p>
-        </div>
-        <button onclick="selectCategory('C')" class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-orange/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <span>S'entraîner</span>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        <!-- Companion Button -->
+        <button
+          onclick="openCompanionModal()"
+          class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-md border-2 border-brand-pink/40 hover:scale-105 active:scale-95 transition-all"
+          title="Mon Compagnon"
+        >
+          <span id="header-companion-icon" class="text-base sm:text-lg"
+            >🦉</span
+          >
         </button>
-      </div>
 
-    </div>
-
-    <!-- ==================== SCREEN: SUBMENU ==================== -->
-    <div id="screen-submenu" class="hidden animate-pop-in w-full max-w-3xl mx-auto">
-      <div class="flex items-center gap-4 mb-6">
-        <button onclick="goHome()" class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-2 px-4 rounded-2xl shadow border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-          <span>Retour</span>
+        <!-- Accessibility Settings Button -->
+        <button
+          onclick="openAccessibilityModal()"
+          class="flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-md border-2 border-slate-200 hover:scale-105 active:scale-95 transition-all"
+          title="Accessibilité"
+        >
+          <span class="text-base sm:text-lg">⚙️</span>
         </button>
-        <h2 id="submenu-title" class="text-3xl font-bold font-title text-slate-800">Catégorie</h2>
-      </div>
 
-      <!-- Grid of Subgames -->
-      <div id="submenu-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Subgame buttons will be injected dynamically -->
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: MULTIPLAYER SETUP ==================== -->
-    <div id="screen-multiplayer-setup" class="hidden animate-pop-in w-full max-w-lg mx-auto bg-white rounded-3xl border-4 border-brand-purple/40 shadow-2xl p-6 md:p-8 flex flex-col items-center">
-      <h2 class="text-2xl font-bold font-title text-brand-purple mb-4">👥 Configuration de la Partie</h2>
-      <p class="text-slate-500 text-sm mb-6 text-center">Entrez vos prénoms pour commencer le défi tour par tour !</p>
-      
-      <div class="w-full flex flex-col gap-4 mb-6">
-        <!-- Player 1 -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Joueur 1 (🐣 Poussin)</label>
-          <input type="text" id="multi-p1-name" value="Joueur 1" placeholder="Prénom Joueur 1" class="w-full border-4 border-slate-200 focus:border-brand-purple rounded-2xl py-3 px-4 font-bold font-title text-lg outline-none transition-all"/>
-        </div>
-        
-        <!-- Player 2 -->
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Joueur 2 (🦁 Lion)</label>
-          <input type="text" id="multi-p2-name" value="Joueur 2" placeholder="Prénom Joueur 2" class="w-full border-4 border-slate-200 focus:border-brand-purple rounded-2xl py-3 px-4 font-bold font-title text-lg outline-none transition-all"/>
+        <!-- Global Stars Counter -->
+        <div
+          class="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-brand-yellow to-brand-orange text-slate-900 font-bold px-3 sm:px-4 py-2 rounded-full shadow-md border-2 border-white animate-bounce-slow"
+        >
+          <svg
+            class="w-5 h-5 sm:w-6 sm:h-6 text-amber-900 fill-amber-400"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+            />
+          </svg>
+          <span
+            id="global-stars-text"
+            class="text-base sm:text-lg md:text-xl font-title"
+            >0</span
+          >
         </div>
       </div>
+    </header>
 
-      <div class="flex gap-3 w-full">
-        <button onclick="backToSubmenu()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-title font-bold py-4 rounded-2xl transition-all shadow">
-          Retour
-        </button>
-        <button onclick="startMultiplayerMatch()" class="w-1/2 bg-brand-purple hover:bg-brand-purple-dark text-white font-title font-bold py-4 rounded-2xl transition-all shadow-lg shadow-brand-purple/20">
-          C'est parti ! 🚀
-        </button>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: GAME ==================== -->
-    <div id="screen-game" class="hidden animate-pop-in w-full max-w-4xl mx-auto">
-      
-      <!-- Quest Progress Banner -->
-      <div id="quest-progress-banner" class="hidden w-full bg-gradient-to-r from-brand-pink/10 to-brand-purple/10 rounded-2xl p-3 border-2 border-brand-pink/20 flex items-center justify-between gap-4 mb-4 shadow-sm">
-        <div class="flex items-center gap-3">
-          <span id="quest-banner-emoji" class="text-2xl animate-bounce-slow">🪺</span>
-          <div>
-            <h4 id="quest-banner-title" class="font-bold text-sm font-title text-brand-pink">Quête de Pytha</h4>
-            <p id="quest-banner-subtitle" class="text-[10px] text-slate-500 font-medium">Récolte 5 brindilles pour finir</p>
-          </div>
-        </div>
-        <div class="bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-2 text-slate-700 font-bold font-title text-xs">
-          <span>Matériaux :</span>
-          <span id="quest-material-tracker" class="text-brand-pink">0 / 5 🪵</span>
-        </div>
-      </div>
-
-      <!-- Multiplayer Turn Info Banner -->
-      <div id="multiplayer-turn-banner" class="hidden w-full bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 rounded-2xl p-3 border-2 border-brand-purple/20 flex items-center justify-between gap-4 mb-4 shadow-sm">
-        <div class="flex items-center gap-3">
-          <span id="multi-turn-avatar" class="text-2xl animate-bounce-slow">🐣</span>
-          <div>
-            <h4 id="multi-turn-title" class="font-bold text-sm font-title text-brand-purple">Tour de Joueur 1</h4>
-            <p id="multi-turn-subtitle" class="text-[10px] text-slate-500 font-medium">Exercice 1 / 10</p>
-          </div>
-        </div>
-        <div class="flex gap-3 text-xs font-bold font-title">
-          <div class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-slate-700">
-            <span id="p1-score-name">J1</span> : <span id="p1-score-val" class="text-brand-purple">0 ⭐</span>
-          </div>
-          <div class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-slate-700">
-            <span id="p2-score-name">J2</span> : <span id="p2-score-val" class="text-brand-blue">0 ⭐</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Top Action Bar (Back / Progress) -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white/50 p-4 rounded-3xl border-2 border-slate-200/60">
-        <div class="flex items-center justify-between md:justify-start gap-4">
-          <button onclick="backToSubmenu()" class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-3 px-5 rounded-2xl shadow-md border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            <span class="text-sm md:text-base">Changer de jeu</span>
-          </button>
-          
-          <h3 id="game-title" class="text-xl font-bold font-title text-slate-700 truncate max-w-[200px] md:max-w-md">Jeu</h3>
-        </div>
-
-        <!-- Level Objective & Difficulty Indicator -->
-        <div class="flex items-center gap-3 flex-wrap">
-          <!-- Difficulty Badge -->
-          <div id="difficulty-badge" class="px-4 py-2 rounded-full font-title text-xs font-bold shadow-sm border-2 transition-all flex items-center gap-1">
-            <!-- Dynamic text and color -->
-          </div>
-
-          <!-- Star Tracker (5 stars per level session) -->
-          <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl shadow-inner border border-slate-200/80">
-            <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Objectif :</span>
-            <div class="flex gap-1" id="star-dots-container">
-              <!-- 5 Star icons dynamically filled/empty -->
+    <!-- Main Content Container -->
+    <main
+      class="relative z-10 flex-grow w-full max-w-6xl mx-auto px-4 py-6 flex flex-col justify-center"
+    >
+      <!-- ==================== SCREEN: HOME ==================== -->
+      <div
+        id="screen-home"
+        class="animate-pop-in grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
+      >
+        <!-- Game Mode Selector -->
+        <div
+          class="col-span-full bg-white/70 backdrop-blur-md rounded-3xl p-5 border-4 border-brand-purple/20 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg"
+        >
+          <div class="flex items-center gap-3 text-center md:text-left">
+            <div
+              class="w-12 h-12 bg-brand-purple-light rounded-2xl flex items-center justify-center text-2xl shadow"
+            >
+              🎮
+            </div>
+            <div>
+              <h3 class="font-bold text-lg font-title text-slate-800">
+                Mode de Jeu
+              </h3>
+              <p class="text-xs text-slate-500 font-medium">
+                Joue seul, défie un ami en face-à-face, ou pars en Quête
+                Aventure avec Pytha !
+              </p>
             </div>
           </div>
-
-          <!-- Cancel Game Button -->
-          <button onclick="backToSubmenu()" class="ml-auto bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 font-title font-bold py-2 px-3 rounded-xl shadow border-2 border-slate-200 hover:border-rose-200 flex items-center gap-1.5 transform active:scale-95 transition-all text-xs" title="Annuler la partie">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            <span>Quitter</span>
+          <div
+            class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-inner flex-wrap justify-center gap-1"
+          >
+            <button
+              id="btn-mode-solo"
+              onclick="setGameMode('solo')"
+              class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all shadow bg-white text-brand-purple"
+            >
+              👤 Solo
+            </button>
+            <button
+              id="btn-mode-multi"
+              onclick="setGameMode('multi')"
+              class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600"
+            >
+              👥 Défis
+            </button>
+            <button
+              id="btn-mode-quest"
+              onclick="setGameMode('quest')"
+              class="px-4 py-2 rounded-xl font-title font-bold text-sm transition-all text-slate-600"
+            >
+              ✨ Quêtes
+            </button>
+          </div>
+          <button
+            onclick="openLearningProfile()"
+            class="mt-2 md:mt-0 bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-title font-bold py-2 px-4 rounded-2xl text-sm transition-all flex items-center gap-2"
+          >
+            📊 Mon Profil
           </button>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-slate-100 rounded-full h-3 mt-3 overflow-hidden hidden" id="game-progress-container">
-          <div id="game-progress-bar" class="h-3 rounded-full bg-gradient-to-r from-brand-purple to-brand-pink transition-all duration-500" style="width: 0%"></div>
-        </div>
-        <div class="flex justify-between items-center mt-1 hidden" id="game-progress-text">
-          <span id="game-progress-label" class="text-xs font-bold text-slate-400 font-title">Question 1/10</span>
-          <span id="game-progress-pct" class="text-xs font-bold text-brand-purple font-title">0%</span>
-        </div>
-      </div>
-
-      <!-- Main Game Card -->
-      <div class="bg-white rounded-3xl border-4 border-brand-purple/40 shadow-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-stretch">
-        
-        <!-- Interactive Illustration Area (SVG container) -->
-        <div class="w-full md:w-3/5 min-h-[260px] md:min-h-[360px] bg-slate-50 border-4 border-dashed border-slate-200 rounded-2xl flex items-center justify-center overflow-hidden relative p-4">
-          <div id="game-visual-area" class="w-full h-full flex items-center justify-center">
-            <!-- SVG content dynamically loaded here -->
+        <!-- Adaptive Recommendations (shown when data exists) -->
+        <div id="home-recommendations" class="col-span-full hidden">
+          <div
+            class="bg-gradient-to-r from-brand-pink/10 to-brand-purple/10 rounded-3xl p-5 border-2 border-brand-pink/20 shadow-md"
+          >
+            <div class="flex items-center gap-3 mb-3">
+              <div
+                class="w-10 h-10 bg-brand-pink-light rounded-xl flex items-center justify-center text-xl"
+              >
+                🎯
+              </div>
+              <h3 class="font-bold text-lg font-title text-slate-800">
+                À toi de jouer !
+              </h3>
+            </div>
+            <div
+              id="home-recommendations-list"
+              class="grid grid-cols-1 md:grid-cols-3 gap-3"
+            ></div>
           </div>
         </div>
 
-        <!-- Question & Answers Area -->
-        <div class="w-full md:w-2/5 flex flex-col justify-between gap-6">
-          <div class="bg-brand-blue-light/60 border-2 border-brand-blue/30 rounded-2xl p-5 flex flex-col justify-center min-h-[100px] shadow-sm relative overflow-hidden">
-            <!-- Decorative character inside question box -->
-            <div class="absolute right-2 -bottom-2 text-brand-blue/20 text-7xl select-none font-bold">?</div>
-            <div class="flex items-center justify-between mb-1 relative z-10">
-              <p class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title">Question</p>
-              <div class="flex items-center gap-2">
-                <button onclick="speakQuestion()" id="btn-speak-question" class="text-brand-blue hover:text-brand-blue-dark hover:scale-105 active:scale-95 transition-all w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center shadow-sm" title="Écouter la question">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/>
-                  </svg>
-                </button>
-                <!-- Question Timer -->
-                <div id="question-timer" class="timer-container">
-                  <svg width="40" height="40" viewBox="0 0 40 40">
-                    <circle class="timer-ring-bg" cx="20" cy="20" r="16"/>
-                    <circle id="timer-ring" class="timer-ring-progress" cx="20" cy="20" r="16" stroke="#22c55e" stroke-dasharray="100.53" stroke-dashoffset="0"/>
-                  </svg>
-                  <span id="timer-text" class="timer-number text-sm text-brand-green-dark">15</span>
-                </div>
+        <!-- Category A: Nombres et Calculs -->
+        <div
+          class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between"
+        >
+          <div>
+            <div
+              class="w-16 h-16 bg-brand-purple-light rounded-2xl flex items-center justify-center mb-4"
+            >
+              <svg
+                class="w-10 h-10 text-brand-purple"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-brand-purple mb-2">
+              Nombres et Calculs
+            </h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+              Apprendre à compter jusqu'à 100, faire des additions, des
+              soustractions et des doubles !
+            </p>
+          </div>
+          <button
+            onclick="selectCategory('A')"
+            class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-purple/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <span>S'entraîner</span>
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Category B: Espace et Géométrie -->
+        <div
+          class="bg-white rounded-3xl p-6 border-4 border-brand-green shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between"
+        >
+          <div>
+            <div
+              class="w-16 h-16 bg-brand-green-light rounded-2xl flex items-center justify-center mb-4"
+            >
+              <svg
+                class="w-10 h-10 text-brand-green"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-brand-green mb-2">
+              Espace et Géométrie
+            </h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+              Découvrir les formes géométriques et apprendre à se repérer dans
+              l'espace.
+            </p>
+          </div>
+          <button
+            onclick="selectCategory('B')"
+            class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <span>S'entraîner</span>
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Category C: Grandeurs et Mesures -->
+        <div
+          class="bg-white rounded-3xl p-6 border-4 border-brand-orange shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between"
+        >
+          <div>
+            <div
+              class="w-16 h-16 bg-brand-orange-light rounded-2xl flex items-center justify-center mb-4"
+            >
+              <svg
+                class="w-10 h-10 text-brand-orange"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-brand-orange mb-2">
+              Grandeurs et Mesures
+            </h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+              Jouer avec des pièces et billets en euros et apprendre à lire
+              l'heure.
+            </p>
+          </div>
+          <button
+            onclick="selectCategory('C')"
+            class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-orange/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <span>S'entraîner</span>
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== SCREEN: SUBMENU ==================== -->
+      <div
+        id="screen-submenu"
+        class="hidden animate-pop-in w-full max-w-3xl mx-auto"
+      >
+        <div class="flex items-center gap-4 mb-6">
+          <button
+            onclick="goHome()"
+            class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-2 px-4 rounded-2xl shadow border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            <span>Retour</span>
+          </button>
+          <h2
+            id="submenu-title"
+            class="text-3xl font-bold font-title text-slate-800"
+          >
+            Catégorie
+          </h2>
+        </div>
+
+        <!-- Grid of Subgames -->
+        <div id="submenu-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Subgame buttons will be injected dynamically -->
+        </div>
+      </div>
+
+      <!-- ==================== SCREEN: MULTIPLAYER SETUP ==================== -->
+      <div
+        id="screen-multiplayer-setup"
+        class="hidden animate-pop-in w-full max-w-lg mx-auto bg-white rounded-3xl border-4 border-brand-purple/40 shadow-2xl p-6 md:p-8 flex flex-col items-center"
+      >
+        <h2 class="text-2xl font-bold font-title text-brand-purple mb-4">
+          👥 Configuration de la Partie
+        </h2>
+        <p class="text-slate-500 text-sm mb-6 text-center">
+          Entrez vos prénoms pour commencer le défi tour par tour !
+        </p>
+
+        <div class="w-full flex flex-col gap-4 mb-6">
+          <!-- Player 1 -->
+          <div class="flex flex-col gap-1.5">
+            <label
+              class="text-xs font-bold text-slate-500 uppercase tracking-wide"
+              >Joueur 1 (🐣 Poussin)</label
+            >
+            <input
+              type="text"
+              id="multi-p1-name"
+              value="Joueur 1"
+              placeholder="Prénom Joueur 1"
+              class="w-full border-4 border-slate-200 focus:border-brand-purple rounded-2xl py-3 px-4 font-bold font-title text-lg outline-none transition-all"
+            />
+          </div>
+
+          <!-- Player 2 -->
+          <div class="flex flex-col gap-1.5">
+            <label
+              class="text-xs font-bold text-slate-500 uppercase tracking-wide"
+              >Joueur 2 (🦁 Lion)</label
+            >
+            <input
+              type="text"
+              id="multi-p2-name"
+              value="Joueur 2"
+              placeholder="Prénom Joueur 2"
+              class="w-full border-4 border-slate-200 focus:border-brand-purple rounded-2xl py-3 px-4 font-bold font-title text-lg outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-3 w-full">
+          <button
+            onclick="backToSubmenu()"
+            class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-title font-bold py-4 rounded-2xl transition-all shadow"
+          >
+            Retour
+          </button>
+          <button
+            onclick="startMultiplayerMatch()"
+            class="w-1/2 bg-brand-purple hover:bg-brand-purple-dark text-white font-title font-bold py-4 rounded-2xl transition-all shadow-lg shadow-brand-purple/20"
+          >
+            C'est parti ! 🚀
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== SCREEN: GAME ==================== -->
+      <div
+        id="screen-game"
+        class="hidden animate-pop-in w-full max-w-4xl mx-auto"
+      >
+        <!-- Quest Progress Banner -->
+        <div
+          id="quest-progress-banner"
+          class="hidden w-full bg-gradient-to-r from-brand-pink/10 to-brand-purple/10 rounded-2xl p-3 border-2 border-brand-pink/20 flex items-center justify-between gap-4 mb-4 shadow-sm"
+        >
+          <div class="flex items-center gap-3">
+            <span id="quest-banner-emoji" class="text-2xl animate-bounce-slow"
+              >🪺</span
+            >
+            <div>
+              <h4
+                id="quest-banner-title"
+                class="font-bold text-sm font-title text-brand-pink"
+              >
+                Quête de Pytha
+              </h4>
+              <p
+                id="quest-banner-subtitle"
+                class="text-[10px] text-slate-500 font-medium"
+              >
+                Récolte 5 brindilles pour finir
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-2 text-slate-700 font-bold font-title text-xs"
+          >
+            <span>Matériaux :</span>
+            <span id="quest-material-tracker" class="text-brand-pink"
+              >0 / 5 🪵</span
+            >
+          </div>
+        </div>
+
+        <!-- Multiplayer Turn Info Banner -->
+        <div
+          id="multiplayer-turn-banner"
+          class="hidden w-full bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 rounded-2xl p-3 border-2 border-brand-purple/20 flex items-center justify-between gap-4 mb-4 shadow-sm"
+        >
+          <div class="flex items-center gap-3">
+            <span id="multi-turn-avatar" class="text-2xl animate-bounce-slow"
+              >🐣</span
+            >
+            <div>
+              <h4
+                id="multi-turn-title"
+                class="font-bold text-sm font-title text-brand-purple"
+              >
+                Tour de Joueur 1
+              </h4>
+              <p
+                id="multi-turn-subtitle"
+                class="text-[10px] text-slate-500 font-medium"
+              >
+                Exercice 1 / 10
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3 text-xs font-bold font-title">
+            <div
+              class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-slate-700"
+            >
+              <span id="p1-score-name">J1</span> :
+              <span id="p1-score-val" class="text-brand-purple">0 ⭐</span>
+            </div>
+            <div
+              class="bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-slate-700"
+            >
+              <span id="p2-score-name">J2</span> :
+              <span id="p2-score-val" class="text-brand-blue">0 ⭐</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Action Bar (Back / Progress) -->
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white/50 p-4 rounded-3xl border-2 border-slate-200/60"
+        >
+          <div class="flex items-center justify-between md:justify-start gap-4">
+            <button
+              onclick="backToSubmenu()"
+              class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-3 px-5 rounded-2xl shadow-md border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              <span class="text-sm md:text-base">Changer de jeu</span>
+            </button>
+
+            <h3
+              id="game-title"
+              class="text-xl font-bold font-title text-slate-700 truncate max-w-[200px] md:max-w-md"
+            >
+              Jeu
+            </h3>
+          </div>
+
+          <!-- Level Objective & Difficulty Indicator -->
+          <div class="flex items-center gap-3 flex-wrap">
+            <!-- Difficulty Badge -->
+            <div
+              id="difficulty-badge"
+              class="px-4 py-2 rounded-full font-title text-xs font-bold shadow-sm border-2 transition-all flex items-center gap-1"
+            >
+              <!-- Dynamic text and color -->
+            </div>
+
+            <!-- Star Tracker (5 stars per level session) -->
+            <div
+              class="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl shadow-inner border border-slate-200/80"
+            >
+              <span
+                class="text-xs text-slate-500 font-bold uppercase tracking-wider"
+                >Objectif :</span
+              >
+              <div class="flex gap-1" id="star-dots-container">
+                <!-- 5 Star icons dynamically filled/empty -->
               </div>
             </div>
-            <h4 id="game-question-text" class="text-lg md:text-xl font-bold text-slate-800 leading-snug relative z-10">
-              Combien y a-t-il d'étoiles ?
-            </h4>
+
+            <!-- Cancel Game Button -->
+            <button
+              onclick="backToSubmenu()"
+              class="ml-auto bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-500 font-title font-bold py-2 px-3 rounded-xl shadow border-2 border-slate-200 hover:border-rose-200 flex items-center gap-1.5 transform active:scale-95 transition-all text-xs"
+              title="Annuler la partie"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+              <span>Quitter</span>
+            </button>
           </div>
 
-          <!-- Multiple choice buttons -->
-          <div class="flex flex-col gap-3" id="game-options-container">
-            <!-- 3 or 4 choices generated here -->
+          <!-- Progress Bar -->
+          <div
+            class="w-full bg-slate-100 rounded-full h-3 mt-3 overflow-hidden hidden"
+            id="game-progress-container"
+          >
+            <div
+              id="game-progress-bar"
+              class="h-3 rounded-full bg-gradient-to-r from-brand-purple to-brand-pink transition-all duration-500"
+              style="width: 0%"
+            ></div>
+          </div>
+          <div
+            class="flex justify-between items-center mt-1 hidden"
+            id="game-progress-text"
+          >
+            <span
+              id="game-progress-label"
+              class="text-xs font-bold text-slate-400 font-title"
+              >Question 1/10</span
+            >
+            <span
+              id="game-progress-pct"
+              class="text-xs font-bold text-brand-purple font-title"
+              >0%</span
+            >
+          </div>
+        </div>
+
+        <!-- Main Game Card -->
+        <div
+          class="bg-white rounded-3xl border-4 border-brand-purple/40 shadow-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-stretch"
+        >
+          <!-- Interactive Illustration Area (SVG container) -->
+          <div
+            class="w-full md:w-3/5 min-h-[260px] md:min-h-[360px] bg-slate-50 border-4 border-dashed border-slate-200 rounded-2xl flex items-center justify-center overflow-hidden relative p-4"
+          >
+            <div
+              id="game-visual-area"
+              class="w-full h-full flex items-center justify-center"
+            >
+              <!-- SVG content dynamically loaded here -->
+            </div>
           </div>
 
-          <!-- Action bar underneath choices -->
-          <div class="flex items-center gap-3">
-            <button id="btn-next-exercise" onclick="handleNextExerciseClick()" class="hidden w-full bg-gradient-to-r from-brand-green to-brand-green-dark hover:from-brand-green-dark hover:to-brand-green text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow">
-              <span>Exercice suivant</span>
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+          <!-- Question & Answers Area -->
+          <div class="w-full md:w-2/5 flex flex-col justify-between gap-6">
+            <div
+              class="bg-brand-blue-light/60 border-2 border-brand-blue/30 rounded-2xl p-5 flex flex-col justify-center min-h-[100px] shadow-sm relative overflow-hidden"
+            >
+              <!-- Decorative character inside question box -->
+              <div
+                class="absolute right-2 -bottom-2 text-brand-blue/20 text-7xl select-none font-bold"
+              >
+                ?
+              </div>
+              <div class="flex items-center justify-between mb-1 relative z-10">
+                <p
+                  class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title"
+                >
+                  Question
+                </p>
+                <div class="flex items-center gap-2">
+                  <button
+                    onclick="speakQuestion()"
+                    id="btn-speak-question"
+                    class="text-brand-blue hover:text-brand-blue-dark hover:scale-105 active:scale-95 transition-all w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center shadow-sm"
+                    title="Écouter la question"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
+                      />
+                    </svg>
+                  </button>
+                  <!-- Question Timer -->
+                  <div id="question-timer" class="timer-container">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                      <circle class="timer-ring-bg" cx="20" cy="20" r="16" />
+                      <circle
+                        id="timer-ring"
+                        class="timer-ring-progress"
+                        cx="20"
+                        cy="20"
+                        r="16"
+                        stroke="#22c55e"
+                        stroke-dasharray="100.53"
+                        stroke-dashoffset="0"
+                      />
+                    </svg>
+                    <span
+                      id="timer-text"
+                      class="timer-number text-sm text-brand-green-dark"
+                      >15</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <h4
+                id="game-question-text"
+                class="text-lg md:text-xl font-bold text-slate-800 leading-snug relative z-10"
+              >
+                Combien y a-t-il d'étoiles ?
+              </h4>
+            </div>
+
+            <!-- Multiple choice buttons -->
+            <div class="flex flex-col gap-3" id="game-options-container">
+              <!-- 3 or 4 choices generated here -->
+            </div>
+
+            <!-- Action bar underneath choices -->
+            <div class="flex items-center gap-3">
+              <button
+                id="btn-next-exercise"
+                onclick="handleNextExerciseClick()"
+                class="hidden w-full bg-gradient-to-r from-brand-green to-brand-green-dark hover:from-brand-green-dark hover:to-brand-green text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow"
+              >
+                <span>Exercice suivant</span>
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SCREEN: VICTORY SESSION ==================== -->
+      <div
+        id="screen-victory"
+        class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-yellow shadow-2xl p-8 text-center flex flex-col items-center"
+      >
+        <!-- Big SVG Trophy -->
+        <div class="w-48 h-48 mb-6 animate-bounce-slow">
+          <svg
+            class="w-full h-full"
+            viewBox="0 0 200 200"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M60 40H140V110C140 132.091 122.091 150 100 150C77.9086 150 60 132.091 60 110V40Z"
+              fill="#FFD93D"
+              stroke="#E0BE2F"
+              stroke-width="6"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M60 60H30C20 60 20 90 30 90H60"
+              stroke="#FFD93D"
+              stroke-width="12"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M140 60H170C180 60 180 90 170 90H140"
+              stroke="#FFD93D"
+              stroke-width="12"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M100 150V180"
+              stroke="#E0BE2F"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+            <rect
+              x="60"
+              y="176"
+              width="80"
+              height="16"
+              rx="8"
+              fill="#FF8E53"
+              stroke="#E0753A"
+              stroke-width="4"
+            />
+            <!-- Star details on cup -->
+            <path
+              d="M100 70L106 82.5L120 84.5L110 94.5L112.5 108L100 101L87.5 108L90 94.5L80 84.5L94 82.5L100 70Z"
+              fill="white"
+            />
+          </svg>
+        </div>
+
+        <h2
+          class="text-3xl md:text-4xl font-bold font-title text-brand-orange mb-3"
+        >
+          Tu as gagné ! 🏆
+        </h2>
+        <p class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
+          Félicitations ! Tu as complété la série de 5 étoiles. Tu es un
+          champion des mathématiques ! 🌟
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <button
+            onclick="backToSubmenu()"
+            class="bg-brand-blue hover:bg-brand-blue-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-blue/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 10h16M4 14h16M4 18h16"
+              />
+            </svg>
+            <span>Choisir un autre jeu</span>
+          </button>
+          <button
+            onclick="restartCurrentGame()"
+            class="bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H17"
+              />
+            </svg>
+            <span>Rejouer</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== SCREEN: MULTIPLAYER VICTORY ==================== -->
+      <div
+        id="screen-multiplayer-victory"
+        class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-purple shadow-2xl p-8 text-center flex flex-col items-center"
+      >
+        <div
+          class="w-48 h-48 mb-6 animate-bounce-slow flex items-center justify-center text-8xl bg-brand-purple-light rounded-full border-4 border-brand-purple shadow-inner"
+        >
+          👑🏆
+        </div>
+
+        <h2
+          id="multi-victory-title"
+          class="text-3xl md:text-4xl font-bold font-title text-brand-purple mb-3"
+        >
+          Victoire ! 🎉
+        </h2>
+        <p
+          id="multi-victory-desc"
+          class="text-slate-600 text-lg mb-6 leading-relaxed font-medium"
+        >
+          Quel match incroyable ! Bravo aux deux joueurs !
+        </p>
+
+        <div
+          class="bg-slate-50 border-2 border-slate-200/80 rounded-2xl p-5 w-full mb-8 flex flex-col gap-3 font-title"
+        >
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">
+            Recap de la partie
+          </h4>
+          <div
+            class="flex justify-between items-center py-1 border-b border-slate-200"
+          >
+            <span id="recap-p1-name" class="font-bold text-slate-700"
+              >Joueur 1</span
+            >
+            <span
+              id="recap-p1-stars"
+              class="font-black text-xl text-brand-purple"
+              >0 ⭐</span
+            >
+          </div>
+          <div class="flex justify-between items-center py-1">
+            <span id="recap-p2-name" class="font-bold text-slate-700"
+              >Joueur 2</span
+            >
+            <span id="recap-p2-stars" class="font-black text-xl text-brand-blue"
+              >0 ⭐</span
+            >
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <button
+            onclick="backToSubmenu()"
+            class="bg-brand-blue hover:bg-brand-blue-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-blue/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 10h16M4 14h16M4 18h16"
+              />
+            </svg>
+            <span>Changer de jeu</span>
+          </button>
+          <button
+            onclick="restartMultiplayerMatch()"
+            class="bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H17"
+              />
+            </svg>
+            <span>Rejouer le match</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==================== SCREEN: QUESTS SELECTION ==================== -->
+      <div
+        id="screen-quests"
+        class="hidden animate-pop-in w-full max-w-4xl mx-auto flex flex-col gap-6"
+      >
+        <div class="flex items-center gap-4 mb-2">
+          <button
+            onclick="goHome()"
+            class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-2 px-4 rounded-2xl shadow border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            <span>Retour</span>
+          </button>
+          <h2 class="text-2xl sm:text-3xl font-bold font-title text-slate-800">
+            ✨ Les Quêtes de Pytha
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <!-- Quest 1 -->
+          <div
+            class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-16 h-16 bg-brand-purple-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow"
+              >
+                🪺
+              </div>
+              <h3 class="text-2xl font-bold text-brand-purple mb-2">
+                Le Nid de Pytha
+              </h3>
+              <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                Aide Pytha à ramasser 5 brindilles pour construire son nid en
+                résolvant des énigmes de nombres et de calculs !
+              </p>
+            </div>
+            <button
+              onclick="launchQuest(1)"
+              class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-purple/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+            >
+              Commencer 🚀
+            </button>
+          </div>
+
+          <!-- Quest 2 -->
+          <div
+            class="bg-white rounded-3xl p-6 border-4 border-brand-green shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-16 h-16 bg-brand-green-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow"
+              >
+                🔑
+              </div>
+              <h3 class="text-2xl font-bold text-brand-green mb-2">
+                Le Temple Perdu
+              </h3>
+              <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                Trouve 5 clés en résolvant des défis de formes géométriques et
+                d'orientation pour ouvrir la porte du temple !
+              </p>
+            </div>
+            <button
+              onclick="launchQuest(2)"
+              class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+            >
+              Commencer 🚀
+            </button>
+          </div>
+
+          <!-- Quest 3 -->
+          <div
+            class="bg-white rounded-3xl p-6 border-4 border-brand-orange shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between"
+          >
+            <div>
+              <div
+                class="w-16 h-16 bg-brand-orange-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow"
+              >
+                ⏳
+              </div>
+              <h3 class="text-2xl font-bold text-brand-orange mb-2">
+                Le Trésor du Temps
+              </h3>
+              <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                Récolte 5 engrenages magiques en lisant l'heure et en mesurant
+                des objets pour réparer la montre du temps !
+              </p>
+            </div>
+            <button
+              onclick="launchQuest(3)"
+              class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-orange/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+            >
+              Commencer 🚀
             </button>
           </div>
         </div>
-
       </div>
 
-    </div>
-
-    <!-- ==================== SCREEN: VICTORY SESSION ==================== -->
-    <div id="screen-victory" class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-yellow shadow-2xl p-8 text-center flex flex-col items-center">
-      <!-- Big SVG Trophy -->
-      <div class="w-48 h-48 mb-6 animate-bounce-slow">
-        <svg class="w-full h-full" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M60 40H140V110C140 132.091 122.091 150 100 150C77.9086 150 60 132.091 60 110V40Z" fill="#FFD93D" stroke="#E0BE2F" stroke-width="6" stroke-linejoin="round"/>
-          <path d="M60 60H30C20 60 20 90 30 90H60" stroke="#FFD93D" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M140 60H170C180 60 180 90 170 90H140" stroke="#FFD93D" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M100 150V180" stroke="#E0BE2F" stroke-width="10" stroke-linecap="round"/>
-          <rect x="60" y="176" width="80" height="16" rx="8" fill="#FF8E53" stroke="#E0753A" stroke-width="4"/>
-          <!-- Star details on cup -->
-          <path d="M100 70L106 82.5L120 84.5L110 94.5L112.5 108L100 101L87.5 108L90 94.5L80 84.5L94 82.5L100 70Z" fill="white"/>
-        </svg>
-      </div>
-
-      <h2 class="text-3xl md:text-4xl font-bold font-title text-brand-orange mb-3">Tu as gagné ! 🏆</h2>
-      <p class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
-        Félicitations ! Tu as complété la série de 5 étoiles. Tu es un champion des mathématiques ! 🌟
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
-        <button onclick="backToSubmenu()" class="bg-brand-blue hover:bg-brand-blue-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-blue/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-          <span>Choisir un autre jeu</span>
-        </button>
-        <button onclick="restartCurrentGame()" class="bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H17"/></svg>
-          <span>Rejouer</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: MULTIPLAYER VICTORY ==================== -->
-    <div id="screen-multiplayer-victory" class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-purple shadow-2xl p-8 text-center flex flex-col items-center">
-      <div class="w-48 h-48 mb-6 animate-bounce-slow flex items-center justify-center text-8xl bg-brand-purple-light rounded-full border-4 border-brand-purple shadow-inner">
-        👑🏆
-      </div>
-
-      <h2 id="multi-victory-title" class="text-3xl md:text-4xl font-bold font-title text-brand-purple mb-3">Victoire ! 🎉</h2>
-      <p id="multi-victory-desc" class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
-        Quel match incroyable ! Bravo aux deux joueurs !
-      </p>
-
-      <div class="bg-slate-50 border-2 border-slate-200/80 rounded-2xl p-5 w-full mb-8 flex flex-col gap-3 font-title">
-        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">Recap de la partie</h4>
-        <div class="flex justify-between items-center py-1 border-b border-slate-200">
-          <span id="recap-p1-name" class="font-bold text-slate-700">Joueur 1</span>
-          <span id="recap-p1-stars" class="font-black text-xl text-brand-purple">0 ⭐</span>
-        </div>
-        <div class="flex justify-between items-center py-1">
-          <span id="recap-p2-name" class="font-bold text-slate-700">Joueur 2</span>
-          <span id="recap-p2-stars" class="font-black text-xl text-brand-blue">0 ⭐</span>
-        </div>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
-        <button onclick="backToSubmenu()" class="bg-brand-blue hover:bg-brand-blue-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-blue/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-          <span>Changer de jeu</span>
-        </button>
-        <button onclick="restartMultiplayerMatch()" class="bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H17"/></svg>
-          <span>Rejouer le match</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: QUESTS SELECTION ==================== -->
-    <div id="screen-quests" class="hidden animate-pop-in w-full max-w-4xl mx-auto flex flex-col gap-6">
-      <div class="flex items-center gap-4 mb-2">
-        <button onclick="goHome()" class="bg-white hover:bg-slate-50 text-slate-700 font-title font-bold py-2 px-4 rounded-2xl shadow border-2 border-slate-200 flex items-center gap-2 transform active:scale-95 transition-all">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-          <span>Retour</span>
-        </button>
-        <h2 class="text-2xl sm:text-3xl font-bold font-title text-slate-800">✨ Les Quêtes de Pytha</h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-        <!-- Quest 1 -->
-        <div class="bg-white rounded-3xl p-6 border-4 border-brand-purple shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
-          <div>
-            <div class="w-16 h-16 bg-brand-purple-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow">🪺</div>
-            <h3 class="text-2xl font-bold text-brand-purple mb-2">Le Nid de Pytha</h3>
-            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Aide Pytha à ramasser 5 brindilles pour construire son nid en résolvant des énigmes de nombres et de calculs !</p>
-          </div>
-          <button onclick="launchQuest(1)" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-purple/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-            Commencer 🚀
-          </button>
+      <!-- ==================== SCREEN: QUEST VICTORY ==================== -->
+      <div
+        id="screen-quest-victory"
+        class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-yellow shadow-2xl p-8 text-center flex flex-col items-center"
+      >
+        <div
+          id="quest-victory-emoji"
+          class="w-44 h-44 mb-6 animate-bounce-slow flex items-center justify-center text-8xl bg-brand-yellow-light rounded-full border-4 border-brand-yellow shadow-inner"
+        >
+          🏆✨
         </div>
 
-        <!-- Quest 2 -->
-        <div class="bg-white rounded-3xl p-6 border-4 border-brand-green shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
-          <div>
-            <div class="w-16 h-16 bg-brand-green-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow">🔑</div>
-            <h3 class="text-2xl font-bold text-brand-green mb-2">Le Temple Perdu</h3>
-            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Trouve 5 clés en résolvant des défis de formes géométriques et d'orientation pour ouvrir la porte du temple !</p>
-          </div>
-          <button onclick="launchQuest(2)" class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-            Commencer 🚀
-          </button>
-        </div>
-
-        <!-- Quest 3 -->
-        <div class="bg-white rounded-3xl p-6 border-4 border-brand-orange shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2 flex flex-col justify-between">
-          <div>
-            <div class="w-16 h-16 bg-brand-orange-light rounded-2xl flex items-center justify-center text-3xl mb-4 shadow">⏳</div>
-            <h3 class="text-2xl font-bold text-brand-orange mb-2">Le Trésor du Temps</h3>
-            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Récolte 5 engrenages magiques en lisant l'heure et en mesurant des objets pour réparer la montre du temps !</p>
-          </div>
-          <button onclick="launchQuest(3)" class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-orange/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-            Commencer 🚀
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== SCREEN: QUEST VICTORY ==================== -->
-    <div id="screen-quest-victory" class="hidden animate-pop-in w-full max-w-xl mx-auto bg-white rounded-3xl border-8 border-brand-yellow shadow-2xl p-8 text-center flex flex-col items-center">
-      <div id="quest-victory-emoji" class="w-44 h-44 mb-6 animate-bounce-slow flex items-center justify-center text-8xl bg-brand-yellow-light rounded-full border-4 border-brand-yellow shadow-inner">
-        🏆✨
-      </div>
-
-      <h2 id="quest-victory-title" class="text-3xl md:text-4xl font-bold font-title text-brand-purple mb-3">Quête Réussie ! 🎉</h2>
-      <p id="quest-victory-desc" class="text-slate-600 text-lg mb-6 leading-relaxed font-medium">
-        Félicitations ! Tu as récolté tous les matériaux et complété la quête avec succès !
-      </p>
-
-      <div class="bg-brand-purple-light/50 border-2 border-brand-purple/20 rounded-2xl p-4 w-full mb-8 flex flex-col items-center shadow-sm">
-        <span class="text-xs text-brand-purple font-bold uppercase tracking-wider font-title mb-1">Nouveau Badge de Quête</span>
-        <span id="quest-victory-badge-name" class="text-xl font-black font-title text-brand-purple">Aventurier de Pytha</span>
-      </div>
-
-      <button onclick="goHome()" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
-        <span>Retour à l'accueil</span>
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-
-    </div>
-
-  </main>
-
-  <!-- ==================== MODAL: BADGES GALLERY ==================== -->
-  <div id="modal-badges" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
-      
-      <!-- Close button -->
-      <button onclick="closeBadgesModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
-        ✕
-      </button>
-
-      <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2">
-          <span>Mes Badges</span> 🏅
+        <h2
+          id="quest-victory-title"
+          class="text-3xl md:text-4xl font-bold font-title text-brand-purple mb-3"
+        >
+          Quête Réussie ! 🎉
         </h2>
-        <p class="text-slate-500 text-sm mt-1">Gagne des étoiles pour collectionner tous les badges jusqu'à 100 étoiles !</p>
-      </div>
-
-      <!-- Badges Grid -->
-      <div id="badges-grid-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center">
-        <!-- SVG badges will be injected here dynamically -->
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: SCOREBOARD HISTORY ==================== -->
-  <div id="modal-scoreboard" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
-      
-      <!-- Close button -->
-      <button onclick="closeScoreboardModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
-        ✕
-      </button>
-
-      <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2">
-          <span>Matchs Récents</span> 📊
-        </h2>
-        <p class="text-slate-500 text-sm mt-1">Historique des défis multijoueurs locaux.</p>
-      </div>
-
-      <!-- Match list -->
-      <div id="scoreboard-list-container" class="flex flex-col gap-3 max-h-[40vh] overflow-y-auto pr-1">
-        <!-- Match items injected here dynamically -->
-      </div>
-      
-      <button onclick="clearScoreboardHistory()" class="w-full mt-6 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 font-title font-bold py-3 rounded-2xl border-2 border-dashed border-slate-200 hover:border-rose-200 transition-all text-xs">
-        Effacer l'historique
-      </button>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: LEARNING PROFILE ==================== -->
-  <div id="modal-learning-profile" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-4 border-brand-orange shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
-      <button onclick="closeLearningProfile()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
-        ✕
-      </button>
-      <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold font-title text-brand-orange flex items-center justify-center gap-2">
-          <span>Mon Profil</span> 📊
-        </h2>
-        <p class="text-slate-500 text-sm mt-1">Ton parcours d'apprentissage adaptatif.</p>
-      </div>
-      <div id="learning-profile-content" class="flex flex-col gap-4"></div>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: ACCESSIBILITY CONFIG ==================== -->
-  <div id="modal-accessibility" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in">
-      
-      <!-- Close button -->
-      <button onclick="closeAccessibilityModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
-        ✕
-      </button>
-
-      <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2">
-          <span>Accessibilité</span> ⚙️
-        </h2>
-        <p class="text-slate-500 text-sm mt-1">Options de confort visuel et d'écoute pour les enfants.</p>
-      </div>
-
-      <!-- Settings List -->
-      <div class="flex flex-col gap-5 font-title">
-        <!-- Setting 1: Voice autoplay -->
-        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
-          <div>
-            <h4 class="font-bold text-slate-700 text-sm">Lecture Vocale Automatique</h4>
-            <p class="text-[10px] text-slate-400 font-medium">Lit les questions à haute voix au chargement.</p>
-          </div>
-          <button id="toggle-acc-voice" onclick="toggleAccVoice()" class="w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative">
-            <div class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"></div>
-          </button>
-        </div>
-
-        <!-- Setting 2: High contrast -->
-        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
-          <div>
-            <h4 class="font-bold text-slate-700 text-sm">Mode Contraste Élevé</h4>
-            <p class="text-[10px] text-slate-400 font-medium">Bascule vers un design sombre à fort contraste.</p>
-          </div>
-          <button id="toggle-acc-contrast" onclick="toggleAccContrast()" class="w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative">
-            <div class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"></div>
-          </button>
-        </div>
-
-        <!-- Setting 3: Question count -->
-        <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
-          <div class="flex items-center justify-between mb-2">
-            <div>
-              <h4 class="font-bold text-slate-700 text-sm">Nombre de questions</h4>
-              <p class="text-[10px] text-slate-400 font-medium">Combien de questions par série solo.</p>
-            </div>
-          </div>
-          <div class="flex gap-2" id="question-count-options">
-            <button onclick="setQuestionCount(5)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="5">5</button>
-            <button onclick="setQuestionCount(10)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="10">10</button>
-            <button onclick="setQuestionCount(15)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="15">15</button>
-            <button onclick="setQuestionCount(20)" class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all" data-count="20">20</button>
-          </div>
-        </div>
-
-        <!-- Streak display -->
-        <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-2xl border-2 border-amber-200/60">
-          <div class="flex items-center gap-3">
-            <span class="text-3xl">🔥</span>
-            <div>
-              <h4 class="font-bold text-amber-700 text-sm">Série de jeu</h4>
-              <p id="streak-display-text" class="text-[10px] text-amber-500 font-medium">Joue aujourd'hui pour commencer une série !</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== POPUP: BADGE UNLOCK CELEBRATION ==================== -->
-  <div id="popup-badge-unlock" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-yellow shadow-2xl text-center flex flex-col items-center animate-pop-in">
-      
-      <!-- Big SVG for newly unlocked badge -->
-      <div id="unlocked-badge-svg-container" class="w-44 h-44 mb-6 animate-bounce-slow">
-        <!-- Injected dynamically -->
-      </div>
-
-      <div class="text-xs text-brand-orange font-bold uppercase tracking-widest bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/20 mb-3 font-title">
-        Nouveau Badge Débloqué !
-      </div>
-      
-      <h2 id="unlocked-badge-title" class="text-3xl font-bold font-title text-slate-800 mb-2">
-        Nom du Badge
-      </h2>
-      
-      <p id="unlocked-badge-desc" class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
-        Félicitations ! Tu as franchi le palier de X étoiles !
-      </p>
-
-      <button onclick="closeUnlockPopup()" class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow">
-        <span>Génial ! Continuer</span>
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: COMPANION PICKER ==================== -->
-  <div id="modal-companion" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-4 border-brand-pink shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
-      <button onclick="closeCompanionModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
-        ✕
-      </button>
-      <div class="text-center mb-4">
-        <h2 class="text-3xl font-bold font-title text-brand-pink flex items-center justify-center gap-2">
-          <span>Mon Compagnon</span> 🐾
-        </h2>
-        <p class="text-slate-500 text-sm mt-1">Choisis ton compagnon d'aventure ! Il évolue avec tes étoiles.</p>
-      </div>
-      <div id="companion-progress" class="mb-4"></div>
-      <div id="companion-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL: PARENT DASHBOARD ==================== -->
-  <div id="modal-dashboard" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-brand-blue shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto">
-      <button onclick="closeDashboard()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90">
-        ✕
-      </button>
-      <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold font-title text-brand-blue flex items-center justify-center gap-2">
-          <span>Tableau de bord</span> 📋
-        </h2>
-        <p class="text-slate-500 text-sm mt-1">Rapport d'apprentissage et tendances de progression.</p>
-      </div>
-
-      <!-- Overview cards -->
-      <div id="dashboard-overview" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"></div>
-
-      <!-- Category breakdown -->
-      <div class="mb-6">
-        <h3 class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-brand-purple"></span> Progression par catégorie
-        </h3>
-        <div id="dashboard-categories" class="flex flex-col gap-3"></div>
-      </div>
-
-      <!-- Per-game detail -->
-      <div class="mb-6">
-        <h3 class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-brand-green"></span> Détail par jeu
-        </div>
-        <div id="dashboard-games" class="bg-slate-50 rounded-2xl border-2 border-slate-100 overflow-hidden"></div>
-      </div>
-
-      <!-- Error patterns -->
-      <div id="dashboard-errors-section" class="mb-6 hidden">
-        <h3 class="font-title font-bold text-rose-600 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-rose-400"></span> Points à améliorer
-        </h3>
-        <div id="dashboard-errors" class="flex flex-col gap-2"></div>
-      </div>
-
-      <!-- Session history -->
-      <div>
-        <h3 class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-brand-orange"></span> Historique des sessions
-        </h3>
-        <div id="dashboard-sessions" class="flex flex-col gap-2 max-h-60 overflow-y-auto"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== FOOTER: MOTIVATIONAL MESSAGE BOARD ==================== -->
-  <footer class="relative z-10 w-full px-6 py-4 mt-auto bg-white/40 backdrop-blur-md border-t-2 border-slate-200/50 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
-    <!-- Bubbly avatar helper -->
-    <div class="flex items-center gap-3">
-      <div id="footer-helper-avatar" class="w-12 h-12 rounded-full bg-brand-yellow flex items-center justify-center text-2xl shadow-md border-2 border-white animate-bounce-slow">
-        🤖
-      </div>
-      <div class="max-w-md">
-        <!-- Message box -->
-        <p id="footer-motivational-text" class="text-sm font-bold text-slate-600 italic">
-          "Bienvenue dans l'aventure des mathématiques ! Clique sur un jeu pour commencer !"
+        <p
+          id="quest-victory-desc"
+          class="text-slate-600 text-lg mb-6 leading-relaxed font-medium"
+        >
+          Félicitations ! Tu as récolté tous les matériaux et complété la quête
+          avec succès !
         </p>
-      </div>
-    </div>
-    <button onclick="openDashboard()" class="text-xs font-title font-bold text-slate-400 hover:text-brand-blue bg-white/60 hover:bg-white px-3 py-1.5 rounded-full border border-slate-200 hover:border-brand-blue/30 transition-all whitespace-nowrap">
-      📋 Tableau de bord
-    </button>
-  </footer>
 
-  <!-- Sound Mute Toggle (Floating bubble in bottom right) -->
-  <button onclick="toggleMute()" id="btn-sound-toggle" class="fixed bottom-6 right-6 z-50 bg-white hover:bg-slate-50 text-slate-600 w-14 h-14 rounded-full shadow-lg border-2 border-slate-200/80 flex items-center justify-center transform active:scale-95 transition-all">
-    <svg id="svg-sound-on" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-    </svg>
-    <svg id="svg-sound-off" class="w-7 h-7 hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm12.95-6.364l-4.243 4.243m0-4.243l4.243 4.243"/>
-    </svg>
-  </button>
-
-  <!-- Encouraging feedback bottom toast -->
-  <div id="feedback-toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
-    <div id="feedback-toast-card" class="px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4">
-      <span id="feedback-toast-emoji" class="text-3xl shrink-0">🌟</span>
-      <span id="feedback-toast-text" class="font-title font-bold text-lg break-words leading-snug">Super !</span>
-    </div>
-  </div>
-
-  <!-- Module entry point -->
-  <script type="module" src="/js/main.js"></script>
-
-  <!-- ==================== SCREEN: PARENTAL CONTROL LOCKOUT ==================== -->
-  <div id="modal-parental-lock" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-blue shadow-2xl text-center flex flex-col items-center animate-pop-in">
-      <div class="w-32 h-32 mb-6 flex items-center justify-center text-6xl bg-brand-blue-light rounded-full border-4 border-brand-blue animate-bounce-slow">
-        🦉💤
-      </div>
-      <h2 class="text-3xl font-bold font-title text-slate-800 mb-3">L'heure de la pause !</h2>
-      <p class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
-        Tu as très bien travaillé aujourd'hui ! Pour protéger tes yeux, c'est l'heure de faire une pause de 30 minutes. Va jouer dehors ou repose-toi ! 🌳
-      </p>
-      
-      <!-- Countdown timer -->
-      <div class="bg-brand-blue-light/60 border-2 border-brand-blue/30 rounded-2xl p-4 w-full mb-6 flex flex-col items-center shadow-sm">
-        <span class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title mb-1">Temps de pause restant</span>
-        <span id="lock-countdown-text" class="text-2xl font-black font-title text-brand-blue">30:00</span>
-      </div>
-
-      <!-- Parent override button -->
-      <button onclick="showParentGate()" class="text-sm font-bold text-slate-400 hover:text-brand-blue underline cursor-pointer active:scale-95 transition-all">
-        Espace Parents (Déverrouiller)
-      </button>
-
-      <!-- Parent math gate container (initially hidden) -->
-      <div id="parent-gate-container" class="hidden mt-6 pt-6 border-t-2 border-slate-100 w-full flex flex-col items-center gap-3">
-        <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Question pour les parents :</p>
-        <h4 id="parent-gate-question" class="text-lg font-black font-title text-slate-800">14 + 17 = ?</h4>
-        <input type="number" id="parent-gate-input" placeholder="Réponse..." class="w-full text-center border-4 border-slate-200 rounded-xl py-2 font-bold font-title text-lg focus:border-brand-blue outline-none transition-all"/>
-        <div class="flex gap-3 w-full mt-1">
-          <button onclick="hideParentGate()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-title font-bold py-3 rounded-xl transition-all">Retour</button>
-          <button onclick="verifyParentGate()" class="w-1/2 bg-brand-blue hover:bg-brand-blue-dark text-white font-title font-bold py-3 rounded-xl transition-all shadow-md">Valider</button>
+        <div
+          class="bg-brand-purple-light/50 border-2 border-brand-purple/20 rounded-2xl p-4 w-full mb-8 flex flex-col items-center shadow-sm"
+        >
+          <span
+            class="text-xs text-brand-purple font-bold uppercase tracking-wider font-title mb-1"
+            >Nouveau Badge de Quête</span
+          >
+          <span
+            id="quest-victory-badge-name"
+            class="text-xl font-black font-title text-brand-purple"
+            >Aventurier de Pytha</span
+          >
         </div>
-        <p id="parent-gate-error" class="hidden text-xs font-bold text-brand-pink mt-1">Oups ! Ce n'est pas correct.</p>
+
+        <button
+          onclick="goHome()"
+          class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2"
+        >
+          <span>Retour à l'accueil</span>
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <!-- ==================== MODAL: BADGES GALLERY ==================== -->
+    <div
+      id="modal-badges"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto"
+      >
+        <!-- Close button -->
+        <button
+          onclick="closeBadgesModal()"
+          class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90"
+        >
+          ✕
+        </button>
+
+        <div class="text-center mb-6">
+          <h2
+            class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2"
+          >
+            <span>Mes Badges</span> 🏅
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">
+            Gagne des étoiles pour collectionner tous les badges jusqu'à 100
+            étoiles !
+          </p>
+        </div>
+
+        <!-- Badges Grid -->
+        <div
+          id="badges-grid-container"
+          class="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-items-center"
+        >
+          <!-- SVG badges will be injected here dynamically -->
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ==================== MODAL: QUEST STORY DIALOG ==================== -->
-  <div id="modal-quest-story" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-purple shadow-2xl text-center flex flex-col items-center animate-pop-in">
-      <div id="quest-story-avatar" class="w-32 h-32 mb-6 flex items-center justify-center text-6xl bg-brand-purple-light rounded-full border-4 border-brand-purple animate-bounce-slow">
-        🦉
+    <!-- ==================== MODAL: SCOREBOARD HISTORY ==================== -->
+    <div
+      id="modal-scoreboard"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto"
+      >
+        <!-- Close button -->
+        <button
+          onclick="closeScoreboardModal()"
+          class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90"
+        >
+          ✕
+        </button>
+
+        <div class="text-center mb-6">
+          <h2
+            class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2"
+          >
+            <span>Matchs Récents</span> 📊
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">
+            Historique des défis multijoueurs locaux.
+          </p>
+        </div>
+
+        <!-- Match list -->
+        <div
+          id="scoreboard-list-container"
+          class="flex flex-col gap-3 max-h-[40vh] overflow-y-auto pr-1"
+        >
+          <!-- Match items injected here dynamically -->
+        </div>
+
+        <button
+          onclick="clearScoreboardHistory()"
+          class="w-full mt-6 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 font-title font-bold py-3 rounded-2xl border-2 border-dashed border-slate-200 hover:border-rose-200 transition-all text-xs"
+        >
+          Effacer l'historique
+        </button>
       </div>
-      <h2 id="quest-story-title" class="text-2xl font-bold font-title text-slate-800 mb-3">Nouvelle Quête !</h2>
-      <p id="quest-story-text" class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
-        Histoire racontée ici...
-      </p>
-      <button onclick="closeQuestStoryModal()" class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all font-bold">
-        Compris ! 👍
+    </div>
+
+    <!-- ==================== MODAL: LEARNING PROFILE ==================== -->
+    <div
+      id="modal-learning-profile"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-4 border-brand-orange shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto"
+      >
+        <button
+          onclick="closeLearningProfile()"
+          class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90"
+        >
+          ✕
+        </button>
+        <div class="text-center mb-6">
+          <h2
+            class="text-3xl font-bold font-title text-brand-orange flex items-center justify-center gap-2"
+          >
+            <span>Mon Profil</span> 📊
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">
+            Ton parcours d'apprentissage adaptatif.
+          </p>
+        </div>
+        <div id="learning-profile-content" class="flex flex-col gap-4"></div>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL: ACCESSIBILITY CONFIG ==================== -->
+    <div
+      id="modal-accessibility"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 border-4 border-brand-purple shadow-2xl relative animate-pop-in"
+      >
+        <!-- Close button -->
+        <button
+          onclick="closeAccessibilityModal()"
+          class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90"
+        >
+          ✕
+        </button>
+
+        <div class="text-center mb-6">
+          <h2
+            class="text-3xl font-bold font-title text-brand-purple flex items-center justify-center gap-2"
+          >
+            <span>Accessibilité</span> ⚙️
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">
+            Options de confort visuel et d'écoute pour les enfants.
+          </p>
+        </div>
+
+        <!-- Settings List -->
+        <div class="flex flex-col gap-5 font-title">
+          <!-- Setting 1: Voice autoplay -->
+          <div
+            class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60"
+          >
+            <div>
+              <h4 class="font-bold text-slate-700 text-sm">
+                Lecture Vocale Automatique
+              </h4>
+              <p class="text-[10px] text-slate-400 font-medium">
+                Lit les questions à haute voix au chargement.
+              </p>
+            </div>
+            <button
+              id="toggle-acc-voice"
+              onclick="toggleAccVoice()"
+              class="w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative"
+            >
+              <div
+                class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"
+              ></div>
+            </button>
+          </div>
+
+          <!-- Setting 2: High contrast -->
+          <div
+            class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60"
+          >
+            <div>
+              <h4 class="font-bold text-slate-700 text-sm">
+                Mode Contraste Élevé
+              </h4>
+              <p class="text-[10px] text-slate-400 font-medium">
+                Bascule vers un design sombre à fort contraste.
+              </p>
+            </div>
+            <button
+              id="toggle-acc-contrast"
+              onclick="toggleAccContrast()"
+              class="w-12 h-6 rounded-full bg-slate-200 p-0.5 transition-all relative"
+            >
+              <div
+                class="w-5 h-5 rounded-full bg-white shadow-md transform transition-all translate-x-0"
+              ></div>
+            </button>
+          </div>
+
+          <!-- Setting 3: Question count -->
+          <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200/60">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h4 class="font-bold text-slate-700 text-sm">
+                  Nombre de questions
+                </h4>
+                <p class="text-[10px] text-slate-400 font-medium">
+                  Combien de questions par série solo.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-2" id="question-count-options">
+              <button
+                onclick="setQuestionCount(5)"
+                class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all"
+                data-count="5"
+              >
+                5
+              </button>
+              <button
+                onclick="setQuestionCount(10)"
+                class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all"
+                data-count="10"
+              >
+                10
+              </button>
+              <button
+                onclick="setQuestionCount(15)"
+                class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all"
+                data-count="15"
+              >
+                15
+              </button>
+              <button
+                onclick="setQuestionCount(20)"
+                class="flex-1 py-2 px-3 rounded-xl text-sm font-bold border-2 transition-all"
+                data-count="20"
+              >
+                20
+              </button>
+            </div>
+          </div>
+
+          <!-- Streak display -->
+          <div
+            class="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-2xl border-2 border-amber-200/60"
+          >
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🔥</span>
+              <div>
+                <h4 class="font-bold text-amber-700 text-sm">Série de jeu</h4>
+                <p
+                  id="streak-display-text"
+                  class="text-[10px] text-amber-500 font-medium"
+                >
+                  Joue aujourd'hui pour commencer une série !
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== POPUP: BADGE UNLOCK CELEBRATION ==================== -->
+    <div
+      id="popup-badge-unlock"
+      class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-yellow shadow-2xl text-center flex flex-col items-center animate-pop-in"
+      >
+        <!-- Big SVG for newly unlocked badge -->
+        <div
+          id="unlocked-badge-svg-container"
+          class="w-44 h-44 mb-6 animate-bounce-slow"
+        >
+          <!-- Injected dynamically -->
+        </div>
+
+        <div
+          class="text-xs text-brand-orange font-bold uppercase tracking-widest bg-brand-orange/10 px-3 py-1 rounded-full border border-brand-orange/20 mb-3 font-title"
+        >
+          Nouveau Badge Débloqué !
+        </div>
+
+        <h2
+          id="unlocked-badge-title"
+          class="text-3xl font-bold font-title text-slate-800 mb-2"
+        >
+          Nom du Badge
+        </h2>
+
+        <p
+          id="unlocked-badge-desc"
+          class="text-slate-600 text-sm mb-6 leading-relaxed font-medium"
+        >
+          Félicitations ! Tu as franchi le palier de X étoiles !
+        </p>
+
+        <button
+          onclick="closeUnlockPopup()"
+          class="w-full bg-brand-green hover:bg-brand-green-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg shadow-brand-green/30 transform active:scale-95 transition-all font-bold flex items-center justify-center gap-2 animate-bounce-slow"
+        >
+          <span>Génial ! Continuer</span>
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL: COMPANION PICKER ==================== -->
+    <div
+      id="modal-companion"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-4 border-brand-pink shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto"
+      >
+        <button
+          onclick="closeCompanionModal()"
+          class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90"
+        >
+          ✕
+        </button>
+        <div class="text-center mb-4">
+          <h2
+            class="text-3xl font-bold font-title text-brand-pink flex items-center justify-center gap-2"
+          >
+            <span>Mon Compagnon</span> 🐾
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">
+            Choisis ton compagnon d'aventure ! Il évolue avec tes étoiles.
+          </p>
+        </div>
+        <div id="companion-progress" class="mb-4"></div>
+        <div
+          id="companion-grid"
+          class="grid grid-cols-2 sm:grid-cols-3 gap-3"
+        ></div>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL: PARENT DASHBOARD ==================== -->
+    <div
+      id="modal-dashboard"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-brand-blue shadow-2xl relative animate-pop-in max-h-[90vh] overflow-y-auto"
+      >
+        <button
+          onclick="closeDashboard()"
+          class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 w-10 h-10 rounded-full flex items-center justify-center font-bold font-title text-xl transition-all active:scale-90"
+        >
+          ✕
+        </button>
+        <div class="text-center mb-6">
+          <h2
+            class="text-3xl font-bold font-title text-brand-blue flex items-center justify-center gap-2"
+          >
+            <span>Tableau de bord</span> 📋
+          </h2>
+          <p class="text-slate-500 text-sm mt-1">
+            Rapport d'apprentissage et tendances de progression.
+          </p>
+        </div>
+
+        <!-- Overview cards -->
+        <div
+          id="dashboard-overview"
+          class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"
+        ></div>
+
+        <!-- Category breakdown -->
+        <div class="mb-6">
+          <h3
+            class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2"
+          >
+            <span class="w-2 h-2 rounded-full bg-brand-purple"></span>
+            Progression par catégorie
+          </h3>
+          <div id="dashboard-categories" class="flex flex-col gap-3"></div>
+        </div>
+
+        <!-- Per-game detail -->
+        <div class="mb-6">
+          <h3
+            class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2"
+          >
+            <span class="w-2 h-2 rounded-full bg-brand-green"></span> Détail par
+            jeu
+          </h3>
+          <div
+            id="dashboard-games"
+            class="bg-slate-50 rounded-2xl border-2 border-slate-100 overflow-hidden"
+          ></div>
+        </div>
+
+        <!-- Error patterns -->
+        <div id="dashboard-errors-section" class="mb-6 hidden">
+          <h3
+            class="font-title font-bold text-rose-600 text-sm uppercase tracking-wide mb-3 flex items-center gap-2"
+          >
+            <span class="w-2 h-2 rounded-full bg-rose-400"></span> Points à
+            améliorer
+          </h3>
+          <div id="dashboard-errors" class="flex flex-col gap-2"></div>
+        </div>
+
+        <!-- Session history -->
+        <div>
+          <h3
+            class="font-title font-bold text-slate-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2"
+          >
+            <span class="w-2 h-2 rounded-full bg-brand-orange"></span>
+            Historique des sessions
+          </h3>
+          <div
+            id="dashboard-sessions"
+            class="flex flex-col gap-2 max-h-60 overflow-y-auto"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FOOTER: MOTIVATIONAL MESSAGE BOARD ==================== -->
+    <footer
+      class="relative z-10 w-full px-6 py-4 mt-auto bg-white/40 backdrop-blur-md border-t-2 border-slate-200/50 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left"
+    >
+      <!-- Bubbly avatar helper -->
+      <div class="flex items-center gap-3">
+        <div
+          id="footer-helper-avatar"
+          class="w-12 h-12 rounded-full bg-brand-yellow flex items-center justify-center text-2xl shadow-md border-2 border-white animate-bounce-slow"
+        >
+          🤖
+        </div>
+        <div class="max-w-md">
+          <!-- Message box -->
+          <p
+            id="footer-motivational-text"
+            class="text-sm font-bold text-slate-600 italic"
+          >
+            "Bienvenue dans l'aventure des mathématiques ! Clique sur un jeu
+            pour commencer !"
+          </p>
+        </div>
+      </div>
+      <button
+        onclick="openDashboard()"
+        class="text-xs font-title font-bold text-slate-400 hover:text-brand-blue bg-white/60 hover:bg-white px-3 py-1.5 rounded-full border border-slate-200 hover:border-brand-blue/30 transition-all whitespace-nowrap"
+      >
+        📋 Tableau de bord
       </button>
+    </footer>
+
+    <!-- Sound Mute Toggle (Floating bubble in bottom right) -->
+    <button
+      onclick="toggleMute()"
+      id="btn-sound-toggle"
+      class="fixed bottom-6 right-6 z-50 bg-white hover:bg-slate-50 text-slate-600 w-14 h-14 rounded-full shadow-lg border-2 border-slate-200/80 flex items-center justify-center transform active:scale-95 transition-all"
+    >
+      <svg
+        id="svg-sound-on"
+        class="w-7 h-7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+        />
+      </svg>
+      <svg
+        id="svg-sound-off"
+        class="w-7 h-7 hidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm12.95-6.364l-4.243 4.243m0-4.243l4.243 4.243"
+        />
+      </svg>
+    </button>
+
+    <!-- Encouraging feedback bottom toast -->
+    <div
+      id="feedback-toast"
+      class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none"
+    >
+      <div
+        id="feedback-toast-card"
+        class="px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 border-4"
+      >
+        <span id="feedback-toast-emoji" class="text-3xl shrink-0">🌟</span>
+        <span
+          id="feedback-toast-text"
+          class="font-title font-bold text-lg break-words leading-snug"
+          >Super !</span
+        >
+      </div>
     </div>
-  </div>
 
-  <!-- Shake effect animation CSS helper -->
-  <style>
-    .shake {
-      animation: shake-anim 0.4s ease-in-out;
-    }
-    @keyframes shake-anim {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-6px); }
-      40%, 80% { transform: translateX(6px); }
-    }
-  </style>
-</body>
+    <!-- Module entry point -->
+    <script type="module" src="/js/main.js"></script>
+
+    <!-- ==================== SCREEN: PARENTAL CONTROL LOCKOUT ==================== -->
+    <div
+      id="modal-parental-lock"
+      class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-blue shadow-2xl text-center flex flex-col items-center animate-pop-in"
+      >
+        <div
+          class="w-32 h-32 mb-6 flex items-center justify-center text-6xl bg-brand-blue-light rounded-full border-4 border-brand-blue animate-bounce-slow"
+        >
+          🦉💤
+        </div>
+        <h2 class="text-3xl font-bold font-title text-slate-800 mb-3">
+          L'heure de la pause !
+        </h2>
+        <p class="text-slate-600 text-sm mb-6 leading-relaxed font-medium">
+          Tu as très bien travaillé aujourd'hui ! Pour protéger tes yeux, c'est
+          l'heure de faire une pause de 30 minutes. Va jouer dehors ou
+          repose-toi ! 🌳
+        </p>
+
+        <!-- Countdown timer -->
+        <div
+          class="bg-brand-blue-light/60 border-2 border-brand-blue/30 rounded-2xl p-4 w-full mb-6 flex flex-col items-center shadow-sm"
+        >
+          <span
+            class="text-xs text-brand-blue font-bold uppercase tracking-wider font-title mb-1"
+            >Temps de pause restant</span
+          >
+          <span
+            id="lock-countdown-text"
+            class="text-2xl font-black font-title text-brand-blue"
+            >30:00</span
+          >
+        </div>
+
+        <!-- Parent override button -->
+        <button
+          onclick="showParentGate()"
+          class="text-sm font-bold text-slate-400 hover:text-brand-blue underline cursor-pointer active:scale-95 transition-all"
+        >
+          Espace Parents (Déverrouiller)
+        </button>
+
+        <!-- Parent math gate container (initially hidden) -->
+        <div
+          id="parent-gate-container"
+          class="hidden mt-6 pt-6 border-t-2 border-slate-100 w-full flex flex-col items-center gap-3"
+        >
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">
+            Question pour les parents :
+          </p>
+          <h4
+            id="parent-gate-question"
+            class="text-lg font-black font-title text-slate-800"
+          >
+            14 + 17 = ?
+          </h4>
+          <input
+            type="number"
+            id="parent-gate-input"
+            placeholder="Réponse..."
+            class="w-full text-center border-4 border-slate-200 rounded-xl py-2 font-bold font-title text-lg focus:border-brand-blue outline-none transition-all"
+          />
+          <div class="flex gap-3 w-full mt-1">
+            <button
+              onclick="hideParentGate()"
+              class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-title font-bold py-3 rounded-xl transition-all"
+            >
+              Retour
+            </button>
+            <button
+              onclick="verifyParentGate()"
+              class="w-1/2 bg-brand-blue hover:bg-brand-blue-dark text-white font-title font-bold py-3 rounded-xl transition-all shadow-md"
+            >
+              Valider
+            </button>
+          </div>
+          <p
+            id="parent-gate-error"
+            class="hidden text-xs font-bold text-brand-pink mt-1"
+          >
+            Oups ! Ce n'est pas correct.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MODAL: QUEST STORY DIALOG ==================== -->
+    <div
+      id="modal-quest-story"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl max-w-md w-full p-8 border-8 border-brand-purple shadow-2xl text-center flex flex-col items-center animate-pop-in"
+      >
+        <div
+          id="quest-story-avatar"
+          class="w-32 h-32 mb-6 flex items-center justify-center text-6xl bg-brand-purple-light rounded-full border-4 border-brand-purple animate-bounce-slow"
+        >
+          🦉
+        </div>
+        <h2
+          id="quest-story-title"
+          class="text-2xl font-bold font-title text-slate-800 mb-3"
+        >
+          Nouvelle Quête !
+        </h2>
+        <p
+          id="quest-story-text"
+          class="text-slate-600 text-sm mb-6 leading-relaxed font-medium"
+        >
+          Histoire racontée ici...
+        </p>
+        <button
+          onclick="closeQuestStoryModal()"
+          class="w-full bg-brand-purple hover:bg-brand-purple-dark text-white font-title text-lg py-4 px-6 rounded-2xl shadow-lg transform active:scale-95 transition-all font-bold"
+        >
+          Compris ! 👍
+        </button>
+      </div>
+    </div>
+
+    <!-- Shake effect animation CSS helper -->
+    <style>
+      .shake {
+        animation: shake-anim 0.4s ease-in-out;
+      }
+      @keyframes shake-anim {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-6px);
+        }
+        40%,
+        80% {
+          transform: translateX(6px);
+        }
+      }
+    </style>
+  </body>
 </html>
-

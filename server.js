@@ -10,14 +10,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Apply security middlewares
-app.use(helmet({
-  contentSecurityPolicy: false,
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 app.use(cors({ origin: '*' })); // Adjust origin as needed
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-}));
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
 
 // Parse JSON bodies
 app.use(express.json());
@@ -36,9 +40,11 @@ app.post('/api/telemetry', async (req, res) => {
   if (!userId || !event) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-  
+
   if (!supabase) {
-    return res.status(503).json({ error: 'Telemetry service unavailable (Supabase not configured)' });
+    return res.status(503).json({
+      error: 'Telemetry service unavailable (Supabase not configured)',
+    });
   }
 
   try {

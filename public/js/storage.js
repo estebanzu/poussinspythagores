@@ -2,8 +2,22 @@
 // STORAGE — localStorage persistence & session tracking
 // =============================================
 
-import { state, streakState, adaptiveStats, totalSessionsPlayed, perfectSessions, sessionHistory, currentSessionGames, currentSessionCorrect, currentSessionTotal, currentSessionStart } from './state.js';
-import { CATEGORIES } from './constants.js';
+import {
+  state,
+  adaptiveStats,
+  totalSessionsPlayed,
+  perfectSessions,
+  sessionHistory,
+  currentSessionGames,
+  currentSessionCorrect,
+  currentSessionTotal,
+  currentSessionStart,
+  setCurrentSessionTotal,
+  setCurrentSessionCorrect,
+  setTotalSessionsPlayed,
+  setPerfectSessions,
+  setCurrentSessionStart,
+} from './state.js';
 
 export function saveAdaptiveStats() {
   localStorage.setItem('mathscp_adaptive_stats', JSON.stringify(adaptiveStats));
@@ -41,8 +55,8 @@ export function recordAnswer(gameId, isCorrect, responseTimeMs) {
   saveAdaptiveStats();
 
   currentSessionGames.add(gameId);
-  currentSessionTotal++;
-  if (isCorrect) currentSessionCorrect++;
+  setCurrentSessionTotal(currentSessionTotal + 1);
+  if (isCorrect) setCurrentSessionCorrect(currentSessionCorrect + 1);
 }
 
 export function getAccuracyRate(gameId) {
@@ -54,7 +68,9 @@ export function getAccuracyRate(gameId) {
 export function getAvgResponseTime(gameId) {
   const stats = getGameStats(gameId);
   if (stats.recentTimes.length === 0) return 15000;
-  return stats.recentTimes.reduce((a, b) => a + b, 0) / stats.recentTimes.length;
+  return (
+    stats.recentTimes.reduce((a, b) => a + b, 0) / stats.recentTimes.length
+  );
 }
 
 export function recordSession() {
@@ -68,19 +84,31 @@ export function recordSession() {
   };
   sessionHistory.unshift(entry);
   if (sessionHistory.length > 20) sessionHistory.length = 20;
-  localStorage.setItem('mathscp_session_history', JSON.stringify(sessionHistory));
+  localStorage.setItem(
+    'mathscp_session_history',
+    JSON.stringify(sessionHistory)
+  );
 
-  totalSessionsPlayed++;
-  localStorage.setItem('mathscp_total_sessions', totalSessionsPlayed.toString());
-  if (currentSessionCorrect === currentSessionTotal && currentSessionTotal >= 5) {
-    perfectSessions++;
-    localStorage.setItem('mathscp_perfect_sessions', perfectSessions.toString());
+  setTotalSessionsPlayed(totalSessionsPlayed + 1);
+  localStorage.setItem(
+    'mathscp_total_sessions',
+    totalSessionsPlayed.toString()
+  );
+  if (
+    currentSessionCorrect === currentSessionTotal &&
+    currentSessionTotal >= 5
+  ) {
+    setPerfectSessions(perfectSessions + 1);
+    localStorage.setItem(
+      'mathscp_perfect_sessions',
+      perfectSessions.toString()
+    );
   }
 }
 
 export function resetSessionTracking() {
   currentSessionGames.clear();
-  currentSessionCorrect = 0;
-  currentSessionTotal = 0;
-  currentSessionStart = Date.now();
+  setCurrentSessionCorrect(0);
+  setCurrentSessionTotal(0);
+  setCurrentSessionStart(Date.now());
 }

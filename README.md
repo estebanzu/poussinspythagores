@@ -12,7 +12,7 @@
 Vous pouvez essayer l'application en direct à l'adresse suivante :
 **https://poussinspythagores.vercel.app**
 
-*(N'hésitez pas à l'ajouter à votre écran d'accueil sur n'importe quel appareil !)*
+_(N'hésitez pas à l'ajouter à votre écran d'accueil sur n'importe quel appareil !)_
 
 ---
 
@@ -40,15 +40,15 @@ Vous pouvez essayer l'application en direct à l'adresse suivante :
 
 ## 🛠️ Stack technique
 
-| Couche | Technologie | Description |
-|---|---|---|
-| **Frontend** | HTML, JavaScript Vanilla | Une application single-page (`index.html`) contenant toute l'interface, la logique et les moteurs de jeu. |
-| **Style** | Tailwind CSS (via CDN) | Pour un développement d'interface rapide et utilitaire. |
-| **Backend** | Node.js + Express | Un serveur minimal pour servir les fichiers statiques et fournir une simple route d'API. |
-| **Stockage** | `localStorage` | Toutes les données utilisateur (progrès, paramètres, stats) sont persistées côté client. |
-| **PWA** | Service Worker, Manifest | Permet la fonctionnalité hors ligne et l'installation sur l'écran d'accueil. |
-| **Audio** | Web Audio API, SpeechSynthesis | Pour les effets sonores et la narration par synthèse vocale. |
-| **Déploiement** | Vercel | Déploiement continu depuis la branche `main`. |
+| Couche          | Technologie                    | Description                                                                                               |
+| --------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| **Frontend**    | HTML, JavaScript Vanilla       | Une application single-page (`index.html`) contenant toute l'interface, la logique et les moteurs de jeu. |
+| **Style**       | Tailwind CSS (via CDN)         | Pour un développement d'interface rapide et utilitaire.                                                   |
+| **Backend**     | Node.js + Express              | Un serveur minimal pour servir les fichiers statiques et fournir une simple route d'API.                  |
+| **Stockage**    | `localStorage`                 | Toutes les données utilisateur (progrès, paramètres, stats) sont persistées côté client.                  |
+| **PWA**         | Service Worker, Manifest       | Permet la fonctionnalité hors ligne et l'installation sur l'écran d'accueil.                              |
+| **Audio**       | Web Audio API, SpeechSynthesis | Pour les effets sonores et la narration par synthèse vocale.                                              |
+| **Déploiement** | Vercel                         | Déploiement continu depuis la branche `main`.                                                             |
 
 ---
 
@@ -83,18 +83,21 @@ poussins-pythagores/
 Pour lancer le projet sur votre machine locale :
 
 1.  **Clonez le dépôt :**
+
     ```bash
     git clone https://github.com/votre-pseudo/poussins-pythagores.git
     cd poussins-pythagores
     ```
 
 2.  **Installez les dépendances :**
+
     ```bash
     npm install
     ```
 
 3.  **(Optionnel) Créez un fichier d'environnement :**
     Créez un fichier `.env` à la racine et ajoutez vos identifiants Supabase si vous souhaitez utiliser la télémétrie.
+
     ```
     SUPABASE_URL=votre_url_supabase
     SUPABASE_ANON_KEY=votre_cle_anon_supabase
@@ -113,6 +116,7 @@ Pour lancer le projet sur votre machine locale :
 L'application est conçue pour être installée sur l'écran d'accueil d'un appareil pour une expérience plein écran et hors ligne.
 
 **Sur un iPad ou iPhone (avec Safari) :**
+
 1.  Naviguez vers l'URL de l'application : `https://poussinspythagores.vercel.app`.
 2.  Appuyez sur l'icône "Partager" (un carré avec une flèche vers le haut).
 3.  Faites défiler vers le bas et sélectionnez **"Sur l'écran d'accueil"**.
@@ -126,10 +130,10 @@ L'icône de l'application apparaîtra sur votre écran d'accueil et pourra être
 
 Ce projet est en développement actif. La prochaine phase majeure (**Phase 6**) est une refonte technique visant à améliorer la maintenabilité et l'évolutivité.
 
--   [ ] **Modulariser `index.html`** : Découper le script massif en modules JS séparés (ex: `gameEngine.js`, `ui.js`, `state.js`).
--   [ ] **Introduire une étape de build** : Intégrer Vite pour le bundling, le tree-shaking et la minification.
--   [ ] **Ajouter des tests unitaires** : Écrire des tests pour le moteur de jeu et la logique d'apprentissage adaptatif avec Vitest.
--   [ ] **Étendre le contenu** : Ajouter plus de jeux pour le calcul mental, la logique et la numération.
+- [ ] **Modulariser `index.html`** : Découper le script massif en modules JS séparés (ex: `gameEngine.js`, `ui.js`, `state.js`).
+- [ ] **Introduire une étape de build** : Intégrer Vite pour le bundling, le tree-shaking et la minification.
+- [ ] **Ajouter des tests unitaires** : Écrire des tests pour le moteur de jeu et la logique d'apprentissage adaptatif avec Vitest.
+- [ ] **Étendre le contenu** : Ajouter plus de jeux pour le calcul mental, la logique et la numération.
 
 Pour un plan détaillé, consultez le fichier plan.md.
 

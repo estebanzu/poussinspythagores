@@ -6,12 +6,14 @@
 ---
 
 ## Phase 1 – Fondations ✅
+
 - [x] Structure PWA (single-file HTML + JS, manifest, service worker)
 - [x] Interface colorée et adulte-amicale (font Fredoka, boutons larges, animations de victoire)
 - [x] Système de difficulté adaptative (facile / normal / challenge) intégré aux générateurs
 - [x] Gamification de base — compteur d'étoiles, badges unlockables
 
 ## Phase 2 – Améliorations UX & Contenu ✅
+
 - [x] Vérification du passage automatique de la difficulté (tests UI, seuil de 3 victoires/échecs)
 - [x] Messages motivants dynamiques dans le footer
 - [x] Extension du catalogue de jeux : nombres, formes, monnaie, heures, vocabulaire spatial
@@ -19,12 +21,14 @@
 - [x] Limite de jeu d'une heure avec blocage de 30 minutes (contrôle parental)
 
 ## Phase 3 – Fonctionnalités avancées ✅
+
 - [x] Mode multijoueur local (tour par tour sur le même iPad)
 - [x] Tableaux de scores et match history stockée localement
 - [x] Contenu additionnel : fractions, mesures, addition/soustraction simples
 - [x] Accessibilité : support voix-off (lecture automatique), contraste élevé
 
 ## Phase 4 – Publication & Distribution ✅
+
 - [x] Publication du PWA sur serveur sécurisé (HTTPS)
 - [x] Compatibilité multi-appareils (phone, iPad, PC)
 - [x] Déploiement continu vers Vercel (Fichier vercel.json configuré)
@@ -32,6 +36,7 @@
 - [x] Pack de ressources (icônes, manifeste PWA)
 
 ## Phase 5 – Feature Expansion ✅
+
 - [x] Adaptive learning paths (per-game stats, response-time-aware thresholds, persistent difficulty)
 - [x] Visual manipulatives (fraction bars, base-ten blocks, interactive shapes)
 - [x] Curriculum-aligned quests & narrative-driven storylines (3 aventures)
@@ -49,12 +54,14 @@
 ---
 
 ## Phase 6 – Refonte technique 🔜 (en cours)
+
 - [ ] Découper index.html en modules JS séparés
 - [ ] Ajouter un build step (Vite) avec Tree-shaking
 - [ ] Tests unitaires (Vitest) pour game engine et adaptive learning
 - [ ] ESLint + Prettier pour la cohérence de code
 
 ## Phase 7 – Contenu éducatif élargi ⬜
+
 - [ ] 4 jeux de calcul mental supplémentaires
 - [ ] 3 jeux de numération (compter jusqu'à 100, decomposer dizaines/unités)
 - [ ] 2 jeux de logique (séquences, analogies)
@@ -62,6 +69,7 @@
 - [ ] Système de « leçon » interactive avant les quiz
 
 ## Phase 8 – Gamification avancée ⬜
+
 - [ ] Streaks quotidiens (jours consécutifs de jeu)
 - [ ] Bonus streak : trésor offert tous les 3 jours consécutifs de jeu
 - [ ] Tableau de bord local top scores
@@ -79,6 +87,7 @@
 - [ ] Détection de plafond/plancher de difficulté par compétence (compétence la plus faible fixe le plafond pour tout le contenu)
 
 ## Phase 9 – Accessibilité et UX ⬜
+
 - [ ] Reconnaissance vocale pour répondre aux exercices
 - [ ] Mode daltonien (patterns en plus des couleurs)
 - [ ] Ajustement de la taille du texte
@@ -95,6 +104,7 @@
 - [ ] Carte d'îles de compétences / Parcours d'apprentissage visuel (Terre des Nombres, Monde des Mots, Grand Monde — statut : nouveau/appris/maitrisé)
 
 ## Phase 10 – Sécurité et confidentialité ⬜
+
 - [ ] Chiffrement des données localStorage (Web Crypto API)
 - [ ] Politique de confidentialité affichée dans l'app
 - [ ] Consentement parental avant collecte de données
@@ -103,11 +113,13 @@
 - [ ] Audit de dépendances (npm audit) en CI
 
 ## Phase 11 – Multilingue ⬜
+
 - [ ] Système de traduction (clés i18n, JSON par langue)
 - [ ] Langues : français, anglais, espagnol
 - [ ] Localisation des nombres et formats
 
 ## Phase 12 – Infrastructure ⬜
+
 - [ ] Migration vers Supabase (auth + DB) pour persistance cross-device
 - [ ] Système de login enfant (avatar + prénom)
 - [ ] Sync cloud des scores et badges
@@ -115,4 +127,4 @@
 
 ---
 
-*Ce roadmap est vivant — les phases avancent au rythme du développement.*
+_Ce roadmap est vivant — les phases avancent au rythme du développement._
