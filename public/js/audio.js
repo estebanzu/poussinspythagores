@@ -2,14 +2,32 @@
 // AUDIO & TTS — Sound effects and speech
 // =============================================
 
-import { state, cachedFrenchVoice } from './state.js';
+import { state } from './state.js';
+
+let audioCtx = null;
+let audioUnlocked = false;
+let cachedFrenchVoice = null;
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  audioUnlocked = true;
+}
+
+if (typeof window !== 'undefined') {
+  ['pointerdown', 'keydown', 'touchstart'].forEach((type) => {
+    window.addEventListener(type, unlockAudio, { once: true });
+  });
+}
 
 export function playAudioTone(type) {
   if (state.isMuted) return;
+  if (!audioCtx) return;
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = audioCtx;
     const now = ctx.currentTime;
 
     if (type === 'success') {
@@ -21,7 +39,7 @@ export function playAudioTone(type) {
       osc.frequency.setValueAtTime(523.25, now);
       osc.frequency.setValueAtTime(659.25, now + 0.1);
       osc.frequency.setValueAtTime(783.99, now + 0.2);
-      osc.frequency.setValueAtTime(1046.50, now + 0.3);
+      osc.frequency.setValueAtTime(1046.5, now + 0.3);
       gain.gain.setValueAtTime(0.12, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
       osc.start(now);
@@ -51,7 +69,7 @@ export function playAudioTone(type) {
       osc.start(now);
       osc.stop(now + 0.08);
     } else if (type === 'trophy') {
-      const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+      const notes = [261.63, 329.63, 392.0, 523.25, 659.25, 783.99, 1046.5];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -67,7 +85,7 @@ export function playAudioTone(type) {
       });
     }
   } catch (err) {
-    console.warn("Audio error", err);
+    console.warn('Audio error', err);
   }
 }
 
@@ -93,7 +111,8 @@ export function applySoundIcons() {
 export function getFrenchVoice() {
   if (cachedFrenchVoice) return cachedFrenchVoice;
   const voices = window.speechSynthesis.getVoices();
-  cachedFrenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang === 'fr-FR') || null;
+  cachedFrenchVoice =
+    voices.find((v) => v.lang.startsWith('fr') || v.lang === 'fr-FR') || null;
   return cachedFrenchVoice;
 }
 

@@ -2,7 +2,9 @@
   "env": {
     "node": true,
     "es2021": true,
-    "jest": true
+    "jest": true,
+    "browser": true,
+    "serviceworker": true
   },
   "extends": [
     "eslint:recommended",

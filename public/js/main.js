@@ -2,20 +2,77 @@
 // MAIN — Entry point, window exports, initialization
 // =============================================
 
-import { state, accessibilityState, cachedFrenchVoice, questState, multiplayerState } from './state.js';
-import { updateStarsUI, updateFooterCompanion, setUICallbacks, updateSessionStarsUI, updateDifficultyUI, updateFooterMessage } from './ui.js';
-import { setNavCallbacks, goHome, hideAllScreens, selectCategory, launchGame, backToSubmenu, restartCurrentGame } from './navigation.js';
-import { playAudioTone, applySoundIcons, toggleMute } from './audio.js';
-import { generateExercise, setGamesCallbacks, toggleFractionBlock, validateInteractiveFraction, addBaseTen, resetBaseTen, validateBaseTen, toggleShapeSelected, validateFormesTri, triggerVictorySession, checkAnswer } from './games.js';
 import {
-  initParentalControls, initAccessibility, applyAccessibilitySettings, updateAccessibilityUI,
-  openAccessibilityModal, closeAccessibilityModal, toggleAccVoice, toggleAccContrast, setQuestionCount,
-  checkBadgeUnlocks, openBadgesModal, closeBadgesModal, closeUnlockPopup,
-  updateStreak, getStreakText, checkStreakBonus, showRandomFact,
-  launchQuest, closeQuestStoryModal, nextQuestStep, triggerQuestVictory,
-  startMultiplayerMatch, nextMultiplayerTurn, handleNextExerciseClick, triggerMultiplayerMatchOver, restartMultiplayerMatch,
-  openScoreboardModal, closeScoreboardModal, clearScoreboardHistory,
-  setGameMode, showParentGate, hideParentGate, verifyParentGate,
+  state,
+  accessibilityState,
+  questState,
+  multiplayerState,
+} from './state.js';
+import {
+  updateStarsUI,
+  updateFooterCompanion,
+  setUICallbacks,
+  updateSessionStarsUI,
+  updateDifficultyUI,
+  updateFooterMessage,
+} from './ui.js';
+import {
+  setNavCallbacks,
+  goHome,
+  hideAllScreens,
+  selectCategory,
+  launchGame,
+  backToSubmenu,
+  restartCurrentGame,
+} from './navigation.js';
+import { playAudioTone, applySoundIcons, toggleMute } from './audio.js';
+import {
+  generateExercise,
+  setGamesCallbacks,
+  toggleFractionBlock,
+  validateInteractiveFraction,
+  addBaseTen,
+  resetBaseTen,
+  validateBaseTen,
+  toggleShapeSelected,
+  validateFormesTri,
+  triggerVictorySession,
+  checkAnswer,
+} from './games.js';
+import {
+  initParentalControls,
+  initAccessibility,
+  applyAccessibilitySettings,
+  updateAccessibilityUI,
+  openAccessibilityModal,
+  closeAccessibilityModal,
+  toggleAccVoice,
+  toggleAccContrast,
+  setQuestionCount,
+  checkBadgeUnlocks,
+  openBadgesModal,
+  closeBadgesModal,
+  closeUnlockPopup,
+  updateStreak,
+  getStreakText,
+  checkStreakBonus,
+  showRandomFact,
+  launchQuest,
+  closeQuestStoryModal,
+  nextQuestStep,
+  triggerQuestVictory,
+  startMultiplayerMatch,
+  nextMultiplayerTurn,
+  handleNextExerciseClick,
+  triggerMultiplayerMatchOver,
+  restartMultiplayerMatch,
+  openScoreboardModal,
+  closeScoreboardModal,
+  clearScoreboardHistory,
+  setGameMode,
+  showParentGate,
+  hideParentGate,
+  verifyParentGate,
   setFeaturesCallbacks,
 } from './features.js';
 import { getGameStats } from './storage.js';
@@ -63,7 +120,9 @@ function startSoloGame() {
   document.getElementById('multiplayer-turn-banner').classList.add('hidden');
   document.getElementById('quest-progress-banner').classList.add('hidden');
   document.getElementById('difficulty-badge').classList.remove('hidden');
-  document.getElementById('star-dots-container').parentNode.classList.remove('hidden');
+  document
+    .getElementById('star-dots-container')
+    .parentNode.classList.remove('hidden');
   updateSessionStarsUI();
   updateDifficultyUI();
   updateStreak();
@@ -87,9 +146,12 @@ window.addEventListener('DOMContentLoaded', () => {
   goHome();
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log('PWA Service Worker registered!', reg))
-      .catch(err => console.error('PWA Service Worker registration failed:', err));
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((reg) => console.log('PWA Service Worker registered!', reg))
+      .catch((err) =>
+        console.error('PWA Service Worker registration failed:', err)
+      );
   }
 
   const splash = document.getElementById('splash-screen');
@@ -109,8 +171,7 @@ window.addEventListener('DOMContentLoaded', () => {
 if ('speechSynthesis' in window) {
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = () => {
-    const voices = window.speechSynthesis.getVoices();
-    cachedFrenchVoice = voices.find(v => v.lang.startsWith('fr') || v.lang === 'fr-FR') || null;
+    window.speechSynthesis.getVoices();
   };
 }
 
