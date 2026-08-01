@@ -424,6 +424,18 @@ export function generateExercise() {
       case 'a_soustractions':
         genSoustractions(visualArea, questionText, optionsContainer);
         break;
+      case 'a_add_rapide':
+        genAddRapide(visualArea, questionText, optionsContainer);
+        break;
+      case 'a_sous_rapide':
+        genSousRapide(visualArea, questionText, optionsContainer);
+        break;
+      case 'a_add_sous_rapide':
+        genAddSousRapide(visualArea, questionText, optionsContainer);
+        break;
+      case 'a_tables_rapides':
+        genTablesRapides(visualArea, questionText, optionsContainer);
+        break;
       case 'a_doubles_moities':
         genDoublesMoities(visualArea, questionText, optionsContainer);
         break;
@@ -722,7 +734,7 @@ function genSoustractions(visualArea, questionText, optionsContainer) {
     if (isCrossed) {
       svg += `<g><circle cx="${x}" cy="${y}" r="${r}" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>`;
       svg += `<line x1="${x - r + 3}" y1="${y - r + 3}" x2="${x + r - 3}" y2="${y + r - 3}" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/>`;
-      svg += `<line x1="${x - r + 3}" y1="${y + r - 3}" x2="${x + r - 3}" y2="${y - r + 3}" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/></g>`;
+      svg += `<line x1="${x - r + 3}" y1="${y + r - 3}" x2="${x + r - 3}" y2="${y - r - 3}" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round"/></g>`;
     } else {
       svg += `<g class="animate-bounce-slow" style="animation-delay: ${i * 0.05}s"><circle cx="${x}" cy="${y}" r="${r}" fill="#FF6B8B" stroke="#E05270" stroke-width="1.5"/>`;
       svg += `<circle cx="${x - 4}" cy="${y - 4}" r="3" fill="white" opacity="0.6"/>`;
@@ -734,6 +746,106 @@ function genSoustractions(visualArea, questionText, optionsContainer) {
   renderOptions(
     correct,
     getDistractors(correct, 3, 0, state.difficulty === 'easy' ? 10 : 35),
+    optionsContainer
+  );
+}
+
+// ---- A3b. Addition rapide ----
+function genAddRapide(visualArea, questionText, optionsContainer) {
+  let a, b;
+  if (state.difficulty === 'easy') {
+    a = getRandomInt(1, 9);
+    b = getRandomInt(1, 9);
+  } else if (state.difficulty === 'challenge') {
+    a = getRandomInt(10, 30);
+    b = getRandomInt(10, 30);
+  } else {
+    a = getRandomInt(1, 20);
+    b = getRandomInt(1, 20);
+  }
+  const correct = a + b;
+  state.currentAnswer = correct;
+  state.currentQuestionKey = 'addrap_' + a + '+' + b;
+  questionText.innerText = `Calcule vite : ${a} + ${b} = ?`;
+  visualArea.innerHTML = `<div class="flex items-center justify-center gap-4 bg-brand-blue-light/40 border-2 border-brand-blue/15 p-6 rounded-3xl shadow-sm w-4/5 font-title">
+    <span class="text-5xl font-extrabold text-brand-blue">${a}</span>
+    <span class="text-4xl font-black text-brand-pink">+</span>
+    <span class="text-5xl font-extrabold text-brand-blue">${b}</span>
+    <span class="text-4xl font-black text-brand-pink">=</span>
+    <span class="text-5xl font-black text-slate-300">?</span>
+  </div>`;
+  renderOptions(
+    correct,
+    getDistractors(correct, 3, 2, state.difficulty === 'easy' ? 20 : 60),
+    optionsContainer
+  );
+}
+
+// ---- A3c. Soustraction rapide ----
+function genSousRapide(visualArea, questionText, optionsContainer) {
+  let a, b;
+  if (state.difficulty === 'easy') {
+    a = getRandomInt(3, 12);
+    b = getRandomInt(1, a - 1);
+  } else if (state.difficulty === 'challenge') {
+    a = getRandomInt(25, 60);
+    b = getRandomInt(10, a - 1);
+  } else {
+    a = getRandomInt(10, 30);
+    b = getRandomInt(1, a - 1);
+  }
+  const correct = a - b;
+  state.currentAnswer = correct;
+  state.currentQuestionKey = 'sousrap_' + a + '-' + b;
+  questionText.innerText = `Calcule vite : ${a} - ${b} = ?`;
+  visualArea.innerHTML = `<div class="flex items-center justify-center gap-4 bg-brand-pink-light/40 border-2 border-brand-pink/15 p-6 rounded-3xl shadow-sm w-4/5 font-title">
+    <span class="text-5xl font-extrabold text-brand-blue">${a}</span>
+    <span class="text-4xl font-black text-brand-pink">-</span>
+    <span class="text-5xl font-extrabold text-brand-blue">${b}</span>
+    <span class="text-4xl font-black text-brand-pink">=</span>
+    <span class="text-5xl font-black text-slate-300">?</span>
+  </div>`;
+  renderOptions(
+    correct,
+    getDistractors(correct, 3, 0, state.difficulty === 'easy' ? 12 : 40),
+    optionsContainer
+  );
+}
+
+// ---- A3d. Addition / Soustraction rapide ----
+function genAddSousRapide(visualArea, questionText, optionsContainer) {
+  if (getRandomInt(0, 1) === 0)
+    genAddRapide(visualArea, questionText, optionsContainer);
+  else genSousRapide(visualArea, questionText, optionsContainer);
+}
+
+// ---- A3e. Tables de multiplication rapides ----
+function genTablesRapides(visualArea, questionText, optionsContainer) {
+  let a, b;
+  if (state.difficulty === 'easy') {
+    a = getRandomInt(1, 5);
+    b = getRandomInt(1, 5);
+  } else if (state.difficulty === 'challenge') {
+    a = getRandomInt(6, 12);
+    b = getRandomInt(1, 12);
+  } else {
+    a = getRandomInt(1, 9);
+    b = getRandomInt(1, 9);
+  }
+  const correct = a * b;
+  state.currentAnswer = correct;
+  state.currentQuestionKey = 'table_' + a + 'x' + b;
+  questionText.innerText = `Calcule vite : ${a} × ${b} = ?`;
+  visualArea.innerHTML = `<div class="flex items-center justify-center gap-4 bg-brand-yellow-light/60 border-2 border-brand-yellow/20 p-6 rounded-3xl shadow-sm w-4/5 font-title">
+    <span class="text-5xl font-extrabold text-brand-purple">${a}</span>
+    <span class="text-4xl font-black text-brand-orange">×</span>
+    <span class="text-5xl font-extrabold text-brand-purple">${b}</span>
+    <span class="text-4xl font-black text-brand-orange">=</span>
+    <span class="text-5xl font-black text-slate-300">?</span>
+  </div>`;
+  renderOptions(
+    correct,
+    getDistractors(correct, 3, 1, state.difficulty === 'easy' ? 25 : 81),
     optionsContainer
   );
 }

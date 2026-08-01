@@ -1,4 +1,4 @@
-# Contexte du projet – Poussins Pythagorés
+# Contexte du projet – Poussins Pythagores
 
 ## Objectif général
 
@@ -25,9 +25,33 @@ Progressive Web App (PWA) éducative, entièrement en **français**, destinée a
 | `public/service-worker.js` | Service Worker pour le mode hors-ligne                                                   |
 | `public/manifest.json`     | Manifest PWA (nom, icônes, couleurs)                                                     |
 | `public/logo.png`          | Icône de l'application                                                                   |
-| `Makefile`                 | Automatisation : `dev`, `deploy`, `stop`, `build`, `clean`                               |
+| `Makefile`                 | Automatisation : `dev`, `deploy`, `stop`, `build`, `clean`, `check`, `verify`, `ci-cd`   |
 | `vercel.json`              | Configuration de routage Vercel                                                          |
 | `.env`                     | Variables d'environnement (SUPABASE_ANON_KEY, VERCEL_TOKEN) — gitignoré                  |
+| `scripts/ci_cd_tui.py`     | Pipeline CI/CD avec TUI Textual + génération du rapport HTML `ci-cd-report.html`         |
+
+## Pipeline CI/CD
+
+`make ci-cd` exécute les étapes suivantes via `scripts/ci_cd_tui.py` :
+
+1. `install` — `npm install`
+2. `format-check` — vérification Prettier
+3. `lint` — ESLint
+4. `test` — Jest
+5. `geome` — QA du jeu Geometry
+6. `frontend-qa` — QA frontend
+7. `audit-prod` — `npm audit --omit=dev`
+8. `gitleaks` — scan de secrets
+9. `css` — rebuild Tailwind CSS
+10. `css-check` — vérification `public/styles.css` à jour
+11. `build` — préparation artefacts Vercel
+12. `deploy` — déploiement Vercel (`npx vercel --prod`)
+13. `smoke` — smoke tests post-déploiement
+
+Garanties :
+- `deploy` ne s'exécute jamais si une étape précédente échoue
+- `deploy` est skippé si le dernier déploiement prod date de moins de 30 min
+- un rapport HTML `ci-cd-report.html` est généré avec statuts, durées et logs par étape
 
 ## Système de données (localStorage)
 
@@ -46,7 +70,7 @@ Progressive Web App (PWA) éducative, entièrement en **français**, destinée a
 | `mathscp_lockout_start_time`   | int    | Début de verrouillage (timestamp)                       |
 | `mathscp_companion`            | object | Compagnon sélectionné (type, nom)                       |
 
-## État actuel (27 juillet 2026)
+## État actuel (2 août 2026)
 
 - **Déploiement** : https://poussinspythagores.vercel.app
 - **Modes de jeu** : Solo, Multijoueur local (tour par tour), Quêtes narratives (3 aventures)
@@ -55,6 +79,7 @@ Progressive Web App (PWA) éducative, entièrement en **français**, destinée a
 - **Gamification** : étoiles, 7 badges, 5 niveaux de difficulté, compagnon évolutif
 - **Accessibilité** : TTS, mode contraste élevé, lecture automatique
 - **Analytics** : tableau de bord parental (précision, tendances, erreurs, historique)
+- **CI/CD** : pipeline TUI Textual + rapport HTML (`ci-cd-report.html`)
 
 ## Équipe
 

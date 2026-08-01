@@ -50,6 +50,10 @@ export function getGameName(gameId) {
   if (gameId === 'a_fractions_interact') return 'Colorier les Fractions';
   if (gameId === 'a_blocs_dizaines') return 'Construire les Nombres';
   if (gameId === 'b_formes_tri') return 'Trier les Formes';
+  if (gameId === 'a_add_rapide') return 'Addition rapide';
+  if (gameId === 'a_sous_rapide') return 'Soustraction rapide';
+  if (gameId === 'a_add_sous_rapide') return 'Addition / Soustraction rapide';
+  if (gameId === 'a_tables_rapides') return 'Tables de multiplication rapides';
   for (const cat in CATEGORIES) {
     const found = CATEGORIES[cat].games.find((g) => g.id === gameId);
     if (found) return found.name;

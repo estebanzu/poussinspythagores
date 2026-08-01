@@ -62,6 +62,16 @@ export const CATEGORIES = {
         desc: 'Dizaines, unités et décompositions.',
       },
       {
+        id: 'a_doubles_moities',
+        name: 'Doubles et moitiés',
+        desc: 'Calculer le double ou diviser par deux.',
+      },
+      {
+        id: 'a_complements_10',
+        name: 'Compléments à 10',
+        desc: 'Trouver le nombre qui manque pour faire 10.',
+      },
+      {
         id: 'a_additions',
         name: 'Les additions',
         desc: 'Opérations en ligne et posées en colonne.',
@@ -72,14 +82,24 @@ export const CATEGORIES = {
         desc: 'Retirer des objets et calculer la différence.',
       },
       {
-        id: 'a_doubles_moities',
-        name: 'Doubles et moitiés',
-        desc: 'Calculer le double ou diviser par deux.',
+        id: 'a_add_rapide',
+        name: 'Addition rapide',
+        desc: 'Calcul mental rapide : additionne deux nombres.',
       },
       {
-        id: 'a_complements_10',
-        name: 'Compléments à 10',
-        desc: 'Trouver le nombre qui manque pour faire 10.',
+        id: 'a_sous_rapide',
+        name: 'Soustraction rapide',
+        desc: 'Calcul mental rapide : soustrais deux nombres.',
+      },
+      {
+        id: 'a_add_sous_rapide',
+        name: 'Addition / Soustraction rapide',
+        desc: 'Mélange aléatoire d’additions et soustractions rapides.',
+      },
+      {
+        id: 'a_tables_rapides',
+        name: 'Tables de multiplication rapides',
+        desc: 'Répondre vite à des multiplications simples.',
       },
       {
         id: 'a_fractions',
