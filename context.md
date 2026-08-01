@@ -49,6 +49,7 @@ Progressive Web App (PWA) éducative, entièrement en **français**, destinée a
 13. `smoke` — smoke tests post-déploiement
 
 Garanties :
+
 - `deploy` ne s'exécute jamais si une étape précédente échoue
 - `deploy` est skippé si le dernier déploiement prod date de moins de 30 min
 - un rapport HTML `ci-cd-report.html` est généré avec statuts, durées et logs par étape
