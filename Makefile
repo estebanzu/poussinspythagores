@@ -22,7 +22,7 @@ else
   KILL = for /f "tokens=5" %a in ('netstat -aon ^| findstr :$(PORT)') do taskkill /F /PID %a
 endif
 
-.PHONY: all install dev start stop build deploy clean security security-fix lint geome frontend-qa check test help css format format-check
+.PHONY: all install dev start stop build deploy clean security security-fix lint geome frontend-qa check test help css format format-check gitleaks verify css-check audit-prod
 
 all: dev
 
@@ -44,6 +44,11 @@ help:
 	@echo "  make check          Run format-check, lint, test, geome and frontend-qa"
 	@echo "  make security       Run npm security audit"
 	@echo "  make security-fix   Run npm audit fix"
+	@echo "  make audit-prod     Run npm audit (production deps only)"
+	@echo "  make gitleaks       Scan for secrets with Gitleaks"
+	@echo "  make css            Rebuild Tailwind CSS"
+	@echo "  make css-check      Verify public/styles.css is up to date"
+	@echo "  make verify         Run check, security and gitleaks"
 	@echo "  make clean          Remove build artefacts"
 	@echo "  make help           Show this help"
 
@@ -118,6 +123,22 @@ format:
 format-check:
 	@echo "Checking Prettier formatting..."
 	npx prettier --check .
+
+gitleaks:
+	@echo "Scanning for secrets with Gitleaks..."
+	gitleaks detect --source . --no-banner
+
+verify: check security gitleaks
+	@echo "All verification checks passed."
+
+css-check:
+	@echo "Checking public/styles.css is up to date..."
+	npx tailwindcss -i ./src/styles.css -o /tmp/styles.css.check --minify
+	@if cmp -s public/styles.css /tmp/styles.css.check; then echo "public/styles.css is up to date."; rm -f /tmp/styles.css.check; else echo "ERROR: public/styles.css is out of date. Run 'make css' to rebuild it."; rm -f /tmp/styles.css.check; exit 1; fi
+
+audit-prod:
+	@echo "Running npm audit (production dependencies only)..."
+	npm audit --omit=dev
 
 clean:
 	@echo "Cleaning build artefacts..."
