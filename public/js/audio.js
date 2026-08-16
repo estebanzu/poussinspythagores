@@ -3,28 +3,47 @@
 // =============================================
 
 import { state } from './state.js';
+import { getLang } from './i18n.js';
 
 let audioCtx = null;
 let audioUnlocked = false;
-let cachedFrenchVoice = null;
+let cachedVoices = { fr: null, es: null };
 
-function pickFrenchVoice(voices) {
+const VOICE_CONFIG = {
+  fr: {
+    lang: 'fr-FR',
+    rate: 0.92,
+    pitch: 1.12,
+  },
+  es: {
+    lang: 'es-ES',
+    rate: 0.93,
+    pitch: 1.10,
+  },
+};
+
+function pickVoice(voices, langPrefix) {
   if (!voices || voices.length === 0) return null;
-  const frFR = voices.find((v) => v.lang.toLowerCase() === 'fr-fr');
-  if (frFR) return frFR;
-  return voices.find((v) => v.lang.toLowerCase().startsWith('fr')) || null;
+  const exact = voices.find(
+    (v) => v.lang.toLowerCase() === langPrefix.toLowerCase()
+  );
+  if (exact) return exact;
+  const prefix = voices.find((v) =>
+    v.lang.toLowerCase().startsWith(langPrefix.split('-')[0])
+  );
+  if (prefix) return prefix;
+  return null;
 }
 
-function refreshFrenchVoiceCache() {
+function refreshVoiceCache() {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-  cachedFrenchVoice = pickFrenchVoice(window.speechSynthesis.getVoices());
+  const voices = window.speechSynthesis.getVoices();
+  cachedVoices.fr = pickVoice(voices, 'fr-FR');
+  cachedVoices.es = pickVoice(voices, 'es-ES');
 }
 
 if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-  window.speechSynthesis.addEventListener(
-    'voiceschanged',
-    refreshFrenchVoiceCache
-  );
+  window.speechSynthesis.addEventListener('voiceschanged', refreshVoiceCache);
 }
 
 function unlockAudio() {
@@ -127,21 +146,24 @@ export function applySoundIcons() {
   }
 }
 
-export function getFrenchVoice() {
-  refreshFrenchVoiceCache();
-  return cachedFrenchVoice;
+export function getVoice(lang) {
+  refreshVoiceCache();
+  return cachedVoices[lang] || cachedVoices.fr || null;
 }
 
 export function speakText(text) {
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   const cleanText = text.replace(/<[^>]*>/g, '').trim();
+  if (!cleanText) return;
+  const lang = getLang();
+  const config = VOICE_CONFIG[lang] || VOICE_CONFIG.fr;
   const utterance = new SpeechSynthesisUtterance(cleanText);
-  utterance.lang = 'fr-FR';
-  const frenchVoice = getFrenchVoice();
-  if (frenchVoice) utterance.voice = frenchVoice;
-  utterance.rate = 0.92;
-  utterance.pitch = 1.12;
+  utterance.lang = config.lang;
+  const voice = getVoice(lang);
+  if (voice) utterance.voice = voice;
+  utterance.rate = config.rate;
+  utterance.pitch = config.pitch;
   window.speechSynthesis.speak(utterance);
 }
 

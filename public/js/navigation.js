@@ -61,7 +61,7 @@ export function goHome() {
 export function selectCategory(catId) {
   playAudioTone('click');
   state.currentCategory = catId;
-  const cat = CATEGORIES[catId];
+  const cat = CATEGORIES()[catId];
   document.getElementById('submenu-title').innerText = cat.name;
   const listEl = document.getElementById('submenu-list');
   listEl.innerHTML = '';

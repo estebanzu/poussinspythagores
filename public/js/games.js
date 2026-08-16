@@ -26,7 +26,8 @@ import {
 } from './ui.js';
 import { recordAnswer, recordSession } from './storage.js';
 import { hideAllScreens } from './navigation.js';
-import { SUCCESS_PHRASES, FAIL_PHRASES } from './constants.js';
+import { getSuccessPhrase, getFailPhrase } from './constants.js';
+import { t } from './i18n.js';
 
 // ---- Import callbacks for cross-module refs ----
 let checkBadgeUnlocks = () => {};
@@ -205,9 +206,9 @@ export function checkAnswer(selected, buttonElement) {
       const nextBtn = document.getElementById('btn-next-exercise');
       if (nextBtn) {
         if (questState.progress >= 5) {
-          nextBtn.querySelector('span').innerText = 'Terminer la quête ! 🏆';
+          nextBtn.querySelector('span').innerText = t('ui.terminate_quest');
         } else {
-          nextBtn.querySelector('span').innerText = "Continuer l'aventure 🚀";
+          nextBtn.querySelector('span').innerText = t('ui.continue_adventure');
         }
         nextBtn.classList.remove('hidden');
       }
@@ -386,7 +387,7 @@ function handleTimeout() {
     state.isAnswerSelected = false;
     const nextBtn = document.getElementById('btn-next-exercise');
     if (nextBtn) {
-      nextBtn.querySelector('span').innerText = "Continuer l'aventure 🚀";
+      nextBtn.querySelector('span').innerText = t('ui.continue_adventure');
       nextBtn.classList.remove('hidden');
     }
   } else {
@@ -574,7 +575,7 @@ function genNombres100(visualArea, questionText, optionsContainer) {
   const dizaines = Math.floor(number / 10);
   const unites = number % 10;
   if (mode === 1) {
-    questionText.innerText = 'Quel est ce nombre représenté par les blocs ?';
+    questionText.innerText = t('question.blocs');
     let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
     const dWidth = 12,
       dHeight = 120,
@@ -610,7 +611,7 @@ function genNombres100(visualArea, questionText, optionsContainer) {
       optionsContainer
     );
   } else {
-    questionText.innerText = "Trouve le nombre correspondant à l'écriture :";
+    questionText.innerText = t('question.ecriture');
     visualArea.innerHTML = `
       <div class="flex flex-col items-center justify-center gap-4 bg-gradient-to-tr from-brand-purple/10 to-brand-blue/10 p-6 rounded-3xl border-2 border-brand-purple/20 w-4/5 animate-float font-title">
         <span class="text-4xl md:text-5xl font-extrabold text-brand-purple tracking-wide">${dizaines > 0 ? `${dizaines}d et ` : ''}${unites}u</span>
@@ -686,9 +687,9 @@ function genCompter100(visualArea, questionText, optionsContainer) {
   renderOptions(count, getDistractors(count, 3, min, max), optionsContainer);
 
   if (state.difficulty !== 'easy') {
-    questionText.innerText = 'Compte les éléments et trouve le bon nombre :';
+    questionText.innerText = t('question.compte_elements');
   } else {
-    questionText.innerText = 'Compte les éléments :';
+    questionText.innerText = t('question.compte');
   }
 }
 
@@ -719,7 +720,7 @@ function genAdditions(visualArea, questionText, optionsContainer) {
     correct = a + b;
     state.currentAnswer = correct;
     state.currentQuestionKey = 'add_h_' + a + '+' + b;
-    questionText.innerText = 'Trouve le résultat de cette addition en ligne :';
+    questionText.innerText = t('question.addition_ligne');
     visualArea.innerHTML = `<div class="flex items-center justify-center gap-3 bg-brand-blue-light/40 border-2 border-brand-blue/15 p-6 rounded-3xl shadow-sm w-4/5 animate-float font-title">
       <span class="text-4xl md:text-5xl font-extrabold text-brand-blue">${a}</span>
       <span class="text-3xl md:text-4xl font-black text-brand-pink">+</span>
@@ -750,7 +751,7 @@ function genAdditions(visualArea, questionText, optionsContainer) {
       correct = a + b;
     state.currentAnswer = correct;
     state.currentQuestionKey = 'add_v_' + a + '+' + b;
-    questionText.innerText = 'Calcule cette addition posée en colonne :';
+    questionText.innerText = t('question.addition_colonne');
     visualArea.innerHTML = `<div class="seyes-grid p-6 rounded-2xl flex flex-col items-center justify-center font-title w-48 shadow-md relative overflow-hidden">
       <div class="absolute left-4 top-0 bottom-0 seyes-red-line"></div>
       <div class="grid grid-cols-2 gap-4 text-center border-b-2 border-slate-300 w-full pb-1 text-sm font-bold text-slate-500"><div>D</div><div>U</div></div>
@@ -792,7 +793,7 @@ function genSoustractions(visualArea, questionText, optionsContainer) {
   const correct = a - b;
   state.currentAnswer = correct;
   state.currentQuestionKey = 'sous_' + a + '-' + b;
-  questionText.innerText = `Trouve le résultat de la soustraction : ${a} - ${b}`;
+  questionText.innerText = t('question.soustraction', { a, b });
   let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
   const r = 12,
     spacingX = 30,
@@ -838,7 +839,7 @@ function genAddRapide(visualArea, questionText, optionsContainer) {
   const correct = a + b;
   state.currentAnswer = correct;
   state.currentQuestionKey = 'addrap_' + a + '+' + b;
-  questionText.innerText = `Calcule vite : ${a} + ${b} = ?`;
+  questionText.innerText = t('question.calcule_add', { a, b });
   visualArea.innerHTML = `<div class="flex items-center justify-center gap-4 bg-brand-blue-light/40 border-2 border-brand-blue/15 p-6 rounded-3xl shadow-sm w-4/5 font-title">
     <span class="text-5xl font-extrabold text-brand-blue">${a}</span>
     <span class="text-4xl font-black text-brand-pink">+</span>
@@ -869,7 +870,7 @@ function genSousRapide(visualArea, questionText, optionsContainer) {
   const correct = a - b;
   state.currentAnswer = correct;
   state.currentQuestionKey = 'sousrap_' + a + '-' + b;
-  questionText.innerText = `Calcule vite : ${a} - ${b} = ?`;
+  questionText.innerText = t('question.calcule_sous', { a, b });
   visualArea.innerHTML = `<div class="flex items-center justify-center gap-4 bg-brand-pink-light/40 border-2 border-brand-pink/15 p-6 rounded-3xl shadow-sm w-4/5 font-title">
     <span class="text-5xl font-extrabold text-brand-blue">${a}</span>
     <span class="text-4xl font-black text-brand-pink">-</span>
@@ -907,7 +908,7 @@ function genTablesRapides(visualArea, questionText, optionsContainer) {
   const correct = a * b;
   state.currentAnswer = correct;
   state.currentQuestionKey = 'table_' + a + 'x' + b;
-  questionText.innerText = `Calcule vite : ${a} × ${b} = ?`;
+  questionText.innerText = t('question.calcule_mult', { a, b });
   visualArea.innerHTML = `<div class="flex items-center justify-center gap-4 bg-brand-yellow-light/60 border-2 border-brand-yellow/20 p-6 rounded-3xl shadow-sm w-4/5 font-title">
     <span class="text-5xl font-extrabold text-brand-purple">${a}</span>
     <span class="text-4xl font-black text-brand-orange">×</span>
@@ -933,7 +934,7 @@ function genDoublesMoities(visualArea, questionText, optionsContainer) {
     const correct = x * 2;
     state.currentAnswer = correct;
     state.currentQuestionKey = 'dm_d_' + state.difficulty + '_' + x;
-    questionText.innerText = `Quel est le double de ${x} ? (${x} + ${x})`;
+    questionText.innerText = t('question.double', { x });
     let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
     svg += `<rect x="15" y="25" width="135" height="150" rx="15" fill="#EEF2F6" stroke="#94A3B8" stroke-width="3" stroke-dasharray="6 4"/>`;
     svg += `<text x="82" y="19" font-family="Fredoka" font-size="12" font-weight="bold" fill="#64748B" text-anchor="middle">GROUPE 1</text>`;
@@ -967,7 +968,7 @@ function genDoublesMoities(visualArea, questionText, optionsContainer) {
     const correct = Y / 2;
     state.currentAnswer = correct;
     state.currentQuestionKey = 'dm_m_' + state.difficulty + '_' + Y;
-    questionText.innerText = `Quelle est la moitié de ${Y} ?`;
+    questionText.innerText = t('question.moitie', { y: Y });
     let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
     svg += `<rect x="20" y="25" width="280" height="150" rx="20" fill="#EEF2F6" stroke="#94A3B8" stroke-width="4"/>`;
     svg += `<line x1="160" y1="25" x2="160" y2="175" stroke="#FF6B8B" stroke-width="3" stroke-dasharray="8 6"/>`;
@@ -1008,7 +1009,7 @@ function genComplements10(visualArea, questionText, optionsContainer) {
   state.currentAnswer = correct;
   state.currentQuestionKey = 'comp10_' + state.difficulty + '_' + x;
   if (state.difficulty === 'challenge') {
-    questionText.innerText = `Combien de jetons manque-t-il pour faire 20 ? (${x} + ? = 20)`;
+    questionText.innerText = t('question.complement_20', { x });
     let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
     svg += `<rect x="35" y="20" width="250" height="70" rx="6" fill="#F8FAFC" stroke="#6C5DD3" stroke-width="3"/>`;
     svg += `<rect x="35" y="105" width="250" height="70" rx="6" fill="#F8FAFC" stroke="#6C5DD3" stroke-width="3"/>`;
@@ -1037,7 +1038,7 @@ function genComplements10(visualArea, questionText, optionsContainer) {
     visualArea.innerHTML = svg;
     renderOptions(correct, getDistractors(correct, 3, 1, 9), optionsContainer);
   } else {
-    questionText.innerText = `Combien de jetons manque-t-il pour faire 10 ? (${x} + ? = 10)`;
+    questionText.innerText = t('question.complement_10', { x });
     let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
     const gridW = 250,
       gridH = 100,
@@ -1127,7 +1128,7 @@ function genFigures(visualArea, questionText, optionsContainer) {
     const chosen = shapes[idx];
     state.currentAnswer = chosen.name;
     state.currentQuestionKey = 'fig_n_' + chosen.id;
-    questionText.innerText = "Comment s'appelle cette figure géométrique ?";
+    questionText.innerText = t('question.figure');
     let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">`;
     let shapeMarkup = '',
       faceX = 120,
@@ -1178,7 +1179,7 @@ function genVocabulaireSpatial(visualArea, questionText, optionsContainer) {
   const chosen = positions[idx];
   state.currentAnswer = chosen.label;
   state.currentQuestionKey = 'spat_' + state.difficulty + '_' + chosen.id;
-  questionText.innerText = 'Où est le petit oiseau bleu ?';
+  questionText.innerText = t('question.oiseau');
   let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">`;
   svg += `<ellipse cx="120" cy="180" rx="55" ry="10" fill="#E2E8F0"/>`;
   svg += `<rect x="75" y="95" width="90" height="75" rx="8" fill="#FF8E53" stroke="#E0753A" stroke-width="4"/>`;
@@ -1264,7 +1265,7 @@ function genMonnaie(visualArea, questionText, optionsContainer) {
       .map((i) => i.val)
       .sort()
       .join(',');
-  questionText.innerText = "Combien d'argent y a-t-il dans le porte-monnaie ?";
+  questionText.innerText = t('question.monnaie');
   let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
   svg += `<path d="M40 180 C40 120 70 50 160 50 C250 50 280 120 280 180 Z" fill="#F5F3FF" stroke="#6C5DD3" stroke-width="4"/>`;
   svg += `<rect x="30" y="165" width="260" height="25" rx="10" fill="#6C5DD3"/><circle cx="160" cy="50" r="10" fill="#FFD93D" stroke="#E0BE2F" stroke-width="2"/>`;
@@ -1314,7 +1315,7 @@ function genHeure(visualArea, questionText, optionsContainer) {
   const correctText = getHeureText(hour, min);
   state.currentAnswer = correctText;
   state.currentQuestionKey = 'heure_' + hour + '_' + min;
-  questionText.innerText = 'Quelle heure indique cette horloge ?';
+  questionText.innerText = t('question.heure');
   let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">`;
   const cx = 120,
     cy = 120,
@@ -1365,7 +1366,7 @@ function genMesures(visualArea, questionText, optionsContainer) {
     state.difficulty === 'easy' ? getRandomInt(3, 7) : getRandomInt(3, 11);
   state.currentAnswer = `${length} cm`;
   state.currentQuestionKey = 'mes_' + state.difficulty + '_' + length;
-  questionText.innerText = 'Combien mesure ce crayon de couleur ?';
+  questionText.innerText = t('question.mesure');
   let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
   const rulerX = 20,
     rulerY = 110,
@@ -1408,7 +1409,7 @@ function genFractions(visualArea, questionText, optionsContainer) {
   const n = getRandomInt(1, d - 1);
   state.currentAnswer = `${n}/${d}`;
   state.currentQuestionKey = 'frac_' + state.difficulty + '_' + n + '_' + d;
-  questionText.innerText = 'Quelle fraction de cette barre est coloriée ?';
+  questionText.innerText = t('question.fraction_quelle');
   let svg = `<svg class="w-full h-full max-h-[300px]" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">`;
   const width = 240,
     height = 60,
@@ -1450,9 +1451,9 @@ function genFractionsInteract(visualArea, questionText, optionsContainer) {
   stateMod.setUserFractionSelected(
     Array(stateMod.targetFractionDenominator).fill(false)
   );
-  questionText.innerText = `Colorie la fraction ${state.currentAnswer} de cette barre :`;
+  questionText.innerText = t('question.fraction_colorie', { fraction: state.currentAnswer });
   renderFractionsInteractSVG(visualArea);
-  optionsContainer.innerHTML = `<button onclick="window.validateInteractiveFraction()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">Valider ma réponse</button>`;
+  optionsContainer.innerHTML = `<button onclick="window.validateInteractiveFraction()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">${t('ui.validate')}</button>`;
 }
 
 function renderFractionsInteractSVG(visualArea) {
@@ -1492,7 +1493,7 @@ function genBlocsDizaines(visualArea, questionText, optionsContainer) {
   state.currentQuestionKey = 'bloc_' + stateMod.targetNumber;
   stateMod.setUserTens(0);
   stateMod.setUserUnits(0);
-  questionText.innerText = `Représente le nombre ${stateMod.targetNumber} en plaçant des dizaines (10) et des unités (1) :`;
+  questionText.innerText = t('question.base_ten', { n: stateMod.targetNumber });
   renderBlocsDizainesSVG(visualArea);
   optionsContainer.innerHTML = `
     <div class="grid grid-cols-2 gap-3 mb-3 font-title">
@@ -1504,8 +1505,8 @@ function genBlocsDizaines(visualArea, questionText, optionsContainer) {
       </button>
     </div>
     <div class="flex gap-3 font-title">
-      <button onclick="window.resetBaseTen()" class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-4 rounded-2xl transition-all active:scale-95">Effacer</button>
-      <button onclick="window.validateBaseTen()" class="w-2/3 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-md">Valider</button>
+      <button onclick="window.resetBaseTen()" class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-4 rounded-2xl transition-all active:scale-95">${t('ui.clear')}</button>
+      <button onclick="window.validateBaseTen()" class="w-2/3 bg-brand-green hover:bg-brand-green-dark text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-md">${t('ui.validate')}</button>
     </div>`;
 }
 
@@ -1548,7 +1549,7 @@ function genSequences(visualArea, questionText, optionsContainer) {
 
   state.currentAnswer = `${answer}`;
   state.currentQuestionKey = `seq_${family.type}_${items.join('-')}`;
-  questionText.innerText = `Trouve l’élément manquant dans cette séquence de ${family.label} :`;
+    questionText.innerText = t('question.sequence', { family: family.label });
 
   const svgItems = items
     .map((item, idx) => {
@@ -1661,7 +1662,7 @@ function genAnalogies(visualArea, questionText, optionsContainer) {
   const item = analogies[getRandomInt(0, analogies.length - 1)];
   state.currentAnswer = item.answer;
   state.currentQuestionKey = `analogie_${item.right}_${item.answer}`;
-  questionText.innerText = `Quel élément complète cette analogie ? ${item.left[0]} est à ${item.left[1]} comme ${item.right} est à :`;
+    questionText.innerText = t('question.analogie', { left: item.left[0], right1: item.left[1], right2: item.right });
 
   visualArea.innerHTML = `<div class="flex flex-wrap items-center justify-center gap-4 bg-brand-pink-light/40 border-2 border-brand-pink/15 p-6 rounded-3xl shadow-sm w-full font-title">
     <div class="flex items-center gap-2 text-4xl">
@@ -1717,7 +1718,7 @@ function genFormesTri(visualArea, questionText, optionsContainer) {
     rectangle: 'rectangles 🟦',
     cercle: 'cercles 🟡',
   };
-  questionText.innerText = `Trouve et clique sur tous les ${shapeNamesFr[stateMod.targetShapeType]} dans le dessin :`;
+    questionText.innerText = t('question.shapes', { shape: shapeNamesFr[stateMod.targetShapeType] });
   stateMod.setShapesArray([]);
   for (let i = 0; i < 6; i++) {
     let type = types[getRandomInt(0, 2)];
@@ -1742,7 +1743,7 @@ function genFormesTri(visualArea, questionText, optionsContainer) {
     '_' +
     stateMod.shapesArray.map((s) => s.type).join(',');
   renderFormesTriSVG(visualArea);
-  optionsContainer.innerHTML = `<button onclick="window.validateFormesTri()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">Valider ma sélection</button>`;
+  optionsContainer.innerHTML = `<button onclick="window.validateFormesTri()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">${t('ui.validate_selection')}</button>`;
 }
 
 function renderFormesTriSVG(visualArea) {

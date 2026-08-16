@@ -117,7 +117,7 @@ export function isBadgeConditionMet(cond) {
       return stats && stats.correct >= cond.value;
     }
     case 'category_correct': {
-      const cat = CATEGORIES[cond.category];
+      const cat = CATEGORIES()[cond.category];
       if (!cat) return false;
       let total = 0;
       for (const g of cat.games) {
@@ -141,7 +141,7 @@ export function isBadgeConditionMet(cond) {
       return perfectSessions >= cond.value;
     case 'all_games_played': {
       const allGameIds = [];
-      for (const cat of Object.values(CATEGORIES))
+      for (const cat of Object.values(CATEGORIES()))
         for (const g of cat.games) allGameIds.push(g.id);
       return allGameIds.every((id) => {
         const s = adaptiveStats[id];
@@ -191,7 +191,7 @@ function triggerBadgeUnlockPopup(badge) {
   if (svgContainer) svgContainer.innerHTML = badge.svg(false);
   if (titleEl) titleEl.innerText = badge.name;
   if (descEl)
-    descEl.innerText = `Félicitations ! Tu as débloqué le badge "${badge.name}" ! ${badge.desc} 🏆`;
+    descEl.innerText = t('feedback.badge_unlock', { name: badge.name, desc: badge.desc });
   const popup = document.getElementById('popup-badge-unlock');
   if (popup) popup.classList.remove('hidden');
 }
@@ -337,7 +337,7 @@ export function nextQuestStep() {
       questState.currentSequenceIndex + 2
     );
     questState.consecutiveCorrect = 0;
-    showToast(true, 'Super rapide ! Saut de niveau ! 🚀');
+    showToast(true, t('feedback.super_fast') + ' 🚀');
   } else {
     questState.currentSequenceIndex =
       (questState.currentSequenceIndex + 1) % questState.gameSequence.length;
@@ -441,11 +441,11 @@ export function triggerMultiplayerMatchOver() {
   let winner = '';
   if (p1.stars > p2.stars) {
     titleEl.innerText = `${p1.name} a gagné ! 🏆`;
-    descEl.innerText = `Félicitations ${p1.name} ! Tu remportes le match avec ${p1.stars} ⭐ contre ${p2.stars} ⭐.`;
+    descEl.innerText = t('feedback.multiplayer_winner', { name: p1.name, stars1: p1.stars, stars2: p2.stars });
     winner = p1.name;
   } else if (p2.stars > p1.stars) {
     titleEl.innerText = `${p2.name} a gagné ! 🏆`;
-    descEl.innerText = `Félicitations ${p2.name} ! Tu remportes le match avec ${p2.stars} ⭐ contre ${p1.stars} ⭐.`;
+    descEl.innerText = t('feedback.multiplayer_winner', { name: p2.name, stars1: p2.stars, stars2: p1.stars });
     winner = p2.name;
   } else {
     titleEl.innerText = 'Égalité ! 🤝';

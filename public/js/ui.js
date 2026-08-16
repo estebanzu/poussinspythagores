@@ -19,6 +19,7 @@ import {
 } from './constants.js';
 import { getGameStats, getAvgResponseTime } from './storage.js';
 import { shuffleArray } from './utils.js';
+import { t, tArray } from './i18n.js';
 
 export function updateStarsUI() {
   document.getElementById('global-stars-text').innerText = state.stars;
@@ -146,18 +147,15 @@ export function updateFooterMessage(type) {
     );
     const nextBadge = starBadges.find((b) => state.stars < b.cond.value);
     const remaining = nextBadge ? nextBadge.cond.value - state.stars : 0;
-    const progressPhrases = [
-      `Waouh ! Tu as déjà accumulé ${state.stars} étoile${state.stars > 1 ? 's' : ''} !${nextBadge ? ` Encore ${remaining} pour le badge "${nextBadge.name}" ! 🏅` : ''}`,
-      `Félicitations pour tes ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! Tu travailles comme un vrai champion ! 🏆`,
-      `Tu as ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! Es-tu prêt à remporter le prochain badge ? ${nextBadge ? `Plus que ${remaining} !` : ''} ⭐`,
-      `Les mathématiques sont un jeu d'enfant avec toi ! Déjà ${state.stars} étoile${state.stars > 1 ? 's' : ''} ! 🎈`,
-    ];
-    msg = progressPhrases[Math.floor(Math.random() * progressPhrases.length)];
+    const badgeHint = nextBadge ? ` Encore ${remaining} pour le badge "${nextBadge.name}" !` : '';
+    const progressKeys = ['footer.progress_1', 'footer.progress_2', 'footer.progress_3', 'footer.progress_4'];
+    const key = progressKeys[Math.floor(Math.random() * progressKeys.length)];
+    msg = t(key, { stars: state.stars, badge: badgeHint });
   } else {
-    const list = FOOTER_PHRASES[type] || FOOTER_PHRASES['idle'];
+    const list = FOOTER_PHRASES(type);
     msg = list[Math.floor(Math.random() * list.length)];
   }
-  textEl.innerText = `"${comp.name} dit : ${msg}"`;
+  textEl.innerText = `"${comp.name} ${t('footer.dit')} : ${msg}"`;
   if (type === 'success') {
     avatarEl.classList.add('scale-110');
     setTimeout(() => avatarEl.classList.remove('scale-110'), 300);
@@ -243,7 +241,7 @@ export function renderRecommendations() {
 
 export function computeLearningProfile() {
   const profile = {};
-  for (const [catId, cat] of Object.entries(CATEGORIES)) {
+  for (const [catId, cat] of Object.entries(CATEGORIES())) {
     let totalCorrect = 0,
       totalAttempts = 0;
     const gameDetails = [];

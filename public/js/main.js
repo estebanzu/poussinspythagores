@@ -3,6 +3,7 @@
 // =============================================
 
 import { state } from './state.js';
+import { getLang, setLang, onLangChange } from './i18n.js';
 import {
   updateStarsUI,
   updateFooterCompanion,
@@ -125,6 +126,16 @@ function startSoloGame() {
 // =============================================
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Initialize language from localStorage
+  const savedLang = localStorage.getItem('mathscp_language') || 'fr';
+  setLang(savedLang);
+
+  // Listen for language changes from the inline toggle script
+  window.addEventListener('langchange', (e) => {
+    setLang(e.detail.lang);
+    updateFooterMessage('idle');
+  });
+
   updateStarsUI();
   updateFooterCompanion();
   applySoundIcons();
@@ -154,7 +165,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(dismissSplash, 2500);
 });
 
-// Initialize French TTS voice early
+// Initialize TTS voices early (both fr-FR and es-ES)
 if ('speechSynthesis' in window) {
   window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = () => {

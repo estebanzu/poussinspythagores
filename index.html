@@ -421,6 +421,17 @@
           >
         </button>
 
+        <!-- Language Selector -->
+        <button
+          id="lang-toggle"
+          onclick="toggleLanguage()"
+          class="flex items-center gap-1.5 bg-white hover:bg-slate-50 font-bold px-3 py-2 rounded-full shadow-md border-2 border-slate-200 hover:scale-105 active:scale-95 transition-all"
+          title="Changer de langue"
+        >
+          <span id="lang-flag" class="text-lg">🇫🇷</span>
+          <span id="lang-label" class="hidden sm:inline font-title text-xs sm:text-sm text-slate-700">Français</span>
+        </button>
+
         <!-- Accessibility Settings Button -->
         <button
           onclick="openAccessibilityModal()"
@@ -1975,6 +1986,25 @@
         >
       </div>
     </div>
+
+    <!-- Language Toggle (inline for instant availability) -->
+    <script>
+      function toggleLanguage() {
+        const current = localStorage.getItem('mathscp_language') || 'fr';
+        const next = current === 'fr' ? 'es' : 'fr';
+        localStorage.setItem('mathscp_language', next);
+        updateLangUI(next);
+        window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: next } }));
+      }
+      function updateLangUI(lang) {
+        const flag = document.getElementById('lang-flag');
+        const label = document.getElementById('lang-label');
+        if (flag) flag.textContent = lang === 'fr' ? '🇫🇷' : '🇪🇸';
+        if (label) label.textContent = lang === 'fr' ? 'Français' : 'Español';
+        document.documentElement.lang = lang;
+      }
+      updateLangUI(localStorage.getItem('mathscp_language') || 'fr');
+    </script>
 
     <!-- Module entry point -->
     <script type="module" src="/js/main.js"></script>
