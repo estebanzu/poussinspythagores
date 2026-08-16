@@ -158,7 +158,7 @@ export function checkAnswer(selected, buttonElement) {
         state.difficulty = 'normal';
         state.consecutiveCorrect = 0;
         setTimeout(
-          () => showToast(true, 'Super ! Difficulté : Normal ! 🔵'),
+          () => showToast(true, t('feedback.level_up_normal') + ' 🔵'),
           500
         );
         updateDifficultyUI();
@@ -169,7 +169,7 @@ export function checkAnswer(selected, buttonElement) {
         state.difficulty = 'challenge';
         state.consecutiveCorrect = 0;
         setTimeout(
-          () => showToast(true, 'Incroyable ! Niveau Défi débloqué ! 🔥'),
+          () => showToast(true, t('feedback.level_up_challenge') + ' 🔥'),
           500
         );
         updateDifficultyUI();
@@ -177,7 +177,7 @@ export function checkAnswer(selected, buttonElement) {
     }
     confetti({ particleCount: 50, spread: 60, origin: { y: 0.75 } });
     checkBadgeUnlocks();
-    const phrase = SUCCESS_PHRASES[getRandomInt(0, SUCCESS_PHRASES.length - 1)];
+    const phrase = getSuccessPhrase();
     showToast(true, phrase);
     updateFooterMessage('success');
     if (
@@ -299,7 +299,7 @@ export function checkAnswer(selected, buttonElement) {
       }
       checkBadgeUnlocks();
     }
-    const phrase = FAIL_PHRASES[getRandomInt(0, FAIL_PHRASES.length - 1)];
+    const phrase = getFailPhrase();
     showToast(false, phrase);
     updateFooterMessage('retry');
   }
