@@ -24,7 +24,7 @@ import {
   updateSessionStarsUI,
 } from './ui.js';
 import { playAudioTone } from './audio.js';
-import { getRandomInt, getGameName } from './utils.js';
+import { getRandomInt, getGameName, getGameIllustration } from './utils.js';
 import { hideAllScreens } from './navigation.js';
 
 // ---- Forward refs to games.js ----
@@ -267,6 +267,26 @@ export function launchQuest(questId) {
       'b_vocabulaire_spatial',
       'b_formes_tri',
     ];
+  } else if (questId === 4) {
+    questState.materialEmoji = '📐';
+    questState.materialName = 'Proportions';
+    questState.gameSequence = [
+      'a_problemes',
+      'a_regle_3',
+      'a_additions',
+      'a_regle_3',
+      'a_problemes',
+    ];
+  } else if (questId === 5) {
+    questState.materialEmoji = '🧩';
+    questState.materialName = 'Indices';
+    questState.gameSequence = [
+      'a_soustractions',
+      'a_problemes',
+      'a_additions',
+      'a_problemes',
+      'a_soustractions',
+    ];
   } else {
     questState.materialEmoji = '⚙️';
     questState.materialName = 'Engrenages';
@@ -299,6 +319,16 @@ function showQuestStoryIntro() {
     title.innerText = 'Le Temple Perdu';
     text.innerHTML =
       '<b>Pytha l\'Hibou</b> : <br/>"Regarde ces ruines mystérieuses ! La porte du temple est fermée. Trouve les <b>5 clés de pierre</b> cachées derrière les formes géométriques pour l\'ouvrir ! En route !"';
+  } else if (questState.currentQuest === 4) {
+    avatar.innerText = '🦉📐';
+    title.innerText = 'La Forêt des Proportions';
+    text.innerHTML =
+      '<b>Pytha l\'Hibou</b> : <br/>"Cette forêt est magique : <b>3 chemins</b> se cachent dans des proportions. Résous les énigmes de <b>règle de 3</b> pour trouver le bon sentier !"';
+  } else if (questState.currentQuest === 5) {
+    avatar.innerText = '🦉🧩';
+    title.innerText = 'Le Jardin des Indices';
+    text.innerHTML =
+      '<b>Pytha l\'Hibou</b> : <br/>"Les fleurs du jardin sont mélangées ! Utilise les <b>indices</b> dans les petits problèmes pour remettre chaque plante à sa place."';
   } else {
     avatar.innerText = '🦉⚙️';
     title.innerText = 'Le Trésor du Temps';
@@ -316,7 +346,9 @@ export function closeQuestStoryModal() {
   state.consecutiveWrong = 0;
   state.difficulty = 'normal';
   const gameName = getGameName(state.currentGame);
-  document.getElementById('game-title').innerText = `Quête : ${gameName}`;
+  const titleEl = document.getElementById('game-title');
+  if (titleEl)
+    titleEl.innerText = `Quête : ${getGameIllustration(state.currentGame)} ${gameName}`;
   document.getElementById('multiplayer-turn-banner').classList.add('hidden');
   document.getElementById('difficulty-badge').classList.remove('hidden');
   document
@@ -343,8 +375,10 @@ export function nextQuestStep() {
       (questState.currentSequenceIndex + 1) % questState.gameSequence.length;
   }
   state.currentGame = questState.gameSequence[questState.currentSequenceIndex];
-  document.getElementById('game-title').innerText =
-    `Quête : ${getGameName(state.currentGame)}`;
+  const gameName = getGameName(state.currentGame);
+  const titleEl = document.getElementById('game-title');
+  if (titleEl)
+    titleEl.innerText = `Quête : ${getGameIllustration(state.currentGame)} ${gameName}`;
   generateExercise();
 }
 
@@ -355,6 +389,8 @@ export function triggerQuestVictory() {
     'Protecteur du Nid 🪺',
     'Clé du Savoir 🔑',
     'Maître du Temps ⏳',
+    'Explorateur des Proportions 📐',
+    'Jardinier des Indices 🧩',
   ];
   const badgeName = badgeNames[questState.currentQuest];
   document.getElementById('quest-victory-badge-name').innerText = badgeName;

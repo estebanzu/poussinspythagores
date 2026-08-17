@@ -64,7 +64,7 @@ import {
   setFeaturesCallbacks,
 } from './features.js';
 import { getGameStats } from './storage.js';
-import { getGameName } from './utils.js';
+import { getGameName, getGameIllustration } from './utils.js';
 
 // =============================================
 // Wire cross-module callbacks
@@ -104,7 +104,9 @@ function startSoloGame() {
   const savedStats = getGameStats(state.currentGame);
   state.difficulty = savedStats.total > 0 ? savedStats.difficulty : 'normal';
   const gameName = getGameName(state.currentGame);
-  document.getElementById('game-title').innerText = gameName;
+  const titleEl = document.getElementById('game-title');
+  if (titleEl)
+    titleEl.innerText = `${getGameIllustration(state.currentGame)} ${gameName}`;
   document.getElementById('multiplayer-turn-banner').classList.add('hidden');
   document.getElementById('quest-progress-banner').classList.add('hidden');
   document.getElementById('difficulty-badge').classList.remove('hidden');

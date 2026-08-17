@@ -62,3 +62,33 @@ export function getGameName(gameId) {
   }
   return 'Jeu';
 }
+
+const DRAW_MAP = {
+  a_additions: '🧮',
+  a_soustractions: '🧾',
+  a_add_rapide: '⚡',
+  a_sous_rapide: '⚡',
+  a_add_sous_rapide: '🎯',
+  a_tables_rapides: '✖️',
+  a_fractions: '🍕',
+  a_fractions_interact: '🍕',
+  a_blocs_dizaines: '🧱',
+  a_nombres_100: '💯',
+  a_compter_100: '🔢',
+  a_regle_3: '🧭',
+  a_problemes: '📖',
+  a_doubles_moities: '🍬',
+  a_complements_10: '🎱',
+  b_figures: '📐',
+  b_vocabulaire_spatial: '🧭',
+  b_formes_tri: '🔍',
+  c_monnaie: '💰',
+  c_heure: '⏰',
+  c_mesures: '📏',
+  d_sequences: '🧩',
+  d_analogies: '🔗',
+};
+
+export function getGameIllustration(gameId) {
+  return DRAW_MAP[gameId] || '✨';
+}

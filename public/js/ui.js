@@ -198,6 +198,8 @@ export function updateQuestObjectiveUI() {
     'Nid de Pytha 🪺',
     'Temple Perdu 🔑',
     'Trésor du Temps ⏳',
+    'Forêt des Proportions 📐',
+    'Jardin des Indices 🧩',
   ];
   bannerTitle.innerText = names[questState.currentQuest];
   bannerSubtitle.innerText = `Récolte 5 ${questState.materialName} pour réussir`;

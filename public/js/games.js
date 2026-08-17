@@ -479,6 +479,12 @@ export function generateExercise() {
       case 'a_blocs_dizaines':
         genBlocsDizaines(visualArea, questionText, optionsContainer);
         break;
+      case 'a_regle_3':
+        genRegle3(visualArea, questionText, optionsContainer);
+        break;
+      case 'a_problemes':
+        genProblemes(visualArea, questionText, optionsContainer);
+        break;
     }
     const key = state.currentQuestionKey;
     if (!key || !isRecentlySeen(state.currentGame, key)) {
@@ -1684,8 +1690,97 @@ function genAnalogies(visualArea, questionText, optionsContainer) {
   );
 }
 
+// ---- A6. Règle de 3 ----
+function genRegle3(visualArea, questionText, optionsContainer) {
+  const contexts = [
+    () => {
+      const price = getRandomInt(2, 8);
+      const qty = getRandomInt(2, 6);
+      const total = price * qty;
+      return {
+        prompt: `Si ${qty} stylos coûtent ${total} €, combien coûte 1 stylo ?`,
+        answer: price,
+        unit: '€',
+      };
+    },
+    () => {
+      const speed = getRandomInt(3, 9);
+      const hours = getRandomInt(2, 5);
+      const dist = speed * hours;
+      return {
+        prompt: `Un vélo roule à ${speed} km/h. Quelle distance parcourt-il en ${hours} h ?`,
+        answer: dist,
+        unit: 'km',
+      };
+    },
+    () => {
+      const servings = getRandomInt(3, 8);
+      const flour = getRandomInt(9, 24);
+      const perServing = Math.round(flour / servings);
+      return {
+        prompt: `Pour ${servings} crêpes, il faut ${flour} g de farine. Quelle quantité pour 1 crêpe ?`,
+        answer: perServing,
+        unit: 'g',
+      };
+    },
+  ];
+  const build = contexts[getRandomInt(0, contexts.length - 1)]();
+  const correct = build.answer;
+  const distractors = getDistractors(correct, 3, 1, correct + 12).filter(
+    (n) => n > 0
+  );
+  state.currentAnswer = correct;
+  state.currentQuestionKey = 'r3_' + correct + '_' + build.unit;
+  questionText.innerText = build.prompt;
+  visualArea.innerHTML = `<div class="flex flex-wrap items-center justify-center gap-4 bg-brand-purple-light/40 border-2 border-brand-purple/15 p-6 rounded-3xl shadow-sm w-full font-title"><span class="text-sm font-bold text-slate-500">Indice :</span><span class="text-base font-semibold text-slate-700">Cherche la valeur de 1 unité.</span></div>`;
+  renderOptions(correct, distractors.slice(0, 3), optionsContainer);
+}
+
+// ---- A7. Résolution de problèmes ----
+function genProblemes(visualArea, questionText, optionsContainer) {
+  const problems = [
+    () => {
+      const a = getRandomInt(5, 12);
+      const b = getRandomInt(2, 6);
+      const c = getRandomInt(1, 4);
+      const total = a + b + c;
+      return {
+        prompt: `Lina a ${a} billes bleues, ${b} billes rouges et ${c} billes vertes. Combien a-t-elle de billes en tout ?`,
+        answer: total,
+      };
+    },
+    () => {
+      const start = getRandomInt(18, 30);
+      const eaten = getRandomInt(3, 7);
+      const left = start - eaten;
+      return {
+        prompt: `Dans un paquet de ${start} gâteaux, on en mange ${eaten}. Combien en reste-t-il ?`,
+        answer: left,
+      };
+    },
+    () => {
+      const boxes = getRandomInt(2, 4);
+      const perBox = getRandomInt(3, 7);
+      const total = boxes * perBox;
+      return {
+        prompt: `Dans chaque carton, il y a ${perBox} paquets de crayons. Avec ${boxes} cartons, combien de paquets y a-t-il ?`,
+        answer: total,
+      };
+    },
+  ];
+  const build = problems[getRandomInt(0, problems.length - 1)]();
+  const correct = build.answer;
+  const distractors = getDistractors(correct, 3, 1, correct + 10).filter(
+    (n) => n > 0
+  );
+  state.currentAnswer = correct;
+  state.currentQuestionKey = 'prob_' + correct;
+  questionText.innerText = build.prompt;
+  visualArea.innerHTML = `<div class="flex flex-wrap items-center justify-center gap-4 bg-brand-green-light/40 border-2 border-brand-green/15 p-6 rounded-3xl shadow-sm w-full font-title"><span class="text-sm font-bold text-slate-500">Astuce :</span><span class="text-base font-semibold text-slate-700">Lis bien l'énoncé et choisis le calcul adapté.</span></div>`;
+  renderOptions(correct, distractors.slice(0, 3), optionsContainer);
+}
+
 export function addBaseTen(value) {
-  playAudioTone('click');
   if (value === 10) {
     if (stateMod.userTens < 5) stateMod.setUserTens(stateMod.userTens + 1);
   } else {
