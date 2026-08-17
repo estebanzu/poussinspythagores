@@ -429,7 +429,11 @@
           title="Changer de langue"
         >
           <span id="lang-flag" class="text-lg">🇫🇷</span>
-          <span id="lang-label" class="hidden sm:inline font-title text-xs sm:text-sm text-slate-700">Français</span>
+          <span
+            id="lang-label"
+            class="hidden sm:inline font-title text-xs sm:text-sm text-slate-700"
+            >Français</span
+          >
         </button>
 
         <!-- Accessibility Settings Button -->
@@ -2046,7 +2050,9 @@
         const next = current === 'fr' ? 'es' : 'fr';
         localStorage.setItem('mathscp_language', next);
         updateLangUI(next);
-        window.dispatchEvent(new CustomEvent('langchange', { detail: { lang: next } }));
+        window.dispatchEvent(
+          new CustomEvent('langchange', { detail: { lang: next } })
+        );
       }
       function updateLangUI(lang) {
         const flag = document.getElementById('lang-flag');

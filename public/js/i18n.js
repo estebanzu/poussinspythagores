@@ -107,7 +107,7 @@ const CATALOG = {
     es: 'Mi Compañero',
   },
   'ui.companion_desc': {
-    fr: 'Choisis ton compagnon d\'aventure ! Il évolue avec tes étoiles.',
+    fr: "Choisis ton compagnon d'aventure ! Il évolue avec tes étoiles.",
     es: '¡Elige tu compañero de aventura! Evoluciona con tus estrellas.',
   },
   'ui.close': {
@@ -176,7 +176,7 @@ const CATALOG = {
   // ─── FEEDBACK PHRASES ────────────────────────────────
   'feedback.correct': {
     fr: [
-      'Super ! C\'est correct !',
+      "Super ! C'est correct !",
       'Bravo ! Tu as trouvé !',
       'Magnifique ! Tu es fort !',
       'Excellent travail ! Continues !',
@@ -195,7 +195,7 @@ const CATALOG = {
       'Aïe ! Réessaie, tu vas y arriver !',
       'Pas tout à fait ! Regarde bien le dessin.',
       'Presque ! Essaie encore un coup !',
-      'Ne t\'inquiète pas, réessaie !',
+      "Ne t'inquiète pas, réessaie !",
       'Oups ! Essaye un autre nombre !',
     ],
     es: [
@@ -223,7 +223,7 @@ const CATALOG = {
     es: 'Vuelta al nivel Normal',
   },
   'feedback.easy_mode': {
-    fr: 'Mode Facile activé pour t\'aider !',
+    fr: "Mode Facile activé pour t'aider !",
     es: '¡Modo Fácil activado para ayudarte!',
   },
   'feedback.time_up': {
@@ -265,16 +265,16 @@ const CATALOG = {
     es: '¡Tienes {stars} estrella(s)! ¿Estás listo para ganar la próxima insignia?{badge} ⭐',
   },
   'footer.progress_4': {
-    fr: 'Les mathématiques sont un jeu d\'enfant avec toi ! Déjà {stars} étoile(s) ! 🎈',
+    fr: "Les mathématiques sont un jeu d'enfant avec toi ! Déjà {stars} étoile(s) ! 🎈",
     es: '¡Las matemáticas son un juego de niños contigo! ¡Ya {stars} estrella(s)! 🎈',
   },
   'footer.idle': {
     fr: [
       'Bonjour champion ! Choisis un jeu et amuse-toi !',
-      'Tu es très fort en mathématiques ! Continue à t\'entraîner !',
-      'Chaque bonne réponse te rapproche d\'un nouveau badge !',
-      'Les mathématiques sont un jeu d\'enfant avec toi !',
-      'Tu as déjà gagné plein d\'étoiles, c\'est formidable !',
+      "Tu es très fort en mathématiques ! Continue à t'entraîner !",
+      "Chaque bonne réponse te rapproche d'un nouveau badge !",
+      "Les mathématiques sont un jeu d'enfant avec toi !",
+      "Tu as déjà gagné plein d'étoiles, c'est formidable !",
     ],
     es: [
       '¡Hola campeón! ¡Elige un juego y diviértete!',
@@ -290,7 +290,7 @@ const CATALOG = {
       'Bravo ! Ta réponse est tout à fait correcte !',
       'Magnifique ! Tu es le roi des calculs !',
       'Génial ! Une étoile de plus dans ta collection !',
-      'Quel talent ! C\'est un sans-faute !',
+      "Quel talent ! C'est un sans-faute !",
     ],
     es: [
       '¡Increíble! ¡Encontraste la respuesta correcta!',
@@ -302,9 +302,9 @@ const CATALOG = {
   },
   'footer.retry': {
     fr: [
-      'Ne t\'inquiète pas ! Essaye encore, tu vas y arriver !',
+      "Ne t'inquiète pas ! Essaye encore, tu vas y arriver !",
       'Presque ! Prends ton temps et regarde bien le dessin.',
-      'L\'erreur fait partie du jeu. Réessaie tranquillement !',
+      "L'erreur fait partie du jeu. Réessaie tranquillement !",
       'Une autre tentative ? Tu es tout près de trouver !',
       'On apprend tous de nos erreurs. Tu vas réussir !',
     ],
@@ -318,9 +318,9 @@ const CATALOG = {
   },
   'footer.game_start': {
     fr: [
-      'Regarde bien l\'image et réfléchis. Quelle est la bonne carte ?',
+      "Regarde bien l'image et réfléchis. Quelle est la bonne carte ?",
       'Un nouvel exercice ! Concentre-toi et choisis ta réponse.',
-      'Tu as toutes les clés pour réussir cet exercice ! C\'est parti !',
+      "Tu as toutes les clés pour réussir cet exercice ! C'est parti !",
       'Observe bien les indices visuels à gauche.',
     ],
     es: [
@@ -337,7 +337,7 @@ const CATALOG = {
     es: '¿Qué número representan los bloques?',
   },
   'question.ecriture': {
-    fr: 'Trouve le nombre correspondant à l\'écriture :',
+    fr: "Trouve le nombre correspondant à l'écriture :",
     es: 'Encuentra el número correspondiente a la escritura:',
   },
   'question.compte_elements': {
@@ -389,7 +389,7 @@ const CATALOG = {
     es: '¿Cuántas fichas faltan para hacer 10? ({x} + ? = 10)',
   },
   'question.figure': {
-    fr: 'Comment s\'appelle cette figure géométrique ?',
+    fr: "Comment s'appelle cette figure géométrique ?",
     es: '¿Cómo se llama esta figura geométrica?',
   },
   'question.oiseau': {
@@ -397,7 +397,7 @@ const CATALOG = {
     es: '¿Dónde está el pajarito azul?',
   },
   'question.monnaie': {
-    fr: 'Combien d\'argent y a-t-il dans le porte-monnaie ?',
+    fr: "Combien d'argent y a-t-il dans le porte-monnaie ?",
     es: '¿Cuánto dinero hay en la alcancía?',
   },
   'question.heure': {
@@ -421,7 +421,7 @@ const CATALOG = {
     es: 'Representa el número {n} colocando decenas (10) y unidades (1):',
   },
   'question.sequence': {
-    fr: 'Trouve l\'élément manquant dans cette séquence de {family} :',
+    fr: "Trouve l'élément manquant dans cette séquence de {family} :",
     es: 'Encuentra el elemento faltante en esta secuencia de {family}:',
   },
   'question.analogie': {
@@ -481,7 +481,7 @@ const CATALOG = {
 
   // ─── GAME NAMES ──────────────────────────────────────
   'game.a_nombres_100': {
-    fr: 'Les nombres jusqu\'à 100',
+    fr: "Les nombres jusqu'à 100",
     es: 'Los números hasta 100',
   },
   'game.a_nombres_100.desc': {
@@ -541,7 +541,7 @@ const CATALOG = {
     es: 'Suma / Resta rápida',
   },
   'game.a_add_sous_rapide.desc': {
-    fr: 'Mélange aléatoire d\'additions et soustractions rapides.',
+    fr: "Mélange aléatoire d'additions et soustractions rapides.",
     es: 'Mezcla aleatoria de sumas y restas rápidas.',
   },
   'game.a_tables_rapides': {
@@ -561,7 +561,7 @@ const CATALOG = {
     es: 'Representar mitades, tercios y cuartos.',
   },
   'game.a_compter_100': {
-    fr: 'Compter jusqu\'à 100',
+    fr: "Compter jusqu'à 100",
     es: 'Contar hasta 100',
   },
   'game.a_compter_100.desc': {
@@ -589,7 +589,7 @@ const CATALOG = {
     es: 'Secuencias lógicas',
   },
   'game.d_sequences.desc': {
-    fr: 'Trouver l\'élément manquant dans une série.',
+    fr: "Trouver l'élément manquant dans une série.",
     es: 'Encontrar el elemento faltante en una serie.',
   },
   'game.d_analogies': {
@@ -609,7 +609,7 @@ const CATALOG = {
     es: 'Sumar monedas y billetes de 1€, 2€, 5€ y 10€.',
   },
   'game.c_heure': {
-    fr: 'Lire l\'heure',
+    fr: "Lire l'heure",
     es: 'Leer la hora',
   },
   'game.c_heure.desc': {
@@ -621,7 +621,7 @@ const CATALOG = {
     es: 'Medir con regla',
   },
   'game.c_mesures.desc': {
-    fr: 'Lire la longueur d\'un objet en centimètres.',
+    fr: "Lire la longueur d'un objet en centimètres.",
     es: 'Leer la longitud de un objeto en centímetros.',
   },
 
@@ -655,36 +655,36 @@ const CATALOG = {
   },
 
   // ─── MATH FACTS ──────────────────────────────────────
-  'mathfacts': {
+  mathfacts: {
     fr: [
-      'Le zéro n\'existe pas dans les nombres naturels ! Les Grecs ne l\'avaient pas trouvé.',
+      "Le zéro n'existe pas dans les nombres naturels ! Les Grecs ne l'avaient pas trouvé.",
       'Les Romains utilisaient des lettres comme chiffres : I = 1, V = 5, X = 10, L = 50.',
       'Un triangle a toujours 3 angles dont la somme fait exactement 180 degrés.',
       'La pyramide de Khéops a environ 4500 ans et ses côtés sont presque parfaits.',
-      'Le nombre π (pi) commence par 3,14 mais ses décimales continuent à l\'infini !',
+      "Le nombre π (pi) commence par 3,14 mais ses décimales continuent à l'infini !",
       'Un cercle a 360 degrés parce que les Babyloniens utilisaient un calendrier de 360 jours.',
-      'La multiplication, c\'est une addition qui se répète : 3×4, c\'est 3+3+3+3.',
+      "La multiplication, c'est une addition qui se répète : 3×4, c'est 3+3+3+3.",
       'Le chiffre le plus joué au loto est le 7, car beaucoup de gens le choisissent.',
-      'En maths, un pair est divisible par 2, un impair ne l\'est jamais.',
+      "En maths, un pair est divisible par 2, un impair ne l'est jamais.",
       'Le plus grand nombre premier connu fait plus de 24 millions de chiffres !',
       'Un carré est un rectangle spécial : tous ses côtés sont égaux.',
-      'La moitié de 1, c\'est 0,5 : il est possible de partager en deux parts égales.',
+      "La moitié de 1, c'est 0,5 : il est possible de partager en deux parts égales.",
       'Le nombre 11 se lit pareil de gauche à droite et de droite à gauche.',
       'Un hexagone a 6 côtés : les abeilles construisent leurs rayons en hexagones.',
       'Si tu retournes le chiffre 6, ça fait un 9 !',
       'La somme de tous les chiffres de 1 à 9 est 45.',
-      'Un demi-cercle a 180 degrés : la moitié d\'un cercle complet.',
-      'Le plus petit nombre premier est 2, c\'est aussi le seul pair premier.',
+      "Un demi-cercle a 180 degrés : la moitié d'un cercle complet.",
+      "Le plus petit nombre premier est 2, c'est aussi le seul pair premier.",
       '1 mètre = 100 centimètres = 1000 millimètres.',
       'Une heure a 60 minutes, et une minute a 60 secondes.',
-      'Le triangle le plus solide est le triangle : on l\'utilise dans les ponts et les toits.',
-      'Les doigts de nos mains font 10 unités, c\'est pour ça qu\'on compte en base 10.',
-      'Le plus petit nombre qui n\'est ni premier ni composé, c\'est 1.',
+      "Le triangle le plus solide est le triangle : on l'utilise dans les ponts et les toits.",
+      "Les doigts de nos mains font 10 unités, c'est pour ça qu'on compte en base 10.",
+      "Le plus petit nombre qui n'est ni premier ni composé, c'est 1.",
       'Un losange a 4 côtés égaux, comme un carré incliné.',
-      'La division, c\'est comme partager des bonbons entre des amis.',
-      '5×5 = 25, c\'est le même nombre en sens inverse !',
-      'Les couleurs de l\'arc-en-ciel suivent l\'ordre : ROUGE, ORANGE, JAUNE, VERT, BLEU, INDIGO, VIOLET.',
-      'Un millimètre, c\'est aussi petit qu\'un trait de crayon.',
+      "La division, c'est comme partager des bonbons entre des amis.",
+      "5×5 = 25, c'est le même nombre en sens inverse !",
+      "Les couleurs de l'arc-en-ciel suivent l'ordre : ROUGE, ORANGE, JAUNE, VERT, BLEU, INDIGO, VIOLET.",
+      "Un millimètre, c'est aussi petit qu'un trait de crayon.",
       'Un cube a 6 faces identiques, 12 arêtes et 8 sommets.',
       'Quand on additionne tous les chiffres pairs de 2 à 8, on obtient 20.',
     ],
@@ -742,11 +742,11 @@ const CATALOG = {
     es: 'Panel de control',
   },
   'dashboard.subtitle': {
-    fr: 'Rapport d\'apprentissage et tendances de progression.',
+    fr: "Rapport d'apprentissage et tendances de progression.",
     es: 'Informe de aprendizaje y tendencias de progreso.',
   },
   'dashboard.overview': {
-    fr: 'Vue d\'ensemble',
+    fr: "Vue d'ensemble",
     es: 'Vista general',
   },
   'dashboard.total_stars': {
@@ -872,7 +872,7 @@ const CATALOG = {
     es: 'Ganar {n} estrellas en una sesión',
   },
   'badge.consecutive': {
-    fr: '{n} bonnes réponses d\'affilée',
+    fr: "{n} bonnes réponses d'affilée",
     es: '{n} respuestas correctas seguidas',
   },
   'badge.time_of_day_early': {

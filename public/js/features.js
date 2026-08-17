@@ -25,6 +25,7 @@ import {
 } from './ui.js';
 import { playAudioTone } from './audio.js';
 import { getRandomInt, getGameName, getGameIllustration } from './utils.js';
+import { t } from './i18n.js';
 import { hideAllScreens } from './navigation.js';
 
 // ---- Forward refs to games.js ----
@@ -191,7 +192,10 @@ function triggerBadgeUnlockPopup(badge) {
   if (svgContainer) svgContainer.innerHTML = badge.svg(false);
   if (titleEl) titleEl.innerText = badge.name;
   if (descEl)
-    descEl.innerText = t('feedback.badge_unlock', { name: badge.name, desc: badge.desc });
+    descEl.innerText = t('feedback.badge_unlock', {
+      name: badge.name,
+      desc: badge.desc,
+    });
   const popup = document.getElementById('popup-badge-unlock');
   if (popup) popup.classList.remove('hidden');
 }
@@ -477,11 +481,19 @@ export function triggerMultiplayerMatchOver() {
   let winner = '';
   if (p1.stars > p2.stars) {
     titleEl.innerText = `${p1.name} a gagné ! 🏆`;
-    descEl.innerText = t('feedback.multiplayer_winner', { name: p1.name, stars1: p1.stars, stars2: p2.stars });
+    descEl.innerText = t('feedback.multiplayer_winner', {
+      name: p1.name,
+      stars1: p1.stars,
+      stars2: p2.stars,
+    });
     winner = p1.name;
   } else if (p2.stars > p1.stars) {
     titleEl.innerText = `${p2.name} a gagné ! 🏆`;
-    descEl.innerText = t('feedback.multiplayer_winner', { name: p2.name, stars1: p2.stars, stars2: p1.stars });
+    descEl.innerText = t('feedback.multiplayer_winner', {
+      name: p2.name,
+      stars1: p2.stars,
+      stars2: p1.stars,
+    });
     winner = p2.name;
   } else {
     titleEl.innerText = 'Égalité ! 🤝';

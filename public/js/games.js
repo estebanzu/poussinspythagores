@@ -1457,7 +1457,9 @@ function genFractionsInteract(visualArea, questionText, optionsContainer) {
   stateMod.setUserFractionSelected(
     Array(stateMod.targetFractionDenominator).fill(false)
   );
-  questionText.innerText = t('question.fraction_colorie', { fraction: state.currentAnswer });
+  questionText.innerText = t('question.fraction_colorie', {
+    fraction: state.currentAnswer,
+  });
   renderFractionsInteractSVG(visualArea);
   optionsContainer.innerHTML = `<button onclick="window.validateInteractiveFraction()" class="w-full min-h-[64px] bg-brand-green hover:bg-brand-green-dark text-white font-title text-xl font-bold py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95">${t('ui.validate')}</button>`;
 }
@@ -1555,7 +1557,7 @@ function genSequences(visualArea, questionText, optionsContainer) {
 
   state.currentAnswer = `${answer}`;
   state.currentQuestionKey = `seq_${family.type}_${items.join('-')}`;
-    questionText.innerText = t('question.sequence', { family: family.label });
+  questionText.innerText = t('question.sequence', { family: family.label });
 
   const svgItems = items
     .map((item, idx) => {
@@ -1668,7 +1670,11 @@ function genAnalogies(visualArea, questionText, optionsContainer) {
   const item = analogies[getRandomInt(0, analogies.length - 1)];
   state.currentAnswer = item.answer;
   state.currentQuestionKey = `analogie_${item.right}_${item.answer}`;
-    questionText.innerText = t('question.analogie', { left: item.left[0], right1: item.left[1], right2: item.right });
+  questionText.innerText = t('question.analogie', {
+    left: item.left[0],
+    right1: item.left[1],
+    right2: item.right,
+  });
 
   visualArea.innerHTML = `<div class="flex flex-wrap items-center justify-center gap-4 bg-brand-pink-light/40 border-2 border-brand-pink/15 p-6 rounded-3xl shadow-sm w-full font-title">
     <div class="flex items-center gap-2 text-4xl">
@@ -1813,7 +1819,9 @@ function genFormesTri(visualArea, questionText, optionsContainer) {
     rectangle: 'rectangles 🟦',
     cercle: 'cercles 🟡',
   };
-    questionText.innerText = t('question.shapes', { shape: shapeNamesFr[stateMod.targetShapeType] });
+  questionText.innerText = t('question.shapes', {
+    shape: shapeNamesFr[stateMod.targetShapeType],
+  });
   stateMod.setShapesArray([]);
   for (let i = 0; i < 6; i++) {
     let type = types[getRandomInt(0, 2)];

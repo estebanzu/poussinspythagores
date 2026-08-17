@@ -16,6 +16,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["public/js/**/*.js", "public/js/**/*.ts", "src/**/*.js", "src/**/*.ts"],
+  "include": [
+    "public/js/**/*.js",
+    "public/js/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.ts"
+  ],
   "exclude": ["node_modules", ".dist-types"]
 }

@@ -18,7 +18,7 @@ const VOICE_CONFIG = {
   es: {
     lang: 'es-ES',
     rate: 0.93,
-    pitch: 1.10,
+    pitch: 1.1,
   },
 };
 
