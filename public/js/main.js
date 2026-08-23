@@ -101,6 +101,7 @@ function startSoloGame() {
   state.consecutiveCorrect = 0;
   state.consecutiveWrong = 0;
   state.secondChancesLeft = 1;
+  state.timeHandicap = 0;
   const savedStats = getGameStats(state.currentGame);
   state.difficulty = savedStats.total > 0 ? savedStats.difficulty : 'normal';
   const gameName = getGameName(state.currentGame);

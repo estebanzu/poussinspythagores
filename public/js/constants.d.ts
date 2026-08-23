@@ -45,6 +45,7 @@ export declare const COMPANION_STAGES: CompanionStageDef[];
 export declare const COMPANIONS: Record<string, CompanionDef>;
 export declare const FOOTER_PHRASES: Record<string, string[]>;
 export declare const QUESTION_TIME_LIMIT: number;
+export declare const FAIL_HANDICAP_SECONDS: number;
 export declare const PLAYTIME_LIMIT: number;
 export declare const LOCKOUT_DURATION: number;
 export declare const DECAY_BREAK_DURATION: number;

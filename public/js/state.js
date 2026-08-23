@@ -21,6 +21,7 @@ export let state = {
   ),
   questionNumber: 0,
   secondChancesLeft: 0,
+  timeHandicap: 0,
 };
 
 export let streakState = {

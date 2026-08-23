@@ -26,7 +26,12 @@ import {
 } from './ui.js';
 import { recordAnswer, recordSession } from './storage.js';
 import { hideAllScreens } from './navigation.js';
-import { getSuccessPhrase, getFailPhrase } from './constants.js';
+import {
+  getSuccessPhrase,
+  getFailPhrase,
+  QUESTION_TIME_LIMIT,
+  FAIL_HANDICAP_SECONDS,
+} from './constants.js';
 import { t } from './i18n.js';
 
 // ---- Import callbacks for cross-module refs ----
@@ -46,11 +51,13 @@ export function setGamesCallbacks(fns) {
 
 import * as stateMod from './state.js';
 
-const QUESTION_TIME_LIMIT = 15;
-
 export function startQuestionTimer() {
   stopQuestionTimer();
-  stateMod.setQuestionTimeRemaining(QUESTION_TIME_LIMIT);
+  const effectiveLimit = QUESTION_TIME_LIMIT + state.timeHandicap;
+  if (state.timeHandicap > 0) {
+    showToast(true, `+${state.timeHandicap} s ⏰`);
+  }
+  stateMod.setQuestionTimeRemaining(effectiveLimit);
   updateTimerUI();
   const timerEl = document.getElementById('question-timer');
   if (timerEl) timerEl.classList.remove('timer-urgent');
@@ -91,7 +98,8 @@ function updateTimerUI() {
   if (!timerText || !timerRing) return;
   timerText.innerText = stateMod.questionTimeRemaining;
   const circumference = 2 * Math.PI * 16;
-  const progress = stateMod.questionTimeRemaining / QUESTION_TIME_LIMIT;
+  const progress =
+    stateMod.questionTimeRemaining / (QUESTION_TIME_LIMIT + state.timeHandicap);
   const offset = circumference * (1 - progress);
   timerRing.style.strokeDashoffset = offset;
   if (stateMod.questionTimeRemaining > 10) {
@@ -117,6 +125,7 @@ export function checkAnswer(selected, buttonElement) {
   const isCorrect = selected === state.currentAnswer;
   if (isCorrect) {
     playAudioTone('success');
+    state.timeHandicap = 0;
     buttonElement.classList.remove('border-slate-200');
     buttonElement.classList.add(
       'border-brand-green',
@@ -243,6 +252,7 @@ export function checkAnswer(selected, buttonElement) {
       setTimeout(() => showToast(false, 'Hmm, essaie encore ! 💪'), 300);
       return;
     }
+    state.timeHandicap += FAIL_HANDICAP_SECONDS;
     buttonElement.classList.remove('border-slate-200');
     buttonElement.classList.add(
       'border-brand-pink',
@@ -312,6 +322,7 @@ export function checkAnswer(selected, buttonElement) {
 function handleTimeout() {
   if (state.isAnswerSelected) return;
   state.isAnswerSelected = true;
+  state.timeHandicap += FAIL_HANDICAP_SECONDS;
   playAudioTone('fail');
   const optionsContainer = document.getElementById('game-options-container');
   if (optionsContainer) {

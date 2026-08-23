@@ -349,6 +349,7 @@ export function closeQuestStoryModal() {
   state.consecutiveCorrect = 0;
   state.consecutiveWrong = 0;
   state.difficulty = 'normal';
+  state.timeHandicap = 0;
   const gameName = getGameName(state.currentGame);
   const titleEl = document.getElementById('game-title');
   if (titleEl)
@@ -428,6 +429,7 @@ export function startMultiplayerMatch() {
   multiplayerState.player2.stars = 0;
   multiplayerState.currentPlayer = 1;
   multiplayerState.currentTurn = 1;
+  state.timeHandicap = 0;
   const gameName = getGameName(state.currentGame);
   document.getElementById('game-title').innerText = `${gameName} (Défi)`;
   document.getElementById('difficulty-badge').classList.add('hidden');

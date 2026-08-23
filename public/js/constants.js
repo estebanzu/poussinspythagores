@@ -782,7 +782,8 @@ export const BADGES = [
   },
 ];
 
-export const QUESTION_TIME_LIMIT = 15;
+export const QUESTION_TIME_LIMIT = 60;
+export const FAIL_HANDICAP_SECONDS = 10;
 
 export const PLAYTIME_LIMIT = 60 * 60 * 1000;
 export const LOCKOUT_DURATION = 30 * 60 * 1000;
